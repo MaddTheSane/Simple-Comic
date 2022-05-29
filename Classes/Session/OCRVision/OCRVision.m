@@ -110,21 +110,7 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 	else if ([request isKindOfClass:[VNRecognizeTextRequest class]])
 	{
 		VNRecognizeTextRequest *textRequests = (VNRecognizeTextRequest *)request;
-		NSMutableArray<VNRecognizedTextObservation *> *pieces = [NSMutableArray array];
-		NSArray *results = textRequests.results;
-		for (id rawResult in results)
-		{
-			if ([rawResult isKindOfClass:[VNRecognizedTextObservation class]])
-			{
-				VNRecognizedTextObservation *textO = (VNRecognizedTextObservation *)rawResult;
-				NSArray<VNRecognizedText *> *text1 = [textO topCandidates:1];
-				if (text1.count)
-				{
-					[pieces addObject:textO];
-				}
-			}
-		}
-		[self callCompletion:completion observations:pieces error:nil];
+		[self callCompletion:completion observations:textRequests.results error:nil];
 	} else {
 		NSString *desc = @"Unrecognized text request";
 		NSError *err = [NSError errorWithDomain:@""
