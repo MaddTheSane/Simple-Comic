@@ -1640,6 +1640,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			[NSCursor hide];
 		}
 		[self refreshLoupePanel];
+		[self handleFullscreenCursorHiding];
     }
 }
 
@@ -1816,6 +1817,13 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
 //    [self resizeWindow];
 	[self refreshLoupePanel];
+	[self hideCursor];
+}
+
+- (void)windowWillExitFullScreen:(NSNotification *)notification
+{
+	[mouseMovedTimer invalidate];
+	mouseMovedTimer = nil;
 }
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification
