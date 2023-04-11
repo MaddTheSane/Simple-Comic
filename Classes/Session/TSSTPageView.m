@@ -329,7 +329,7 @@ typedef struct {
 	NSGraphicsContext *gcontext = NSGraphicsContext.currentContext;
 	[gcontext saveGraphicsState];
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-	NSColor * color = [NSKeyedUnarchiver unarchiveObjectWithData: [defaults valueForKey: TSSTBackgroundColor]];
+	NSColor * color = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:[defaults valueForKey: TSSTBackgroundColor] error:NULL];
 	self.layer.backgroundColor = [color CGColor];
 
 	NSData *firstPageImageData = firstPageImage.TIFFRepresentation;
