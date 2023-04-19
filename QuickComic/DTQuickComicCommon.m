@@ -25,7 +25,9 @@ NSMutableArray<NSDictionary<NSString*,id>*> * fileListForArchive(XADArchive * ar
             CFBridgingRelease(UTTypeCopyAllTagsWithClass((__bridge CFStringRef)uti, kUTTagClassFilenameExtension));
             [imageExtensions addObjectsFromArray:filenameExtensions];
         }
+        // Some older archives might store jpeg images as jfif
         [imageExtensions addObject:@"jfif"];
+        [imageExtensions addObject:@"jfi"];
         imageFileTypes = [imageExtensions copy];
     });
     

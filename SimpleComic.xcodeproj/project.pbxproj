@@ -746,11 +746,11 @@
 		55517ACE294BD686009734A9 /* QuickComic Thumbnailer */ = {
 			isa = PBXGroup;
 			children = (
+				55517AEF294BD8EE009734A9 /* PartialArchiveParser.swift */,
 				55517ACF294BD686009734A9 /* ThumbnailProvider.swift */,
 				55517AD1294BD686009734A9 /* Info.plist */,
 				55517AD2294BD686009734A9 /* QuickComic_Thumbnailer.entitlements */,
 				55517AE9294BD7A8009734A9 /* QuickComic Thumbnailer-Bridging-Header.h */,
-				55517AEF294BD8EE009734A9 /* PartialArchiveParser.swift */,
 			);
 			path = "QuickComic Thumbnailer";
 			sourceTree = "<group>";
@@ -776,6 +776,7 @@
 				55C3741B1BD9E6AF006385B6 /* main.c */,
 				55C3741A1BD9E6AF006385B6 /* Info.plist */,
 				55A6C3241CEF51F90049D381 /* QuickComic.exp */,
+				55EE6BD82945D40300C1AAE7 /* QuickComicCommonSwift.swift */,
 				55EE6BB12945CA5B00C1AAE7 /* QuickComic Preview */,
 				55517ACE294BD686009734A9 /* QuickComic Thumbnailer */,
 			);
@@ -816,7 +817,6 @@
 		55EE6BB12945CA5B00C1AAE7 /* QuickComic Preview */ = {
 			isa = PBXGroup;
 			children = (
-				55EE6BD82945D40300C1AAE7 /* QuickComicCommonSwift.swift */,
 				55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */,
 				55EE6BB92945CA5B00C1AAE7 /* Info.plist */,
 				55EE6BBA2945CA5B00C1AAE7 /* QuickComic_Preview.entitlements */,

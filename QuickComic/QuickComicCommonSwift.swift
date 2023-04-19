@@ -25,7 +25,9 @@ private let imageFileTypes = {
 			imageExtensions.formUnion(tmpExt)
 		}
 	}
+	// Some older archives might store jpeg images as jfif
 	imageExtensions.insert("jfif")
+	imageExtensions.insert("jfi")
 	return imageExtensions
 }()
 
