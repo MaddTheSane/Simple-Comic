@@ -1508,7 +1508,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 346;
+				CURRENT_PROJECT_VERSION = 348;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1523,7 +1523,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Dancing Tortoise Software. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.9.6;
+				MARKETING_VERSION = 1.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ToWatchList.SimpleComic.QuickComic-Thumbnailer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1546,7 +1546,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 346;
+				CURRENT_PROJECT_VERSION = 348;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1556,7 +1556,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Dancing Tortoise Software. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.9.6;
+				MARKETING_VERSION = 1.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ToWatchList.SimpleComic.QuickComic-Thumbnailer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1573,7 +1573,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 346;
+				CURRENT_PROJECT_VERSION = 348;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				EXPORTED_SYMBOLS_FILE = QuickComic/QuickComic.exp;
@@ -1603,7 +1603,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 346;
+				CURRENT_PROJECT_VERSION = 348;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1632,7 +1632,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 346;
+				CURRENT_PROJECT_VERSION = 348;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1647,7 +1647,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Dancing Tortoise Software. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.9.6;
+				MARKETING_VERSION = 1.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ToWatchList.SimpleComic.QuickComic-Preview";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1668,7 +1668,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 346;
+				CURRENT_PROJECT_VERSION = 348;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1679,7 +1679,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Dancing Tortoise Software. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.9.6;
+				MARKETING_VERSION = 1.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ToWatchList.SimpleComic.QuickComic-Preview";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1768,7 +1768,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 346;
+				CURRENT_PROJECT_VERSION = 348;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -1780,7 +1780,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = 1.9.6;
+				MARKETING_VERSION = 1.9.7;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic;
 				PRODUCT_NAME = "Simple Comic";
@@ -1804,7 +1804,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 346;
+				CURRENT_PROJECT_VERSION = 348;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1816,7 +1816,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = 1.9.6;
+				MARKETING_VERSION = 1.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic;
 				PRODUCT_NAME = "Simple Comic";
 				PROVISIONING_PROFILE_SPECIFIER = "";
