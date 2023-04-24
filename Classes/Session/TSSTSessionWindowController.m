@@ -248,7 +248,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	else if([keyPath isEqualToString: TSSTBackgroundColor])
 	{
-		NSColor * color = [NSKeyedUnarchiver unarchiveObjectWithData: [defaults valueForKey: TSSTBackgroundColor]];
+		NSColor * color = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:[defaults valueForKey: TSSTBackgroundColor] error:NULL];
 		[pageScrollView setBackgroundColor: color];
 	}
 	else if([keyPath isEqualToString: TSSTStatusbarVisible])
@@ -304,6 +304,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	
 	[self refreshLoupePanel];
+	
+	[self handleFullscreenCursorHiding];
 }
 
 
@@ -397,6 +399,15 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 					   right: NSMaxX([[bar window] frame])];
 }
 
+- (void)handleFullscreenCursorHiding
+{
+	if ([[self window] isFullscreen])
+	{
+		// Invalidate eventual previous timer to prevent cursor flickering
+		[mouseMovedTimer invalidate];
+		mouseMovedTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(hideCursor) userInfo:nil repeats:NO];
+	}
+}
 
 #pragma mark - Actions
 
@@ -1052,12 +1063,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)hideCursor
 {
+	[mouseMovedTimer invalidate];
 	mouseMovedTimer = nil;
-
-	if([[self window] isFullscreen])
-	{
-		[NSCursor setHiddenUntilMouseMoves: YES];
-	}
+	[NSCursor setHiddenUntilMouseMoves: YES];
 }
 
 
@@ -1069,7 +1077,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 	NSInteger loupeDiameter = [defaults integerForKey: TSSTLoupeDiameter];
 	[loupeWindow setFrame:NSMakeRect(0,0, loupeDiameter, loupeDiameter) display: NO];
-	NSColor * color = [NSKeyedUnarchiver unarchiveObjectWithData: [defaults valueForKey: TSSTBackgroundColor]];
+	NSColor * color = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:[defaults valueForKey: TSSTBackgroundColor] error:NULL];
 	[pageScrollView setBackgroundColor: color];
 	[pageView setRotation: session.rotation];
 	NSValue * positionValue;
@@ -1077,7 +1085,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	
 	if(posData)
 	{
-		positionValue = [NSKeyedUnarchiver unarchiveObjectWithData: posData];
+		positionValue = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSValue class] fromData:posData error:NULL];
 		if (!positionValue) {
 			positionValue = [NSUnarchiver unarchiveObjectWithData: posData];
 		}
@@ -1086,7 +1094,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		if(scrollData)
 		{
 			[self setShouldCascadeWindows: NO];
-			positionValue = [NSKeyedUnarchiver unarchiveObjectWithData: scrollData];
+			positionValue = [NSKeyedUnarchiver unarchivedObjectOfClass: [NSValue class] fromData: scrollData error: NULL];
 			if (!positionValue) {
 				positionValue = [NSUnarchiver unarchiveObjectWithData: scrollData];
 			}
@@ -1356,11 +1364,11 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
     if(![[self window] isFullscreen])
     {
         NSValue * postionValue = [NSValue valueWithRect: [[self window] frame]];
-        NSData * posData = [NSKeyedArchiver archivedDataWithRootObject: postionValue];
+        NSData * posData = [NSKeyedArchiver archivedDataWithRootObject: postionValue requiringSecureCoding: YES error: NULL];
         session.position = posData;
         
         postionValue = [NSValue valueWithPoint: [[pageView enclosingScrollView] documentVisibleRect].origin];
-        posData = [NSKeyedArchiver archivedDataWithRootObject: postionValue];
+        posData = [NSKeyedArchiver archivedDataWithRootObject: postionValue requiringSecureCoding: YES error: NULL];
         session.scrollPosition = posData;
     }
     else
@@ -1632,6 +1640,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			[NSCursor hide];
 		}
 		[self refreshLoupePanel];
+		[self handleFullscreenCursorHiding];
     }
 }
 
@@ -1808,6 +1817,13 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
 //    [self resizeWindow];
 	[self refreshLoupePanel];
+	[self hideCursor];
+}
+
+- (void)windowWillExitFullScreen:(NSNotification *)notification
+{
+	[mouseMovedTimer invalidate];
+	mouseMovedTimer = nil;
 }
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification

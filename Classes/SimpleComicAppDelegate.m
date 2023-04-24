@@ -199,7 +199,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		  TSSTPageScaleOptions: @1,
 		  TSSTTwoPageSpread: @YES,
 		  TSSTScrollersVisible: @YES,
-		  TSSTBackgroundColor: [NSKeyedArchiver archivedDataWithRootObject: [NSColor whiteColor]],
+		  TSSTBackgroundColor: [NSKeyedArchiver archivedDataWithRootObject: [NSColor whiteColor] requiringSecureCoding: YES error: NULL],
 		  TSSTConstrainScale: @YES,
 		  TSSTWindowAutoResize: @YES,
 		  TSSTEnableSwipe: @NO,
@@ -218,10 +218,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		[defaults registerDefaults: standardDefaults];
 		NSData *colorData = [defaults dataForKey: TSSTBackgroundColor];
 		// Convert old NSArchiver color key to NSKeyedArchiver, if needed
-		if ([NSKeyedUnarchiver unarchiveObjectWithData: colorData] == nil) {
+		if ([NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:colorData error:NULL] == nil) {
 			NSColor *newColor = [NSUnarchiver unarchiveObjectWithData: colorData];
 			if (newColor && [newColor isKindOfClass: [NSColor class]]) {
-				NSData *newKey = [NSKeyedArchiver archivedDataWithRootObject: newColor];
+				NSData *newKey = [NSKeyedArchiver archivedDataWithRootObject: newColor requiringSecureCoding:YES error:NULL];
 				[defaults setObject: newKey forKey: TSSTBackgroundColor];
 			} else {
 				//shrug

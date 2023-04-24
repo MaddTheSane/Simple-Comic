@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,7 +17,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="140" y="154" width="320" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <view key="contentView" id="247">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="282"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -87,16 +86,16 @@
                         </textFieldCell>
                     </textField>
                     <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="238">
-                        <rect key="frame" x="14" y="244" width="20" height="20"/>
+                        <rect key="frame" x="11" y="242" width="26" height="24"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="20" id="LcY-29-3Cg"/>
                             <constraint firstAttribute="height" constant="20" id="oZD-F6-H5Q"/>
                         </constraints>
                         <color key="color" red="0.058130499000000002" green="0.055541898999999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <connections>
-                            <binding destination="42" name="value" keyPath="values.pageBackgroundColor" id="242">
+                            <binding destination="42" name="value" keyPath="values.pageBackgroundColor" id="FDp-gK-LPg">
                                 <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSKeyedUnarchiveFromData</string>
+                                    <string key="NSValueTransformerName">NSSecureUnarchiveFromDataTransformer</string>
                                 </dictionary>
                             </binding>
                         </connections>
