@@ -93,9 +93,9 @@
                         </constraints>
                         <color key="color" red="0.058130499000000002" green="0.055541898999999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <connections>
-                            <binding destination="42" name="value" keyPath="values.pageBackgroundColor" id="FDp-gK-LPg">
+                            <binding destination="42" name="value" keyPath="values.pageBackgroundColor" id="hRl-nn-44P">
                                 <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSSecureUnarchiveFromDataTransformer</string>
+                                    <string key="NSValueTransformerName">NSKeyedUnarchiveFromData</string>
                                 </dictionary>
                             </binding>
                         </connections>
