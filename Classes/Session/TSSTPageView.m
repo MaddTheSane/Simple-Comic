@@ -329,59 +329,31 @@ typedef struct {
 	NSGraphicsContext *gcontext = NSGraphicsContext.currentContext;
 	[gcontext saveGraphicsState];
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-	NSColor * color = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:[defaults valueForKey: TSSTBackgroundColor] error:NULL];
+	NSColor * color = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:[defaults dataForKey: TSSTBackgroundColor] error:NULL];
 	self.layer.backgroundColor = [color CGColor];
 
-	NSData *firstPageImageData = firstPageImage.TIFFRepresentation;
-
-	if(firstPageImageData != nil)
 	{
-		CGImageSourceRef firstPageImageSource = CGImageSourceCreateWithData((__bridge CFDataRef)firstPageImageData, NULL);
-		CGImageRef firstPageImageRef =  CGImageSourceCreateImageAtIndex(firstPageImageSource, 0, NULL);
-		CFRelease(firstPageImageSource);
-
 		CALayer *firstPageLayer = [CALayer layer];
-		firstPageLayer.contents = (__bridge id) firstPageImageRef;
+		firstPageLayer.contents = firstPageImage;
 		NSRect frame = [self centerScanRect: firstPageRect];
 		[firstPageLayer setFrame:frame];
 		[newLayer addSublayer:firstPageLayer];
-		CFRelease(firstPageImageRef);
 		CALayer *selectionLayer = [sessionController.tracker layerForImage:firstPageImage imageLayer:firstPageLayer];
 		if (selectionLayer) {
 			[firstPageLayer addSublayer:selectionLayer];
 		}
-	} else {
-		[firstPageImage drawInRect: [self centerScanRect: firstPageRect]
-						  fromRect: NSZeroRect
-						 operation: NSCompositingOperationSourceOver
-						  fraction: 1.0];
 	}
 
 	if([secondPageImage isValid])
 	{
-		NSData *secondPageImageData = secondPageImage.TIFFRepresentation;
-
-		if(secondPageImageData != nil)
-		{
-			CGImageSourceRef secondPageImageSource = CGImageSourceCreateWithData((__bridge CFDataRef)secondPageImageData, NULL);
-			CGImageRef secondPageImageRef =  CGImageSourceCreateImageAtIndex(secondPageImageSource, 0, NULL);
-			CFRelease(secondPageImageSource);
-
-			CALayer *secondPageLayer = [CALayer layer];
-			secondPageLayer.contents = (__bridge id) secondPageImageRef;
-			NSRect frame = [self centerScanRect: secondPageRect];
-			[secondPageLayer setFrame:frame];
-			[newLayer addSublayer:secondPageLayer];
-			CFRelease(secondPageImageRef);
-			CALayer *selectionLayer = [sessionController.tracker layerForImage:secondPageImage imageLayer:secondPageLayer];
-			if (selectionLayer) {
-				[secondPageLayer addSublayer:selectionLayer];
-			}
-		} else {
-			[secondPageImage drawInRect: [self centerScanRect: secondPageRect]
-							   fromRect: NSZeroRect
-							  operation: NSCompositingOperationSourceOver
-							   fraction: 1.0];
+		CALayer *secondPageLayer = [CALayer layer];
+		secondPageLayer.contents = secondPageImage;
+		NSRect frame = [self centerScanRect: secondPageRect];
+		[secondPageLayer setFrame:frame];
+		[newLayer addSublayer:secondPageLayer];
+		CALayer *selectionLayer = [sessionController.tracker layerForImage:secondPageImage imageLayer:secondPageLayer];
+		if (selectionLayer) {
+			[secondPageLayer addSublayer:selectionLayer];
 		}
 	}
 	
