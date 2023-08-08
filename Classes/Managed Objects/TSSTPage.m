@@ -22,6 +22,7 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 #import "TSSTImageUtilities.h"
 #import "TSSTManagedGroup.h"
 #import <XADMaster/XADArchive.h>
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 static NSDictionary * TSSTInfoPageAttributes = nil;
 static NSSize monospaceCharacterSize;
@@ -50,10 +51,18 @@ static NSSize monospaceCharacterSize;
 		NSArray<NSString*> *imgTyp = self.imageTypes;
 		NSMutableSet<NSString*> *aimageTypes = [[NSMutableSet alloc] initWithCapacity:imgTyp.count * 2];
 		for (NSString *uti in imgTyp) {
-			NSArray *fileExts =
-			CFBridgingRelease(UTTypeCopyAllTagsWithClass((__bridge CFStringRef)uti, kUTTagClassFilenameExtension));
+			NSArray *fileExts;
+			if (@available(macOS 11.0, *)) {
+				UTType *fileUTI = [UTType typeWithIdentifier:uti];
+				fileExts = fileUTI.tags[UTTagClassFilenameExtension];
+			} else {
+				fileExts =
+				CFBridgingRelease(UTTypeCopyAllTagsWithClass((__bridge CFStringRef)uti, kUTTagClassFilenameExtension));
+			}
 			[aimageTypes addObjectsFromArray:fileExts];
 		}
+		//Some early JPEGs have the extension jfi/jfif.
+		[aimageTypes addObject:@"jfi"];
 		[aimageTypes addObject:@"jfif"];
 		imageTypes = [[aimageTypes allObjects] sortedArrayUsingSelector:@selector(compare:)];
 	});
