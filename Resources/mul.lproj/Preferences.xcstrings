@@ -1,0 +1,306 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "36.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Pages are never automatically scaled past their actual resolution\"; ObjectID = \"36\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Pages are never automatically scaled past their actual resolution"
+          }
+        }
+      }
+    },
+    "152.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Windows are dynamically resized to fit the page-view and screen\"; ObjectID = \"152\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Windows are dynamically resized to fit the page-view and screen"
+          }
+        }
+      }
+    },
+    "229.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Page scaling constrained by resolution\"; ObjectID = \"229\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skalierung auf Originalgröße beschränken"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Page scaling constrained by resolution"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "原始比例缩放"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "頁面縮放受分辨率限制"
+          }
+        }
+      }
+    },
+    "231.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Automatically resize windows\"; ObjectID = \"231\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fenstergröße automatisch anpassen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Automatically resize windows"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动调整窗口大小"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動調整窗口尺寸"
+          }
+        }
+      }
+    },
+    "234.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Images will not exceed their actual resolution in \\\"fit to window\\\" scaling modes.\"; ObjectID = \"234\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder werden in „An Fenster anpassen“-Ansicht nicht über ihre Originalgröße hinaus vergrößert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Images will not exceed their actual resolution in \"fit to window\" scaling modes."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"最适合窗口\"模式的图片缩放会保持原始比例"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「適合窗口」縮放模式中圖片不會超過其實際分辨率。"
+          }
+        }
+      }
+    },
+    "235.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Windows automatically resize to maximize viewing area.\"; ObjectID = \"235\";",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fenstergröße wird automatisch an die Seitengröße angepasst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windows automatically resize to maximize viewing area."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windows automatically resize to maximise viewing area."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "窗口自动调整到最大显示大小"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "窗口會自動調整以最大限度利用可視面積。"
+          }
+        }
+      }
+    },
+    "239.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Background color\"; ObjectID = \"239\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hintergrundfarbe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Background color"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background colour"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "背景色"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "背景顏色"
+          }
+        }
+      }
+    },
+    "244.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"This color is displayed around pages in fullscreen mode.\"; ObjectID = \"244\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Farbe wird in der Vollbildansicht außerhalb der Seiten angezeigt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This color is displayed around pages in fullscreen mode."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This colour is displayed around pages in fullscreen mode."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全屏模式下的背景颜色"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全屏模式下這種顏色會在畫頁周圍顯示。"
+          }
+        }
+      }
+    },
+    "246.title" : {
+      "comment" : "Class = \"NSWindow\"; title = \"Preferences\"; ObjectID = \"246\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Preferences"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "偏好设置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "偏好設置"
+          }
+        }
+      }
+    },
+    "251.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Recognize Text so you can select and copy it.\"; ObjectID = \"251\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Recognize Text so you can select and copy it."
+          }
+        }
+      }
+    },
+    "252.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Recognize Text so you can select and copy it. Requires macOS 11 or newer.\"; ObjectID = \"252\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Recognize Text so you can select and copy it. Requires macOS 11 or newer."
+          }
+        }
+      }
+    },
+    "253.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Recognize Text\"; ObjectID = \"253\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Recognize Text"
+          }
+        }
+      }
+    },
+    "AH5-fb-l75.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Windows automatically resize to maximize viewing area.\"; ObjectID = \"AH5-fb-l75\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Windows automatically resize to maximize viewing area."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

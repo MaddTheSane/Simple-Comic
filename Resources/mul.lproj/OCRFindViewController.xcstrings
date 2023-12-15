@@ -1,0 +1,114 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "8vg-dd-Evw.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"9999\"; ObjectID = \"8vg-dd-Evw\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "9999"
+          }
+        }
+      }
+    },
+    "600.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Done\"; ObjectID = \"600\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "601.placeholderString" : {
+      "comment" : "Class = \"NSSearchFieldCell\"; placeholderString = \"Find\"; ObjectID = \"601\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Find"
+          }
+        }
+      }
+    },
+    "602.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Page:\"; ObjectID = \"602\";",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page:"
+          }
+        }
+      }
+    },
+    "603.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Cancel\"; ObjectID = \"603\";",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "aPq-tp-CkM.ibShadowedLabels[0]" : {
+      "comment" : "Class = \"NSSegmentedCell\"; aPq-tp-CkM.ibShadowedLabels[0] = \"<\"; ObjectID = \"aPq-tp-CkM\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "<"
+          }
+        }
+      }
+    },
+    "aPq-tp-CkM.ibShadowedLabels[1]" : {
+      "comment" : "Class = \"NSSegmentedCell\"; aPq-tp-CkM.ibShadowedLabels[1] = \">\"; ObjectID = \"aPq-tp-CkM\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : ">"
+          }
+        }
+      }
+    },
+    "ftU-SQ-dHE.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Page:\"; ObjectID = \"ftU-SQ-dHE\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Page:"
+          }
+        }
+      }
+    },
+    "WHS-7N-EuX.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Cancel\"; ObjectID = \"WHS-7N-EuX\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Cancel"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
