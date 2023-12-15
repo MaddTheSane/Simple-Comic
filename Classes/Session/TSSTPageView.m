@@ -303,7 +303,7 @@ typedef struct {
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard *pboard = [sender draggingPasteboard];
-	if([[pboard types] containsObject: NSFilenamesPboardType] || [[pboard types] containsObject: (__bridge NSString*)kUTTypeFileURL])
+	if([[pboard types] containsObject: NSFilenamesPboardType] || [[pboard types] containsObject: NSPasteboardTypeFileURL])
 	{
 		return YES;
 	}
