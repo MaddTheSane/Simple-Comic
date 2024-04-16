@@ -41,6 +41,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 @interface TSSTSessionWindowController()<OCRFindDelegate, OCRTrackerDelegate>
 @property(nonatomic, readonly) OCRFind *find;
 @property OCRVision *ocrVision API_AVAILABLE(macos(10.15));
+@property (weak) IBOutlet DTToolbarItem *thumbnailToolbar;
 @end
 
 @implementation TSSTSessionWindowController
@@ -678,6 +679,38 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (IBAction)togglePageExpose:(id)sender
 {
+#if 1
+	if (![_thumbPopover isShown]) {
+		// Create view controller
+//		NSViewController *viewController = [[NSViewController alloc] init];
+//		viewController.view = exposeView;
+		
+		// Create popover
+//		_thumbsPopover = [[NSPopover alloc] init];
+//		[_thumbsPopover setContentSize:NSMakeSize(200.0, 200.0)];
+//		[_thumbsPopover setBehavior:NSPopoverBehaviorApplicationDefined];
+//		[_thumbsPopover setAnimates:YES];
+//		[_thumbsPopover setContentViewController:viewController];
+		
+		[(TSSTThumbnailView *)exposeView buildTrackingRects];
+		
+		if (@available(macOS 14.0, *)) {
+			[_thumbPopover showRelativeToToolbarItem:_thumbnailToolbar];
+		} else {
+			// Convert point to main window coordinates
+			NSRect entryRect = [progressBar convertRect:progressBar.bounds
+												 toView:exposeView];
+			
+			// Show popover
+			[_thumbPopover showRelativeToRect:entryRect
+									   ofView:exposeView
+								preferredEdge:NSMinYEdge];
+		}
+		[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
+	} else {
+		[_thumbPopover performClose:sender];
+	}
+#else
 	if([exposeBezel isVisible])
 	{
 		[[thumbnailPanel parentWindow] removeChildWindow: thumbnailPanel];
@@ -694,6 +727,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		[exposeBezel makeKeyAndOrderFront: self];
 		[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
 	}
+#endif
 }
 
 

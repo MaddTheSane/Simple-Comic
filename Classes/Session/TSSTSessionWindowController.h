@@ -28,6 +28,7 @@
 @class TSSTInfoWindow;
 @class TSSTManagedSession;
 @class OCRTracker;
+@class TSSTThumbnailView;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -59,6 +60,8 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 /*! Controller for all of the page entities related to the session object */
 @property (weak) IBOutlet NSArrayController * pageController;
 
+@property (weak) IBOutlet NSPopover *thumbPopover;
+
 /*! Where the pages are composited.  Handles all of the drawing logic */
 @property (weak) IBOutlet TSSTPageView  * pageView;
 /*! There is an outlet to this so that the visibility of the
@@ -82,7 +85,7 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 
 /* Panel and view for the page expose method */
 @property (weak) IBOutlet NSPanel * exposeBezel;
-@property (weak) IBOutlet NSView * exposeView;
+@property (weak) IBOutlet TSSTThumbnailView * exposeView;
 @property (weak) IBOutlet TSSTInfoWindow * thumbnailPanel;
 
 @property (copy) NSArray<NSSortDescriptor*> * pageSortDescriptor;

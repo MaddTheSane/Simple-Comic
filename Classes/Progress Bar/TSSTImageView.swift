@@ -30,7 +30,7 @@ class TSSTImageView: NSImageView {
 		//[NSGraphicsContext saveGraphicsState];
 		//[[NSGraphicsContext currentContext] setImageInterpolation: NSImageInterpolationHigh];
 		image?.draw(in: imageRect, from: .zero, operation: .sourceOver, fraction: 1)
-		if let imageName = imageName {
+		if let imageName {
 			imageRect = imageRect.insetBy(dx: 10, dy: 10)
 			var stringRect = imageName.boundingRect(with: imageRect.size, attributes: stringAttributes)
 			stringRect = rectCentered(with: stringRect.size, in: imageRect);
