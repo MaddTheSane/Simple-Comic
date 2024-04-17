@@ -681,12 +681,21 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
 #if 1
 	if (![_thumbPopover isShown]) {
-		// Create view controller
-//		NSViewController *viewController = [[NSViewController alloc] init];
-//		viewController.view = exposeView;
-		
-		// Create popover
-//		_thumbsPopover = [[NSPopover alloc] init];
+		// Size it to take up about 3/4 of the screen
+		{
+			NSScreen *ourScreen = self.window.screen;
+			if (!ourScreen) {
+				ourScreen = NSScreen.mainScreen;
+			}
+			NSRect screenFrame = ourScreen.visibleFrame;
+			// But don't dip too low.
+			
+			NSRect winFrame = self.window.frame;
+			;
+			
+			NSSize ourSize = NSMakeSize((NSMaxX(screenFrame) - NSMinX(winFrame)) * 0.75, (NSMaxY(screenFrame) - NSMinY(winFrame)) * 0.75);
+			[_thumbPopover setContentSize:ourSize];
+		}
 //		[_thumbsPopover setContentSize:NSMakeSize(200.0, 200.0)];
 //		[_thumbsPopover setBehavior:NSPopoverBehaviorApplicationDefined];
 //		[_thumbsPopover setAnimates:YES];
@@ -704,7 +713,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			// Show popover
 			[_thumbPopover showRelativeToRect:entryRect
 									   ofView:exposeView
-								preferredEdge:NSMinYEdge];
+								preferredEdge:NSRectEdgeMinY];
 		}
 		[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
 	} else {
