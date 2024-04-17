@@ -82,24 +82,24 @@ class TSSTThumbnailView: NSView {
 		autoreleasepool() {
 			threadIdent += 1
 			let localIdent = threadIdent
-			thumbLock.lock()
-			let pageCount: Int = (pageController!.content! as AnyObject).count
-			limit = 0
-			while limit < (pageCount) && localIdent == threadIdent &&
-				dataSource?.responds(to: #selector(TSSTSessionWindowController.imageForPage(at:))) ?? false {
-				autoreleasepool() {
-					dataSource!.imageForPage(at: limit)
-					if (limit % 5) == 0 {
-						DispatchQueue.main.async {
-							if self.window!.isVisible {
-								self.needsDisplay = true
+			thumbLock.withLock {
+				let pageCount: Int = (pageController!.content! as AnyObject).count
+				limit = 0
+				while limit < (pageCount) && localIdent == threadIdent &&
+					dataSource?.responds(to: #selector(TSSTSessionWindowController.imageForPage(at:))) ?? false {
+					autoreleasepool() {
+						dataSource!.imageForPage(at: limit)
+						if (limit % 5) == 0 {
+							DispatchQueue.main.async {
+								if self.window!.isVisible {
+									self.needsDisplay = true
+								}
 							}
 						}
+						limit += 1
 					}
-					limit += 1
 				}
 			}
-			thumbLock.unlock()
 		}
 		DispatchQueue.main.sync {
 			needsDisplay = true
