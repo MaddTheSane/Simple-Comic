@@ -706,13 +706,10 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		if (@available(macOS 14.0, *)) {
 			[_thumbPopover showRelativeToToolbarItem:_thumbnailToolbar];
 		} else {
-			// Convert point to main window coordinates
-			NSRect entryRect = [progressBar convertRect:progressBar.bounds
-												 toView:exposeView];
-			
+			NSView *theView = [_thumbnailToolbar view];
 			// Show popover
-			[_thumbPopover showRelativeToRect:entryRect
-									   ofView:exposeView
+			[_thumbPopover showRelativeToRect:theView.bounds
+									   ofView:theView
 								preferredEdge:NSRectEdgeMinY];
 		}
 		[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
