@@ -12,7 +12,7 @@ class TSSTThumbnailView: NSView {
 	@IBOutlet weak var pageController: NSArrayController!
 	@IBOutlet weak var thumbnailView: TSSTImageView!
 	
-	@objc weak var dataSource: TSSTSessionWindowController?
+	@IBOutlet weak var dataSource: TSSTSessionWindowController?
 	
 	private var trackingRects = IndexSet()
 	private var trackingIndexes = Set<NSNumber>()
@@ -187,10 +187,12 @@ class TSSTThumbnailView: NSView {
 	}
 	
 	override func mouseDown(with theEvent: NSEvent) {
-		if let hoverIndex = hoverIndex, hoverIndex < (pageController.content! as AnyObject).count && hoverIndex >= 0 {
+		if let hoverIndex,
+		   hoverIndex < (pageController.content! as AnyObject).count,
+		   hoverIndex >= 0 {
 			pageController.setSelectionIndex(hoverIndex)
 		}
-		window?.orderOut(self)
+		dataSource?.thumbPopover?.close()
 	}
 	
 	override func keyDown(with theEvent: NSEvent) {
@@ -199,7 +201,8 @@ class TSSTThumbnailView: NSView {
 		}
 		
 		if let nsChar = chars.utf16.first, nsChar == 27 {
-			(window!.windowController! as! TSSTSessionWindowController).killTopOptionalUIElement()
+			dataSource?.thumbPopover?.close()
+//			(window!.windowController! as! TSSTSessionWindowController).killTopOptionalUIElement()
 		}
 	}
 }
