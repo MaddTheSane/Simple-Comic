@@ -19,10 +19,20 @@ internal let fileSort: [NSSortDescriptor] = {
 private let imageFileTypes = {
 	let imageTypes = NSImage.imageTypes
 	var imageExtensions = Set<String>()
-	for uti in imageTypes {
-		if let aUT = UTType(uti),
-		   let tmpExt = aUT.tags[.filenameExtension] {
-			imageExtensions.formUnion(tmpExt)
+	if #available(macOSApplicationExtension 11.0, *) {
+		for uti in imageTypes {
+			if let aUT = UTType(uti),
+			   let tmpExt = aUT.tags[.filenameExtension] {
+				imageExtensions.formUnion(tmpExt)
+			}
+		}
+	} else {
+		// Yay, we have to use the old CFType functions!
+		for uti in imageTypes {
+			if let tmpCFExt = UTTypeCopyAllTagsWithClass(uti as NSString, kUTTagClassFilenameExtension)?.takeRetainedValue(),
+			let tmpExt = tmpCFExt as? [String] {
+				imageExtensions.formUnion(tmpExt)
+			}
 		}
 	}
 	// Some older archives might store jpeg images as jfif
