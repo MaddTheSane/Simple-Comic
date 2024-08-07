@@ -530,8 +530,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	else
 	{
-		index = ([pageController selectionIndex] - 10);
-		index = index > 0 ? index : 0;
+		index = [pageController selectionIndex] > 10 ? [pageController selectionIndex] - 10 : 0;
 	}
 	
 	[pageController setSelectionIndex: index];
@@ -548,8 +547,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	else
 	{
-		index = ([pageController selectionIndex] - 10);
-		index = index > 0 ? index : 0;
+		index = [pageController selectionIndex] > 10 ? [pageController selectionIndex] - 10 : 0;
 	}
 	[pageController setSelectionIndex: index];
 }
