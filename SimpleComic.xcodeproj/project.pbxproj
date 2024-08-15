@@ -41,6 +41,8 @@
 		5528C69F2953D19E0005EE8B /* QuickComic Thumbnailer.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 55517ACA294BD686009734A9 /* QuickComic Thumbnailer.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		552F38B71CF2CE1000CD6063 /* Sessions_DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 287D0C0310F058BB00207768 /* Sessions_DataModel.xcdatamodeld */; };
 		5538C2021C0E1A7C00744130 /* TSSTInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5538C2011C0E1A7C00744130 /* TSSTInfoView.swift */; };
+		5541C9AE2C6D806600A61EB9 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5541C9912C6D7FB100A61EB9 /* PreviewViewController.swift */; };
+		5541C9AF2C6D809C00A61EB9 /* PreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5541C9952C6D7FB100A61EB9 /* PreviewViewController.xib */; };
 		554564792B2BC6F100983407 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 554564782B2BC6F000983407 /* InfoPlist.xcstrings */; };
 		5545647E2B2BC6F100983407 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5545647D2B2BC6F100983407 /* Localizable.xcstrings */; };
 		554A1C0226478396009FE60D /* TSSTSessionWindowController+NSTouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A1C0126478396009FE60D /* TSSTSessionWindowController+NSTouchBar.swift */; };
@@ -78,7 +80,6 @@
 		55C7D7901C4C06FF005F40C8 /* TSSTInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78F1C4C06FF005F40C8 /* TSSTInfoWindow.swift */; };
 		55DC3817235EAA4200132291 /* WebPMac.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 55871ECB235D708900528BDF /* WebPMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		55EE6BB02945CA5B00C1AAE7 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28BD08E50C9836E600BD7EAF /* Quartz.framework */; };
-		55EE6BB52945CA5B00C1AAE7 /* PreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */; };
 		55EE6BD62945CD4500C1AAE7 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; };
 		55EE6BD92945D40300C1AAE7 /* QuickComicCommonSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EE6BD82945D40300C1AAE7 /* QuickComicCommonSwift.swift */; };
 		55EE6BDF2945D4AA00C1AAE7 /* TSSTSortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 286AEDB60C4161C20031E3D9 /* TSSTSortDescriptor.m */; };
@@ -384,6 +385,8 @@
 		552627901BDEEC5E005AAF63 /* TSSTKeyWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSTKeyWindow.swift; sourceTree = "<group>"; };
 		552627941BDEEF85005AAF63 /* TSSTTransparentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSTTransparentView.swift; sourceTree = "<group>"; };
 		5538C2011C0E1A7C00744130 /* TSSTInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSTInfoView.swift; sourceTree = "<group>"; };
+		5541C9912C6D7FB100A61EB9 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		5541C9962C6D7FB100A61EB9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PreviewViewController.xib; sourceTree = "<group>"; };
 		554564692B2BC6F000983407 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/MainMenu.xcstrings; sourceTree = "<group>"; };
 		554564782B2BC6F000983407 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		5545647A2B2BC6F100983407 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/OCRFindViewController.xcstrings; sourceTree = "<group>"; };
@@ -788,6 +791,8 @@
 			isa = PBXGroup;
 			children = (
 				55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */,
+				5541C9912C6D7FB100A61EB9 /* PreviewViewController.swift */,
+				5541C9952C6D7FB100A61EB9 /* PreviewViewController.xib */,
 				55EE6BB92945CA5B00C1AAE7 /* Info.plist */,
 				55EE6BBA2945CA5B00C1AAE7 /* QuickComic_Preview.entitlements */,
 				55EE6BDC2945D49A00C1AAE7 /* QuickComic Preview-Bridging-Header.h */,
@@ -977,7 +982,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				CLASSPREFIX = TSST;
-				LastSwiftUpdateCheck = 1420;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "Dancing Tortoise Software";
 				TargetAttributes = {
@@ -1180,6 +1185,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5541C9AF2C6D809C00A61EB9 /* PreviewViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1238,7 +1244,7 @@
 			files = (
 				55EE6BDF2945D4AA00C1AAE7 /* TSSTSortDescriptor.m in Sources */,
 				55EE6BD92945D40300C1AAE7 /* QuickComicCommonSwift.swift in Sources */,
-				55EE6BB52945CA5B00C1AAE7 /* PreviewProvider.swift in Sources */,
+				5541C9AE2C6D806600A61EB9 /* PreviewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1408,6 +1414,14 @@
 				5545647C2B2BC6F100983407 /* mul */,
 			);
 			name = TSSTSessionWindow.xib;
+			sourceTree = "<group>";
+		};
+		5541C9952C6D7FB100A61EB9 /* PreviewViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5541C9962C6D7FB100A61EB9 /* Base */,
+			);
+			name = PreviewViewController.xib;
 			sourceTree = "<group>";
 		};
 		63A57A172872683F00D0A88B /* OCRFindViewController.xib */ = {
