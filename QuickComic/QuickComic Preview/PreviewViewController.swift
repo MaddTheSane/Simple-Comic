@@ -10,7 +10,9 @@ import Cocoa
 import Quartz
 import XADMaster
 
-class PreviewViewController: NSViewController, QLPreviewingController, NSCollectionViewDataSource {
+let thumbViewIdentifier = NSUserInterfaceItemIdentifier("TSSTThumbViewIdentifier")
+
+class PreviewViewController: NSViewController, QLPreviewingController, NSCollectionViewDataSource, NSCollectionViewDelegate {
 	
 	private var archive: XADArchive?
 	private var filesList: [[String: Any]] = []
@@ -25,6 +27,7 @@ class PreviewViewController: NSViewController, QLPreviewingController, NSCollect
 	
 	override func loadView() {
 		super.loadView()
+		collectionView.register(ThumbViewItem.self, forItemWithIdentifier: thumbViewIdentifier)
 		// Do any additional setup after loading the view.
 	}
 	
@@ -49,7 +52,7 @@ class PreviewViewController: NSViewController, QLPreviewingController, NSCollect
 		}
 		filesList = fList
 		
-		// Load the first image. Assume all pages are that big.
+		// Load the first image. Assume all pages are at least that big.
 		let pdfSize: CGSize
 		if let firstIdx = fList.first?["index"] as? Int,
 		   let fileData = try? archiv.contents(ofEntry: firstIdx),
@@ -59,15 +62,30 @@ class PreviewViewController: NSViewController, QLPreviewingController, NSCollect
 			pdfSize = CGSize(width: 800, height: 600)
 		}
 		baseSize = pdfSize
+		collectionView.reloadData()
 	}
 	
 	// MARK: - NSCollectionViewDataSource
 	
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-		filesList.count
+		assert(self.collectionView === collectionView)
+		return filesList.count
 	}
 	
 	func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-		return NSCollectionViewItem()
+		assert(self.collectionView === collectionView)
+		let item = collectionView.makeItem(withIdentifier: thumbViewIdentifier, for: indexPath) as! ThumbViewItem
+		let idx = indexPath.first!
+		item.archive = archive
+		item.entryIndex = filesList[idx]["index"] as! Int
+		return item
 	}
+	
+	// MARK: - NSCollectionViewDelegate
+
+	func collectionView(_ collectionView: NSCollectionView, willDisplay item: NSCollectionViewItem, forRepresentedObjectAt indexPath: IndexPath) {
+		assert(self.collectionView === collectionView)
+		(item as! ThumbViewItem).loadImageFromArchive()
+	}
+	
 }

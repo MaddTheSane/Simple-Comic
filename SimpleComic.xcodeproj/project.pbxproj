@@ -46,6 +46,8 @@
 		554564792B2BC6F100983407 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 554564782B2BC6F000983407 /* InfoPlist.xcstrings */; };
 		5545647E2B2BC6F100983407 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5545647D2B2BC6F100983407 /* Localizable.xcstrings */; };
 		554A1C0226478396009FE60D /* TSSTSessionWindowController+NSTouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A1C0126478396009FE60D /* TSSTSessionWindowController+NSTouchBar.swift */; };
+		554DDAED2C6FF9EE0011CCC0 /* ThumbViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554DDAEB2C6FF9EE0011CCC0 /* ThumbViewItem.swift */; };
+		554DDAEE2C6FF9EE0011CCC0 /* ThumbViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 554DDAEC2C6FF9EE0011CCC0 /* ThumbViewItem.xib */; };
 		55517ACC294BD686009734A9 /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55517ACB294BD686009734A9 /* QuickLookThumbnailing.framework */; };
 		55517ACD294BD686009734A9 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28BD08E50C9836E600BD7EAF /* Quartz.framework */; };
 		55517AD0294BD686009734A9 /* ThumbnailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55517ACF294BD686009734A9 /* ThumbnailProvider.swift */; };
@@ -394,6 +396,8 @@
 		5545647C2B2BC6F100983407 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/TSSTSessionWindow.xcstrings; sourceTree = "<group>"; };
 		5545647D2B2BC6F100983407 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		554A1C0126478396009FE60D /* TSSTSessionWindowController+NSTouchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TSSTSessionWindowController+NSTouchBar.swift"; sourceTree = "<group>"; };
+		554DDAEB2C6FF9EE0011CCC0 /* ThumbViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbViewItem.swift; sourceTree = "<group>"; };
+		554DDAEC2C6FF9EE0011CCC0 /* ThumbViewItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThumbViewItem.xib; sourceTree = "<group>"; };
 		55517ACA294BD686009734A9 /* QuickComic Thumbnailer.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "QuickComic Thumbnailer.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55517ACB294BD686009734A9 /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
 		55517ACF294BD686009734A9 /* ThumbnailProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailProvider.swift; sourceTree = "<group>"; };
@@ -796,6 +800,8 @@
 				55EE6BB92945CA5B00C1AAE7 /* Info.plist */,
 				55EE6BBA2945CA5B00C1AAE7 /* QuickComic_Preview.entitlements */,
 				55EE6BDC2945D49A00C1AAE7 /* QuickComic Preview-Bridging-Header.h */,
+				554DDAEB2C6FF9EE0011CCC0 /* ThumbViewItem.swift */,
+				554DDAEC2C6FF9EE0011CCC0 /* ThumbViewItem.xib */,
 			);
 			path = "QuickComic Preview";
 			sourceTree = "<group>";
@@ -1185,6 +1191,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				554DDAEE2C6FF9EE0011CCC0 /* ThumbViewItem.xib in Resources */,
 				5541C9AF2C6D809C00A61EB9 /* PreviewViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1242,6 +1249,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				554DDAED2C6FF9EE0011CCC0 /* ThumbViewItem.swift in Sources */,
 				55EE6BDF2945D4AA00C1AAE7 /* TSSTSortDescriptor.m in Sources */,
 				55EE6BD92945D40300C1AAE7 /* QuickComicCommonSwift.swift in Sources */,
 				5541C9AE2C6D806600A61EB9 /* PreviewViewController.swift in Sources */,
