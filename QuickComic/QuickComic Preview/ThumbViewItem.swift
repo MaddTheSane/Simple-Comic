@@ -9,6 +9,8 @@
 import Cocoa
 import XADMaster
 
+let theQueue = DispatchQueue(label: "com.ToWatchList.SimpleComic.QuickComic-Preview.archiver", qos: .background, target: nil)
+
 class ThumbViewItem: NSCollectionViewItem {
 	@IBOutlet weak var throbber: NSProgressIndicator!
 	
@@ -21,14 +23,14 @@ class ThumbViewItem: NSCollectionViewItem {
     }
     
 	func loadImageFromArchive() {
-		//TODO: this looks ugly to my untrained eye. Have someone else go over it or learn more about concurrency
-		Task.detached(priority: .background) {
-			guard let archive = await self.archive else {
-				return
-			}
+		theQueue.async {
 			do {
-				let fileData = try await archive.contents(ofEntry: self.entryIndex)
-				// NSImage is not sendable...
+				guard let archive = self.archive else {
+					return
+				}
+
+				let fileData = try archive.contents(ofEntry: self.entryIndex)
+				
 				Task { @MainActor in
 					if let img = NSImage(data: fileData) {
 						self.imageView?.image = img
@@ -42,5 +44,5 @@ class ThumbViewItem: NSCollectionViewItem {
 				}
 			}
 		}
-	}	
+	}
 }

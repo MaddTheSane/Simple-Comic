@@ -75,7 +75,7 @@ class PreviewViewController: NSViewController, QLPreviewingController, NSCollect
 	func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
 		assert(self.collectionView === collectionView)
 		let item = collectionView.makeItem(withIdentifier: thumbViewIdentifier, for: indexPath) as! ThumbViewItem
-		let idx = indexPath.first!
+		let idx = indexPath.item
 		item.archive = archive
 		item.entryIndex = filesList[idx]["index"] as! Int
 		return item

@@ -19,18 +19,23 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="59Z-zG-C4p">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="ajQ-EK-kXt"/>
+                </imageView>
                 <progressIndicator maxValue="100" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="mug-4l-x62">
                     <rect key="frame" x="224" y="120" width="32" height="32"/>
                 </progressIndicator>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="59Z-zG-C4p">
-                    <rect key="frame" x="20" y="204" width="48" height="48"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="ajQ-EK-kXt"/>
-                </imageView>
             </subviews>
             <constraints>
+                <constraint firstItem="59Z-zG-C4p" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="B0i-F4-7jh"/>
                 <constraint firstItem="mug-4l-x62" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="SDE-E4-ML2"/>
+                <constraint firstItem="mug-4l-x62" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="20" symbolic="YES" id="Voo-TT-h04"/>
                 <constraint firstItem="mug-4l-x62" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="XRZ-EG-76n"/>
+                <constraint firstAttribute="trailing" secondItem="59Z-zG-C4p" secondAttribute="trailing" id="iTh-KW-rQw"/>
+                <constraint firstItem="59Z-zG-C4p" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="rSR-Wd-Abb"/>
+                <constraint firstItem="mug-4l-x62" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="sMg-Ha-UEC"/>
+                <constraint firstAttribute="bottom" secondItem="59Z-zG-C4p" secondAttribute="bottom" id="zsa-Ip-DkQ"/>
             </constraints>
             <point key="canvasLocation" x="14" y="135"/>
         </customView>
