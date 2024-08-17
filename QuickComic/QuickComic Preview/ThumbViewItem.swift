@@ -19,7 +19,7 @@ class ThumbViewItem: NSCollectionViewItem {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
+		throbber.startAnimation(nil)
     }
     
 	func loadImageFromArchive() {

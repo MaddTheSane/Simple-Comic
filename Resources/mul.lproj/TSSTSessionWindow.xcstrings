@@ -602,7 +602,7 @@
       }
     },
     "517.label" : {
-      "comment" : "Page Scaling\nClass = \"NSToolbarItem\"; label = \"Page Scaling\"; ObjectID = \"517\";",
+      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Scaling\"; ObjectID = \"517\";\nPage Scaling",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -841,7 +841,7 @@
       }
     },
     "520.label" : {
-      "comment" : "Page Order\nClass = \"NSToolbarItem\"; label = \"Page Order\"; ObjectID = \"520\";",
+      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Order\"; ObjectID = \"520\";\nPage Order",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1080,7 +1080,7 @@
       }
     },
     "523.label" : {
-      "comment" : "Page Layout\nClass = \"NSToolbarItem\"; label = \"Page Layout\"; ObjectID = \"523\";",
+      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Layout\"; ObjectID = \"523\";\nPage Layout",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2097,7 +2097,7 @@
       }
     },
     "585.label" : {
-      "comment" : "Rotate\nClass = \"NSToolbarItem\"; label = \"Rotate\"; ObjectID = \"585\";",
+      "comment" : "Class = \"NSToolbarItem\"; label = \"Rotate\"; ObjectID = \"585\";\nRotate",
       "localizations" : {
         "de" : {
           "stringUnit" : {
