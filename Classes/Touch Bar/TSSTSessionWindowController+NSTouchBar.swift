@@ -47,7 +47,7 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 			
 		case .pageOrder:
 			let item = NSCustomTouchBarItem(identifier: .pageOrder)
-			item.customizationLabel = NSLocalizedString("520.label", tableName: "TSSTSessionWindow", value: "Page Order", comment: "Page Order")
+			item.customizationLabel = NSLocalizedString("Page Order", value: "Page Order", comment: "Page Order")
 
 			let prevNext = NSSegmentedControl(images: [NSImage(named: "rightLeftOrderTemplate")!, NSImage(named: "leftRightOrderTemplate")!], trackingMode: .selectOne, target: nil, action: nil)
 			prevNext.bind(.selectedIndex, to: self, withKeyPath: "session.pageOrder", options: nil)
@@ -58,7 +58,7 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 
 		case .pageLayout:
 			let item = NSCustomTouchBarItem(identifier: .pageLayout)
-			item.customizationLabel = NSLocalizedString("523.label", tableName: "TSSTSessionWindow", value: "Page Layout", comment: "Page Layout")
+			item.customizationLabel = NSLocalizedString("Page Layout", value: "Page Layout", comment: "Page Layout")
 
 			let prevNext = NSSegmentedControl(images: [NSImage(named: "onePageTemplate")!, NSImage(named: "twoPageTemplate")!], trackingMode: .selectOne, target: nil, action: nil)
 			prevNext.bind(.selectedIndex, to: self, withKeyPath: "session.twoPageSpread", options: nil)
@@ -69,7 +69,7 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 
 		case .pageScaling:
 			let item = NSCustomTouchBarItem(identifier: .pageScaling)
-			item.customizationLabel = NSLocalizedString("517.label", tableName: "TSSTSessionWindow", value: "Page Scaling", comment: "Page Scaling")
+			item.customizationLabel = NSLocalizedString("Page Scaling", value: "Page Scaling", comment: "Page Scaling")
 
 			let prevNext = NSSegmentedControl(images: [NSImage(named: "equalTemplate")!, NSImage(named: "winScaleTemplate")!, NSImage(named: "horScaleTemplate")!], trackingMode: .selectOne, target: nil, action: nil)
 			prevNext.bind(.selectedIndex, to: self, withKeyPath: "session.scaleOptions", options: nil)
@@ -80,7 +80,7 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 
 		case .rotate:
 			let item = NSCustomTouchBarItem(identifier: .rotate)
-			item.customizationLabel = NSLocalizedString("585.label", tableName: "TSSTSessionWindow", value: "Rotate", comment: "Rotate")
+			item.customizationLabel = NSLocalizedString("Rotate Label", value: "Rotate", comment: "Rotate")
 			
 			let prevNext = NSSegmentedControl(images: [NSImage(named: NSImage.touchBarRotateLeftTemplateName)!, NSImage(named: NSImage.touchBarRotateRightTemplateName)!], trackingMode: .momentary, target: self, action: #selector(self.rotate(_:)))
 			if #available(macOS 10.13, *) {

@@ -3,7 +3,7 @@
   "strings" : {
     "6.title" : {
       "comment" : "Class = \"NSWindow\"; title = \"Window\"; ObjectID = \"6\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -183,7 +183,7 @@
     },
     "373.title" : {
       "comment" : "Class = \"NSWindow\"; title = \"Window\"; ObjectID = \"373\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -243,7 +243,7 @@
     },
     "483.title" : {
       "comment" : "Class = \"NSWindow\"; title = \"Window\"; ObjectID = \"483\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -602,7 +602,7 @@
       }
     },
     "517.label" : {
-      "comment" : "Page Scaling\nClass = \"NSToolbarItem\"; label = \"Page Scaling\"; ObjectID = \"517\";",
+      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Scaling\"; ObjectID = \"517\";",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -841,7 +841,7 @@
       }
     },
     "520.label" : {
-      "comment" : "Page Order\nClass = \"NSToolbarItem\"; label = \"Page Order\"; ObjectID = \"520\";",
+      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Order\"; ObjectID = \"520\";",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1080,7 +1080,7 @@
       }
     },
     "523.label" : {
-      "comment" : "Page Layout\nClass = \"NSToolbarItem\"; label = \"Page Layout\"; ObjectID = \"523\";",
+      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Layout\"; ObjectID = \"523\";",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2097,7 +2097,7 @@
       }
     },
     "585.label" : {
-      "comment" : "Rotate\nClass = \"NSToolbarItem\"; label = \"Rotate\"; ObjectID = \"585\";",
+      "comment" : "Class = \"NSToolbarItem\"; label = \"Rotate\"; ObjectID = \"585\";",
       "localizations" : {
         "de" : {
           "stringUnit" : {

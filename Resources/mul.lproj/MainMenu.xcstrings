@@ -247,18 +247,6 @@
         }
       }
     },
-    "29.title" : {
-      "comment" : "Class = \"NSMenu\"; title = \"MainMenu\"; ObjectID = \"29\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "MainMenu"
-          }
-        }
-      }
-    },
     "56.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Simple Comic\"; ObjectID = \"56\";",
       "extractionState" : "extracted_with_value",
@@ -2499,30 +2487,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "編碼中"
-          }
-        }
-      }
-    },
-    "1083.title" : {
-      "comment" : "Class = \"NSMenu\"; title = \"OtherViews\"; ObjectID = \"1083\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "OtherViews"
-          }
-        }
-      }
-    },
-    "1086.title" : {
-      "comment" : "Class = \"NSMenuItem\"; title = \"Item1\"; ObjectID = \"1086\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Item1"
           }
         }
       }

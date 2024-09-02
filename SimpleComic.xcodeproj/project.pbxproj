@@ -1825,6 +1825,7 @@
 				SDKROOT = macosx;
 				STRINGS_FILE_OUTPUT_ENCODING = binary;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -1888,6 +1889,7 @@
 				STRINGS_FILE_OUTPUT_ENCODING = binary;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
