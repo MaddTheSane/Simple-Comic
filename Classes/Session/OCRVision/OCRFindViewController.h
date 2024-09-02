@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol OCRFindEngine;
 
 /// UI for \c OCRFind
-@interface OCRFindViewController : NSViewController
+@interface OCRFindViewController : NSViewController <NSMenuItemValidation>
 
 /// Provides requirements of the \c OCRFindViewController
 @property (nullable, weak) id <OCRFindEngine> engine;

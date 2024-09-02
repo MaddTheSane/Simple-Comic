@@ -17,10 +17,10 @@ static CGPathRef CGPathCreateFromNSBezierQuadPath(NSBezierPath *path)
 	{
 		switch ([path elementAtIndex:i associatedPoints:points])
 		{
-			case NSMoveToBezierPathElement:
+			case NSBezierPathElementMoveTo:
 				CGPathMoveToPoint(p, NULL, points[0].x, points[0].y);
 				break;
-			case NSLineToBezierPathElement:
+			case NSBezierPathElementLineTo:
 				CGPathAddLineToPoint(p, NULL, points[0].x, points[0].y);
 				break;
 			case NSBezierPathElementClosePath:

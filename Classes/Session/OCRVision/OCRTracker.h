@@ -15,7 +15,7 @@ extern NSString *const OCRDisableKey;
 @protocol OCRTrackerDelegate;
 
 /// Provide mouse tracking services for an NSImageView to track the recognized text.
-@interface OCRTracker : NSResponder
+@interface OCRTracker : NSResponder <NSMenuItemValidation>
 
 /// The selected text as a single string. Readonly, because it is selected using the mouse. nil if not available.
 @property (readonly, nullable) NSString *selection;
