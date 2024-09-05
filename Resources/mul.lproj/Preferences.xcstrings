@@ -10,6 +10,18 @@
             "state" : "new",
             "value" : "Pages are never automatically scaled past their actual resolution"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ページは実際の解像度を超えて自動的にスケーリングされることはありません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "페이지는 실제 해상도를 초과하여 자동으로 확장되지 않습니다."
+          }
         }
       }
     },
@@ -21,6 +33,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Windows are dynamically resized to fit the page-view and screen"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Windowsは、ページビューと画面に合わせて動的にサイズ変更されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "윈도우는 페이지 뷰와 화면에 맞게 동적으로 크기가 조정됩니다."
           }
         }
       }
@@ -39,6 +63,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Page scaling constrained by resolution"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "解像度によって制約されたページスケーリング"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "해상도에 의해 제한된 페이지 스케일링"
           }
         },
         "zh-Hans" : {
@@ -71,6 +107,18 @@
             "value" : "Automatically resize windows"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ウィンドウのサイズを自動的に変更する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "자동으로 창의 크기를 조정합니다."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -99,6 +147,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Images will not exceed their actual resolution in \"fit to window\" scaling modes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "画像は、「ウィンドウにフィット」スケーリングモードで実際の解像度を超えることはありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "이미지는 \"창에 적합\" 스케일링 모드에서 실제 해상도를 초과하지 않습니다."
           }
         },
         "zh-Hans" : {
@@ -137,6 +197,18 @@
             "value" : "Windows automatically resize to maximise viewing area."
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Windowsは自動的にサイズを変更して、表示領域を最大化します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "윈도우는 보기 영역을 최대화하기 위해 자동으로 크기를 조정합니다."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -171,6 +243,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Background colour"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "背景色"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "배경색"
           }
         },
         "zh-Hans" : {
@@ -209,6 +293,18 @@
             "value" : "This colour is displayed around pages in fullscreen mode."
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "この色は、フルスクリーンモードでページの周りに表示されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "이 색상은 전체 화면 모드에서 페이지 주위에 표시됩니다."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -239,6 +335,18 @@
             "value" : "Preferences"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好み"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선호도"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -262,6 +370,24 @@
             "state" : "new",
             "value" : "Recognize Text so you can select and copy it."
           }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recognise Text so you can select and copy it."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "選択してコピーできるように、テキストを認識します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "텍스트를 인식하여 선택하고 복사할 수 있도록 합니다."
+          }
         }
       }
     },
@@ -273,6 +399,24 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Recognize Text so you can select and copy it. Requires macOS 11 or newer."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recognise Text so you can select and copy it. Requires macOS 11 or newer."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "選択してコピーできるように、テキストを認識します。macOS 11 以降が必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "텍스트를 인식하여 선택하고 복사할 수 있도록 합니다. macOS 11 이상이 필요합니다."
           }
         }
       }
@@ -286,6 +430,18 @@
             "state" : "new",
             "value" : "Recognize Text"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "テキストを認識する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "텍스트 인식"
+          }
         }
       }
     },
@@ -297,6 +453,24 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Windows automatically resize to maximize viewing area."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windows automatically resize to maximise viewing area."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Windowsは自動的にサイズを変更して、表示領域を最大化します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "윈도우는 보기 영역을 최대화하기 위해 자동으로 크기를 조정합니다."
           }
         }
       }

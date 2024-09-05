@@ -666,7 +666,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 		NSInteger i = 0;
 		NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Contextual Menu", @"")];
 		[theMenu insertItemWithTitle:NSLocalizedString(@"Copy", @"") action:@selector(copy:) keyEquivalent:@"" atIndex:i++];
-		[theMenu insertItemWithTitle:NSLocalizedString(@"Look up", @"") action:@selector(lookUp:) keyEquivalent:@"" atIndex:i++];
+		[theMenu insertItemWithTitle:NSLocalizedString(@"Look Up", @"") action:@selector(lookUp:) keyEquivalent:@"" atIndex:i++];
 		[theMenu insertItem:[NSMenuItem separatorItem] atIndex:i++];
 		[theMenu insertItemWithTitle:NSLocalizedString(@"Start Speaking", @"") action:@selector(startSpeaking:) keyEquivalent:@"" atIndex:i++];
 		[theMenu insertItemWithTitle:NSLocalizedString(@"Stop Speaking", @"") action:@selector(stopSpeaking:) keyEquivalent:@"" atIndex:i++];

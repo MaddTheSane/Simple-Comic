@@ -11,7 +11,8 @@
             "value" : "9999"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "600.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Done\"; ObjectID = \"600\";",
@@ -57,30 +58,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
-          }
-        }
-      }
-    },
-    "aPq-tp-CkM.ibShadowedLabels[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; aPq-tp-CkM.ibShadowedLabels[0] = \"<\"; ObjectID = \"aPq-tp-CkM\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "<"
-          }
-        }
-      }
-    },
-    "aPq-tp-CkM.ibShadowedLabels[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; aPq-tp-CkM.ibShadowedLabels[1] = \">\"; ObjectID = \"aPq-tp-CkM\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : ">"
           }
         }
       }

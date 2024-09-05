@@ -8,6 +8,30 @@
             "state" : "translated",
             "value" : "7-Zip-Archiv"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archives 7-Zip"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio 7-Zip"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7-Zipアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7-Zip 아카이브"
+          }
         }
       }
     },
@@ -17,6 +41,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "7-Zip-Comicarchiv"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archives de bandes dessinées 7-Zip"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio di fumetti 7-Zip"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7-Zipコミックアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7-Zip 만화 아카이브"
           }
         }
       }
@@ -28,6 +76,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Simple Comic"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Simple Comic"
           }
         }
@@ -47,16 +101,70 @@
             "state" : "translated",
             "value" : "tar comic archive"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archive de la bande dessinée de goudron"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio dei fumetti di tar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "タールコミックアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "타르 만화 아카이브"
+          }
         }
       }
     },
     "com.microsoft.cur" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microsoft Windows-Cursor"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Microsoft Windows Cursor"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Curseur Microsoft Windows"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Cursore di Microsoft Windows"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "マイクロソフト ウィンドウズ カーソル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "마이크로소프트 윈도우 커서"
           }
         }
       }
@@ -75,6 +183,30 @@
             "state" : "translated",
             "value" : "RAR comic archive"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archives de bandes dessinées RAR"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio dei fumetti RAR"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "RARコミックアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "RAR 만화 아카이브"
+          }
         }
       }
     },
@@ -92,6 +224,30 @@
             "state" : "translated",
             "value" : "Zip comic archive"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archive de bande dessinée zip"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio di fumetti ZIP"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zipコミックアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zip 만화 아카이브"
+          }
         }
       }
     },
@@ -101,6 +257,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "LHA-Archiv"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archives de la LHA"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio LHA"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "LHAアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "LHA 아카이브"
           }
         }
       }
@@ -113,6 +293,24 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Copyright © 2010 Dancing Tortoise Software."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copyright © 2010 Dancing Tortoise Software."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "著作権 © 2010 Dancing Tortoise Software."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저작권 © 2010 Dancing Tortoise Software."
           }
         }
       }
@@ -131,6 +329,30 @@
             "state" : "translated",
             "value" : "7-Zip comic archive"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archives de bandes dessinées 7-Zip"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio di fumetti 7-Zip"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7-Zipコミックアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "7-Zip 만화 아카이브"
+          }
         }
       }
     },
@@ -148,6 +370,30 @@
             "state" : "translated",
             "value" : "WebP image"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Image WebP"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Immagine WebP"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "WebPイメージ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "WebP 이미지"
+          }
         }
       }
     },
@@ -157,6 +403,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "RAR-Archiv"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archives RAR"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio RAR"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "RARアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "RAR 아카이브"
           }
         }
       }
@@ -168,6 +438,30 @@
             "state" : "translated",
             "value" : "RAR-Comicarchiv"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archives de bandes dessinées RAR"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio dei fumetti RAR"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "RARコミックアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "RAR 만화 아카이브"
+          }
         }
       }
     },
@@ -177,6 +471,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tar-Comicarchiv"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archive de la bande dessinée de goudron"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio dei fumetti di tar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "タールコミックアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "타르 만화 아카이브"
           }
         }
       }
@@ -188,11 +506,66 @@
             "state" : "translated",
             "value" : "WebP-Bild"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Image WebP"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Immagine WebP"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "WebPイメージ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "WebP 이미지"
+          }
         }
       }
     },
     "Windows Cursor" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microsoft Windows-Cursor"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Curseur Microsoft Windows"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Cursore di Microsoft Windows"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "マイクロソフト ウィンドウズ カーソル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "마이크로소프트 윈도우 커서"
+          }
+        }
+      }
     },
     "ZIP comic archive" : {
       "localizations" : {
@@ -200,6 +573,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ZIP-Comicarchiv"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archive de bande dessinée zip"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Archivio di fumetti ZIP"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zipコミックアーカイブ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zip 만화 아카이브"
           }
         }
       }

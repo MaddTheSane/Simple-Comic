@@ -31,7 +31,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "\nDrag to crop"
+            "value" : "\n드래그하여 자르기"
           }
         },
         "pt" : {
@@ -77,13 +77,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Cancel"
+            "value" : "中止する"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Cancel"
+            "value" : "취소"
           }
         },
         "pt" : {
@@ -135,7 +135,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Click to select page"
+            "value" : "페이지를 선택하려면 클릭하세요"
           }
         },
         "pt" : {
@@ -194,13 +194,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Could not save changes while quitting. Quit anyway?"
+            "value" : "終了中に変更を保存できませんでした。とにかく辞める？"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Could not save changes while quitting. Quit anyway?"
+            "value" : "종료하는 동안 변경 사항을 저장할 수 없습니다. 어쨌든 그만둬?"
           }
         },
         "pt" : {
@@ -328,7 +328,15 @@
       }
     },
     "Full Word" : {
-      "comment" : "Find options menu item"
+      "comment" : "Find options menu item",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "전체 단어"
+          }
+        }
+      }
     },
     "Horizontal Fit" : {
       "comment" : "Pages are scaled to fit window width",
@@ -494,14 +502,39 @@
         }
       }
     },
-    "Look up" : {
-
-    },
     "Look Up" : {
-      "comment" : "Contextual menu command to look up the selected word"
+      "comment" : "Contextual menu command to look up the selected word",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "見上げる"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "찾아봐"
+          }
+        }
+      }
     },
     "Look Up “%@”" : {
-      "comment" : "Contextual menu command to look up the word"
+      "comment" : "Contextual menu command to look up the word",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "見上げる「%@」"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "찾아봐 “%@”"
+          }
+        }
+      }
     },
     "Original Size" : {
       "comment" : "Pages are not scaled",
@@ -780,7 +813,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Prev/Next Comic"
+            "value" : "이전/다음 만화"
           }
         },
         "pt" : {
@@ -826,13 +859,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit anyway"
+            "value" : "とにかく辞める"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit anyway"
+            "value" : "어쨌든 그만둬"
           }
         },
         "pt" : {
@@ -878,13 +911,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit without saving session?"
+            "value" : "セッションを保存せずに終了しますか？"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit without saving session?"
+            "value" : "세션을 저장하지 않고 종료하시겠습니까?"
           }
         },
         "pt" : {
@@ -1035,6 +1068,18 @@
             "value" : "Ruota"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "回転する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "회전하다"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1073,13 +1118,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Scrubber"
+            "value" : "スクラバー"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Scrubber"
+            "value" : "관목 숲에 사는 사람"
           }
         },
         "pt" : {
@@ -1160,7 +1205,15 @@
       "comment" : "Contextual menu item"
     },
     "Starts with" : {
-      "comment" : "Find options menu item"
+      "comment" : "Find options menu item",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "から始まる"
+          }
+        }
+      }
     },
     "Stop Speaking" : {
       "comment" : "Contextual menu item"
