@@ -41,7 +41,7 @@ class ThumbnailProvider: QLThumbnailProvider {
 			}
 			
 			guard let imageData, let image = NSImage(data: imageData) else {
-				throw CocoaError(.fileReadCorruptFile)
+				throw CocoaError(.fileReadCorruptFile, userInfo: [NSURLErrorKey: archiveURL])
 			}
 			
 			var imageSize = cropRect.isEmpty ? image.size : cropRect.size
