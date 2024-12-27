@@ -78,6 +78,32 @@
 	self.pathData = bookmarkData;
 }
 
+/// helper: common code of \c probeFileURL and \c fileURL
+- (NSURL *)ResolvingURLWithStale:(BOOL *)stalep error:(NSError **)errorp {
+	return self.pathData ? [NSURL URLByResolvingBookmarkData: self.pathData
+												options: NSURLBookmarkResolutionWithoutUI | NSURLBookmarkResolutionWithSecurityScope
+										  relativeToURL: nil
+									bookmarkDataIsStale: stalep
+												  error: errorp] : nil;
+}
+
+- (NSURL *)probeFileURL {
+	if (_url && [_url checkResourceIsReachableAndReturnError:NULL]) {
+		return _url;
+	}
+	NSError * urlError = nil;
+	BOOL stale = NO;
+	NSURL *fileURL = [self ResolvingURLWithStale:&stale error:&urlError];
+	if (stale && fileURL) {
+		// regenerate stale bookmark.
+		self.fileURL = fileURL;
+	} else if (fileURL) {
+		//cache fileURL
+		_url = fileURL;
+	}
+	return fileURL;;
+}
+
 - (NSURL *)fileURL
 {
 	if (_url && [_url checkResourceIsReachableAndReturnError:NULL]) {
@@ -85,12 +111,7 @@
 	}
 	NSError * urlError = nil;
 	BOOL stale = NO;
-	NSURL * fileURL = self.pathData ? [NSURL URLByResolvingBookmarkData: self.pathData
-												options: NSURLBookmarkResolutionWithoutUI | NSURLBookmarkResolutionWithSecurityScope
-										  relativeToURL: nil
-									bookmarkDataIsStale: &stale
-												  error: &urlError] : nil;
-	
+	NSURL *fileURL = [self ResolvingURLWithStale:&stale error:&urlError];
 	//For backwards compatibility
 	if (fileURL == nil || urlError != nil) {
 		NSError *othErr = nil;

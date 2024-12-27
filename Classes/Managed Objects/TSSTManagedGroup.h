@@ -52,6 +52,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)nestedFolderContents;
 
+/**
+  Attempts to resolve the filleURL, but doesn't alter self on failure. Note: If it fails, always call fileURL to truly update the state.
+ */
+- (nullable NSURL *)probeFileURL;
+
 @end
 
 @interface TSSTManagedArchive : TSSTManagedGroup
