@@ -11,7 +11,7 @@ import XADMaster
 import UniformTypeIdentifiers
 
 
-internal let fileSort: [NSSortDescriptor] = {
+nonisolated(unsafe) internal let fileSort: [NSSortDescriptor] = {
 	let sort = TSSTSortDescriptor(key: "name", ascending: true)
 	return [sort]
 }()
