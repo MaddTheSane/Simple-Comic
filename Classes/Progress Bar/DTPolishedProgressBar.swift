@@ -52,7 +52,7 @@ private var borderColor: NSColor {
 }
 
 /// The font attributes of the progress numbers.
-private let numberStyle: [NSAttributedString.Key: Any] = {
+nonisolated(unsafe) private let numberStyle: [NSAttributedString.Key: Any] = {
 	var theKeys: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 10)]
 	if #available(OSX 10.14, *) {
 		theKeys[.foregroundColor] = NSColor.controlTextColor
