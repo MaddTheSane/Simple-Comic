@@ -9,6 +9,12 @@
             "value" : "7-Zip-Archiv"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7-Zip archive"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -41,6 +47,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "7-Zip-Comicarchiv"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7-Zip comic archive"
           }
         },
         "fr" : {
@@ -83,6 +95,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Simple Comic"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "シンプルなコミック"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "간단한 만화"
           }
         }
       }
@@ -259,6 +283,12 @@
             "value" : "LHA-Archiv"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LHA archive"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -405,6 +435,12 @@
             "value" : "RAR-Archiv"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RAR archive"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -437,6 +473,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "RAR-Comicarchiv"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RAR comic archive"
           }
         },
         "fr" : {
@@ -473,6 +515,12 @@
             "value" : "Tar-Comicarchiv"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tar comic archive"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -505,6 +553,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "WebP-Bild"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WebP image"
           }
         },
         "fr" : {
@@ -541,6 +595,12 @@
             "value" : "Microsoft Windows-Cursor"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windows Cursor"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -573,6 +633,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ZIP-Comicarchiv"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ZIP comic archive"
           }
         },
         "fr" : {
