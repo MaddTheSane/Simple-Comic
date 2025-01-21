@@ -77,6 +77,7 @@
 		55C7D78C1C4C0401005F40C8 /* TSSTCircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78B1C4C0401005F40C8 /* TSSTCircularImageView.swift */; };
 		55C7D7901C4C06FF005F40C8 /* TSSTInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78F1C4C06FF005F40C8 /* TSSTInfoWindow.swift */; };
 		55DC3817235EAA4200132291 /* WebPMac.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 55871ECB235D708900528BDF /* WebPMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		55ED4ADB2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ED4ADA2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift */; };
 		55EE6BB02945CA5B00C1AAE7 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28BD08E50C9836E600BD7EAF /* Quartz.framework */; };
 		55EE6BB52945CA5B00C1AAE7 /* PreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */; };
 		55EE6BD62945CD4500C1AAE7 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; };
@@ -426,6 +427,7 @@
 		55C7D78B1C4C0401005F40C8 /* TSSTCircularImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSTCircularImageView.swift; sourceTree = "<group>"; };
 		55C7D78F1C4C06FF005F40C8 /* TSSTInfoWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSTInfoWindow.swift; sourceTree = "<group>"; };
 		55E21B1123FBCCF900D53932 /* No Sign.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "No Sign.xcconfig"; path = "Classes/No Sign.xcconfig"; sourceTree = SOURCE_ROOT; };
+		55ED4ADA2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSecureUnarchiveFromDataTransformer.swift; sourceTree = "<group>"; };
 		55EE6BAF2945CA5B00C1AAE7 /* QuickComic Preview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "QuickComic Preview.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewProvider.swift; sourceTree = "<group>"; };
 		55EE6BB92945CA5B00C1AAE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -831,6 +833,7 @@
 			isa = PBXGroup;
 			children = (
 				28A2662F1285C73200ED6391 /* DTPreferencesController.swift */,
+				55ED4ADA2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -1284,6 +1287,7 @@
 				28EF3FC00E9970BD002AD2EE /* UKXattrMetadataStore.m in Sources */,
 				55FFF1BE1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m in Sources */,
 				284D381B101249BE00A37AB2 /* DTToolbarItems.swift in Sources */,
+				55ED4ADB2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift in Sources */,
 				42D9A8BF2449ABC400AF2FB6 /* CenteredTextLayer.swift in Sources */,
 				55FFF1DF1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m in Sources */,
 				55FFF1E61DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m in Sources */,
