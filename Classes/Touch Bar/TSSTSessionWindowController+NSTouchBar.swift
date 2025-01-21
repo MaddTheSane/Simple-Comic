@@ -83,13 +83,8 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 			item.customizationLabel = NSLocalizedString("Rotate Label", value: "Rotate", comment: "Rotate")
 			
 			let prevNext = NSSegmentedControl(images: [NSImage(named: NSImage.touchBarRotateLeftTemplateName)!, NSImage(named: NSImage.touchBarRotateRightTemplateName)!], trackingMode: .momentary, target: self, action: #selector(self.rotate(_:)))
-			if #available(macOS 10.13, *) {
-				prevNext.setTag(901, forSegment: 0)
-				prevNext.setTag(902, forSegment: 1)
-			} else {
-				(prevNext.cell as? NSSegmentedCell)?.setTag(901, forSegment: 0)
-				(prevNext.cell as? NSSegmentedCell)?.setTag(902, forSegment: 1)
-			}
+			prevNext.setTag(901, forSegment: 0)
+			prevNext.setTag(902, forSegment: 1)
 
 			item.view = prevNext
 			

@@ -19,25 +19,13 @@ private extension NSToolbarItem.Identifier {
 extension TSSTSessionWindowController: NSToolbarDelegate {
 	
 	public func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-		if #available(macOS 11.0, *) {
-			return [
-				.turnPage,
-				.pageOrder,
-				.pageLayout,
-				.pageScaling,
-				.flexibleSpace,
-				.thumbnails,
-			]
-		} else {
-			return [
-				.turnPage,
-				.space,
-				.pageOrder,
-				.pageLayout,
-				.pageScaling,
-				.flexibleSpace,
-				.thumbnails,
-			]
-		}
+		return [
+			.turnPage,
+			.pageOrder,
+			.pageLayout,
+			.pageScaling,
+			.flexibleSpace,
+			.thumbnails,
+		]
 	}
 }
