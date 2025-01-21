@@ -45,7 +45,17 @@ class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 		
 		let reply = QLPreviewReply(forPDFWithPageSize: pdfSize) { replyToUpdate in
 			let document = PDFDocument()
-			for (index1, list) in fList.enumerated() {
+			for (index1, list) in fList.enumerated().filter({ (val, _) in
+				// Only load so many pages.
+				if val >= 25 {
+					return true
+					// and the last page, as suggested by a user.
+				} else if val == fList.count - 1 {
+					return true
+				}
+				
+				return false
+			}) {
 				guard let index = list["index"] as? Int,
 					  let fileData = try? archive.contents(ofEntry: index),
 					  let image = NSImage(data: fileData),
@@ -57,10 +67,6 @@ class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 					continue
 				}
 				document.insert(page, at: index1)
-				// Only load so many pages.
-				guard index1 < 25 else {
-					break
-				}
 			}
 			
 			return document
