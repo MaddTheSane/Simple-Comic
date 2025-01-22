@@ -35,8 +35,10 @@
 		return allKeys;	// Empty list.
 	} else if (dataSize == -1) {
 		if (error) {
-			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno
-									 userInfo:@{NSFilePathErrorKey: path}];
+			int sysErr = errno;
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:sysErr
+									 userInfo:@{NSFilePathErrorKey: path,
+												NSDebugDescriptionErrorKey: @(strerror(sysErr))}];
 		}
 		return nil;
 	}
@@ -73,7 +75,8 @@
 				0, (travLnk ? 0 : XATTR_NOFOLLOW) );
 	if (iErr == -1) {
 		if (error) {
-			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{NSFilePathErrorKey: path}];
+			int sysErr = errno;
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:sysErr userInfo:@{NSFilePathErrorKey: path, NSDebugDescriptionErrorKey: @(strerror(sysErr))}];
 		}
 		return NO;
 	}
@@ -162,7 +165,8 @@
 									NULL, ULONG_MAX, 0, (travLnk ? 0 : XATTR_NOFOLLOW) );
 	if( dataSize == -1 ) {
 		if (error) {
-			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{NSFilePathErrorKey: path}];
+			int sysErr = errno;
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:sysErr userInfo:@{NSFilePathErrorKey: path, NSDebugDescriptionErrorKey: @(strerror(sysErr))}];
 		}
 		return nil;
 	}
@@ -172,7 +176,8 @@
 	
 	if (dataSize == -1) {
 		if (error) {
-			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{NSFilePathErrorKey: path}];
+			int sysErr = errno;
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:sysErr userInfo:@{NSFilePathErrorKey: path, NSDebugDescriptionErrorKey: @(strerror(sysErr))}];
 		}
 		return nil;
 	}
@@ -254,10 +259,12 @@
 	
 	if (success == -1) {
 		if (outError) {
+			int sysErr = errno;
 			*outError = [NSError errorWithDomain:NSPOSIXErrorDomain
-											code:errno
+											code:sysErr
 										userInfo:
-						 @{NSFilePathErrorKey: path}];
+						 @{NSFilePathErrorKey: path,
+						   NSDebugDescriptionErrorKey: @(strerror(sysErr))}];
 		}
 		return NO;
 	}
