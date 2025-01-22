@@ -22,9 +22,10 @@ class ThumbnailProvider: QLThumbnailProvider {
 			var cropRect = CGRect.zero
 			if !coverName.isEmpty {
 				let partialArchive = try PartialArchiveParser(with: archiveURL, searchString: coverName)
-				if coverRectString != "" {
+				if !coverRectString.isEmpty {
 					cropRect = NSRectFromString(coverRectString)
 				}
+				try partialArchive.parse()
 				imageData = partialArchive.searchResult
 			} else {
 				let archive = try XADArchive(fileURL: archiveURL, delegate: nil)

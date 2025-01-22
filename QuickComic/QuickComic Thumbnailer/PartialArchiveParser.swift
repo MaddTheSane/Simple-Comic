@@ -14,12 +14,16 @@ import XADMaster.XADArchiveParser
 internal class PartialArchiveParser: NSObject, XADArchiveParserDelegate {
 	private(set) var searchResult: Data? = nil
 	private let searchString: String
+	private let parser: XADArchiveParser
 	
 	init(with url: URL, searchString: String) throws {
 		self.searchString = searchString
+		parser = try XADArchiveParser.archiveParser(for: url)
 		super.init()
-		let parser = try XADArchiveParser.archiveParser(for: url)
 		parser.delegate = self
+	}
+	
+	func parse() throws {
 		do {
 			try parser.parse()
 		} catch XADError.`break` {
