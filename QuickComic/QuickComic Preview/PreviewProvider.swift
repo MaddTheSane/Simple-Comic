@@ -25,8 +25,11 @@ class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 		let archive = try XADArchive(fileURL: request.fileURL, delegate: nil)
 		var fList = fileList(for: archive)
 		
-		guard fList.count > 0 else {
-			throw CocoaError(.fileReadCorruptFile)
+		guard !fList.isEmpty else {
+			throw CocoaError(.fileReadCorruptFile,
+							 userInfo:
+								[NSURLErrorKey: request.fileURL,
+					 NSLocalizedDescriptionKey: NSLocalizedString("No images found in archive.", comment: "No images found in archive.")])
 		}
 		do {
 			let flist2 = (fList as NSArray).sortedArray(using: fileSort)

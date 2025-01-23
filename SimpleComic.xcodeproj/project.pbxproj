@@ -56,6 +56,7 @@
 		55861E3923C68B3700390CD3 /* V1ToV2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 55861E3823C68B3700390CD3 /* V1ToV2.xcmappingmodel */; };
 		55871EDE235D70C100528BDF /* WebPMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55871ECB235D708900528BDF /* WebPMac.framework */; };
 		55871EFC235D8B2800528BDF /* WebPMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55871ECB235D708900528BDF /* WebPMac.framework */; };
+		5588929D2D41DF5900EA6A58 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5588929C2D41DF5900EA6A58 /* Localizable.xcstrings */; };
 		5589952E1A13D4450058830B /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5589952D1A13D4450058830B /* Media.xcassets */; };
 		5590EB3924A1FD0900DA060E /* ManagedSmartFolder+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 5590EB3724A1FD0900DA060E /* ManagedSmartFolder+CoreDataClass.m */; };
 		5590EB3A24A1FD0900DA060E /* ManagedSmartFolder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5590EB3824A1FD0900DA060E /* ManagedSmartFolder+CoreDataProperties.m */; };
@@ -401,6 +402,7 @@
 		5575A1821EAA76AC00C6D178 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		55861E3823C68B3700390CD3 /* V1ToV2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = V1ToV2.xcmappingmodel; sourceTree = "<group>"; };
 		55871EC6235D708900528BDF /* libwebp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libwebp.xcodeproj; path = "ios-osx-webp-decoder/libwebp.xcodeproj"; sourceTree = "<group>"; };
+		5588929C2D41DF5900EA6A58 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5589952D1A13D4450058830B /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		5590EB3524A1FD0900DA060E /* ManagedSmartFolder+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ManagedSmartFolder+CoreDataProperties.h"; sourceTree = "<group>"; };
 		5590EB3624A1FD0900DA060E /* ManagedSmartFolder+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ManagedSmartFolder+CoreDataClass.h"; sourceTree = "<group>"; };
@@ -792,6 +794,7 @@
 				55EE6BB92945CA5B00C1AAE7 /* Info.plist */,
 				55EE6BBA2945CA5B00C1AAE7 /* QuickComic_Preview.entitlements */,
 				55EE6BDC2945D49A00C1AAE7 /* QuickComic Preview-Bridging-Header.h */,
+				5588929C2D41DF5900EA6A58 /* Localizable.xcstrings */,
 			);
 			path = "QuickComic Preview";
 			sourceTree = "<group>";
@@ -1182,6 +1185,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5588929D2D41DF5900EA6A58 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1839,6 +1843,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				STRINGS_FILE_OUTPUT_ENCODING = binary;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
@@ -1903,6 +1908,7 @@
 				SDKROOT = macosx;
 				STRINGS_FILE_OUTPUT_ENCODING = binary;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
