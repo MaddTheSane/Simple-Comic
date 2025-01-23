@@ -1156,21 +1156,16 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			if (bothAreGood) {
 				theSame = [dat1 isEqual:dat2];
 			}
-			if (theSame) {
-				titleString = [NSString stringWithFormat:@"%@ — %@", fileName, titleString];
-			}
-		} else {
-			titleString = [NSString stringWithFormat:@"%@ — %@", fileName, titleString];
 		}
 	}
 	if (fileName == nil) {
 		fileName = representationURL.lastPathComponent;
 	}
-	if (@available(macOS 11.0, *)) {
-		self.window.title = fileName;
-		self.window.subtitle = [titleString stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@ — ", fileName] withString:@""];
+	self.window.title = fileName;
+	if ([fileName isEqualToString:titleString]) {
+		self.window.subtitle = @"";
 	} else {
-		self.window.title = titleString;
+		self.window.subtitle = titleString;
 	}
 	[pageView setFirstPage: pageOne.pageImage secondPageImage: pageTwo.pageImage];
 	
