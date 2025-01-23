@@ -322,9 +322,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	[OCRTracker hideOCRMenusIfUnavailable];
 
 	// Allow users to customize the app's Touch Bar items.
-	if (@available(macOS 10.12.2, *)) {
-		NSApplication.sharedApplication.automaticCustomizeTouchBarMenuItemEnabled = YES;
-	}
+	NSApplication.sharedApplication.automaticCustomizeTouchBarMenuItemEnabled = YES;
 }
 
 
@@ -578,7 +576,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 
 - (void)sessionRelaunch
 {
-	NSFetchRequest * sessionRequest = [TSSTManagedSession fetchRequest];
+	NSFetchRequest<TSSTManagedSession *> * sessionRequest = [TSSTManagedSession fetchRequest];
 	NSError * fetchError;
 	NSArray * managedSessions = [[self managedObjectContext] executeFetchRequest: sessionRequest error: &fetchError];
 	for(TSSTManagedSession *session in managedSessions)

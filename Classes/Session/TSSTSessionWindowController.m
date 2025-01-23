@@ -985,21 +985,16 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)observationsForFindIndex:(NSInteger)index completion:(void (^)(NSArray<VNRecognizedTextObservation *> *pieces)) completion
 {
-	if (@available(macOS 10.15, *))
+	NSImage *image = [[[[self pageController] arrangedObjects] objectAtIndex:index] pageImage];
+	if (image)
 	{
-		NSImage *image = [[[[self pageController] arrangedObjects] objectAtIndex:index] pageImage];
-		if (image)
-		{
-			self.ocrVision = [[OCRVision alloc] init];
-			__weak typeof(self) weakSelf = self;
-			[self.ocrVision ocrImage:image completion:^(id<OCRVisionResults> ocrResults) {
-				NSArray<VNRecognizedTextObservation *> *textObservations = ocrResults.textObservations;
-				weakSelf.ocrVision = nil;
-				completion(textObservations ?: @[]);
-			}];
-		} else {
-			completion( @[] );
-		}
+		self.ocrVision = [[OCRVision alloc] init];
+		__weak typeof(self) weakSelf = self;
+		[self.ocrVision ocrImage:image completion:^(id<OCRVisionResults> ocrResults) {
+			NSArray<VNRecognizedTextObservation *> *textObservations = ocrResults.textObservations;
+			weakSelf.ocrVision = nil;
+			completion(textObservations ?: @[]);
+		}];
 	} else {
 		completion( @[] );
 	}
@@ -1007,11 +1002,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)cancelObservations
 {
-	if (@available(macOS 10.15, *))
-	{
-		[self.ocrVision cancel];
-		self.ocrVision = nil;
-	}
+	[self.ocrVision cancel];
+	self.ocrVision = nil;
 }
 
 #pragma mark - Applescript

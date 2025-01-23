@@ -357,15 +357,8 @@ typedef struct {
 		}
 	}
 	
-	NSColor* selectionBackgroundColor;
-	NSColor* selectionBorderColor;
-	if (@available(macOS 10.14, *)) {
-		selectionBackgroundColor = [NSColor.selectedContentBackgroundColor colorWithAlphaComponent:0.5];
-		selectionBorderColor =  [NSColor.controlAccentColor colorWithAlphaComponent:0.8];
-	} else {
-		selectionBackgroundColor = [NSColor colorWithCalibratedWhite: .2 alpha: 0.5];
-		selectionBorderColor = [NSColor colorWithCalibratedWhite: 1 alpha: 0.8];
-	}
+	NSColor* selectionBackgroundColor = [NSColor.selectedContentBackgroundColor colorWithAlphaComponent:0.5];
+	NSColor* selectionBorderColor =  [NSColor.controlAccentColor colorWithAlphaComponent:0.8];
 
 	if(!NSEqualRects(cropRect, NSZeroRect))
 	{
@@ -401,12 +394,7 @@ typedef struct {
 		[newLayer addSublayer:selectionLayer];
 	}
 	
-	NSColor* labelBackgroundColor;
-	if (@available(macOS 10.14, *)) {
-		labelBackgroundColor = [NSColor.selectedContentBackgroundColor colorWithAlphaComponent:0.8];
-	} else {
-		labelBackgroundColor = [NSColor colorWithCalibratedWhite: .2 alpha: 0.8];
-	}
+	NSColor* labelBackgroundColor = [NSColor.selectedContentBackgroundColor colorWithAlphaComponent:0.8];
 	
 	if([sessionController pageSelectionInProgress])
 	{

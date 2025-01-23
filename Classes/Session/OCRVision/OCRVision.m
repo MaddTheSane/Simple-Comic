@@ -49,11 +49,9 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 		};
 		NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 		[defaults registerDefaults: standardDefaults];
-		NSUInteger revision = VNRecognizeTextRequestRevision1;
+		NSUInteger revision = VNRecognizeTextRequestRevision2;
 		if (@available(macOS 13.0, *)) {
 			revision = VNRecognizeTextRequestRevision3;
-		} else if (@available(macOS 11.0, *)) {
-			revision = VNRecognizeTextRequestRevision2;
 		}
 		if (@available(macOS 12.0, *))
 		{

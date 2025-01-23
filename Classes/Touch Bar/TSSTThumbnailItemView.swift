@@ -8,7 +8,6 @@
 
 import Cocoa
 
-@available(macOS 10.12.2, *)
 class TSSTThumbnailItemView: NSScrubberItemView {
 	private let imageView: NSImageView
 	private let spinner: NSProgressIndicator

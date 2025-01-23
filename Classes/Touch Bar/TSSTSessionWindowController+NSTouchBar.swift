@@ -8,7 +8,6 @@
 
 import Cocoa
 
-@available(macOS 10.12.2, *)
 extension NSTouchBarItem.Identifier {
 	static let prevNext = NSTouchBarItem.Identifier("com.ToWatchList.prevNextButton")
 	static let pageOrder = NSTouchBarItem.Identifier("com.ToWatchList.pageOrder")
@@ -18,7 +17,6 @@ extension NSTouchBarItem.Identifier {
 	static let scrubber = NSTouchBarItem.Identifier("com.ToWatchList.scrubberBar")
 }
 
-@available(macOS 10.12.2, *)
 extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource {
 	
 	static let touchBar: NSTouchBar.CustomizationIdentifier = "com.ToWatchList.touchBar"

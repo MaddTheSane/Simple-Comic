@@ -122,17 +122,13 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
 - (NSUInteger)totalStringLength
 {
-	if (@available(macOS 10.15, *))
-	{
-		if (_totalStringLength == NSNotFound) {
-			_totalStringLength = 0;
-			for (VNRecognizedTextObservation *piece in self.textPieces) {
-				_totalStringLength += [[[[piece topCandidates:1] firstObject] string] length];
-			}
+	if (_totalStringLength == NSNotFound) {
+		_totalStringLength = 0;
+		for (VNRecognizedTextObservation *piece in self.textPieces) {
+			_totalStringLength += [[[[piece topCandidates:1] firstObject] string] length];
 		}
-		return _totalStringLength;
 	}
-	return 0;
+	return _totalStringLength;
 }
 
 - (void)reset
@@ -328,46 +324,38 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	if (!sIsEnabled) {
 		return nil;
 	}
-	CALayer *layer = nil;
-	if (@available(macOS 10.15, *))
+	OCRDatum *datum = [self datumOfImage:image];
+	if (datum.image != nil && datum.textPieces != nil)
 	{
-		OCRDatum *datum = [self datumOfImage:image];
-		if (datum.image != nil && datum.textPieces != nil)
+		OCRSelectionLayer *selectionLayer =  [[OCRSelectionLayer alloc] initWithObservations:datum.textPieces selection:datum.selectionPieces imageLayer:imageLayer];
+		datum.selectionLayer = selectionLayer;
+		if (self.needsInvalidateCursorRects)
 		{
-			OCRSelectionLayer *selectionLayer =  [[OCRSelectionLayer alloc] initWithObservations:datum.textPieces selection:datum.selectionPieces imageLayer:imageLayer];
-			datum.selectionLayer = selectionLayer;
-			if (self.needsInvalidateCursorRects)
-			{
-				[self.view.window invalidateCursorRectsForView:self.view];
-				self.needsInvalidateCursorRects = NO;
-			}
-			return selectionLayer;
+			[self.view.window invalidateCursorRectsForView:self.view];
+			self.needsInvalidateCursorRects = NO;
 		}
+		return selectionLayer;
 	}
-	return layer;
+	return nil;
 }
 
 #pragma mark Model
 
 - (NSString *)allTextJoinedBy:(NSString *)join
 {
-	if (@available(macOS 10.15, *))
+	NSMutableArray *a = [NSMutableArray array];
+	for (OCRDatum *datum in self.datums)
 	{
-		NSMutableArray *a = [NSMutableArray array];
-		for (OCRDatum *datum in self.datums)
+		if (datum.image != nil)
 		{
-			if (datum.image != nil)
+			for (VNRecognizedTextObservation *piece in datum.textPieces)
 			{
-				for (VNRecognizedTextObservation *piece in datum.textPieces)
-				{
-					NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
-					[a addObject:text1.firstObject.string];
-				}
+				NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
+				[a addObject:text1.firstObject.string];
 			}
 		}
-		return [a componentsJoinedByString:join];
 	}
-	return @"";
+	return [a componentsJoinedByString:join];
 }
 
 - (NSString *)allText
@@ -379,25 +367,22 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 {
 	NSRange result = NSMakeRange(0, 0);
 	NSInteger location = 0;
-	if (@available(macOS 10.15, *))
+	for (OCRDatum *datum in self.datums)
 	{
-		for (OCRDatum *datum in self.datums)
+		if (datum.image != nil)
 		{
-			if (datum.image != nil)
+			for (VNRecognizedTextObservation *piece in datum.textPieces)
 			{
-				for (VNRecognizedTextObservation *piece in datum.textPieces)
+				NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
+				location += text1.firstObject.string.length;
+				NSValue *rangeInAValue = datum.selectionPieces[piece];
+				if (rangeInAValue != nil)
 				{
-					NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
-					location += text1.firstObject.string.length;
-					NSValue *rangeInAValue = datum.selectionPieces[piece];
-					if (rangeInAValue != nil)
-					{
-						NSRange r = [rangeInAValue rangeValue];
-						location += r.location;
-						return NSMakeRange(location, r.length);
-					} else {
-						location += 1;
-					}
+					NSRange r = [rangeInAValue rangeValue];
+					location += r.location;
+					return NSMakeRange(location, r.length);
+				} else {
+					location += 1;
 				}
 			}
 		}
@@ -407,32 +392,29 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
 - (void)setAllTextSelection:(NSRange)candidateSelection
 {
-	if (@available(macOS 10.15, *))
+	NSInteger location = candidateSelection.location;
+	if (candidateSelection.length == 0 || candidateSelection.location == NSNotFound)
 	{
-		NSInteger location = candidateSelection.location;
-		if (candidateSelection.length == 0 || candidateSelection.location == NSNotFound)
+		[self clearSelection];
+		return;
+	}
+	for (OCRDatum *datum in self.datums)
+	{
+		if (datum.image != nil)
 		{
-			[self clearSelection];
-			return;
-		}
-		for (OCRDatum *datum in self.datums)
-		{
-			if (datum.image != nil)
+			for (VNRecognizedTextObservation *piece in datum.textPieces)
 			{
-				for (VNRecognizedTextObservation *piece in datum.textPieces)
+				NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
+				if (text1.firstObject.string.length < location)
 				{
-					NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
-					if (text1.firstObject.string.length < location)
-					{
-						location -= text1.firstObject.string.length + 1;
-					} else {
-						NSRange r = NSMakeRange(location,
-												MIN(candidateSelection.length, text1.firstObject.string.length));
-						[datum.selectionPieces removeAllObjects];
-						datum.selectionPieces[piece] = [NSValue valueWithRange:r];
-						[self.view setNeedsDisplay:YES];
-						return;
-					}
+					location -= text1.firstObject.string.length + 1;
+				} else {
+					NSRange r = NSMakeRange(location,
+											MIN(candidateSelection.length, text1.firstObject.string.length));
+					[datum.selectionPieces removeAllObjects];
+					datum.selectionPieces[piece] = [NSValue valueWithRange:r];
+					[self.view setNeedsDisplay:YES];
+					return;
 				}
 			}
 		}
@@ -455,22 +437,19 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 - (NSString *)selectionJoinedBy:(NSString *)join
 {
 	NSMutableArray *a = [NSMutableArray array];
-	if (@available(macOS 10.15, *))
+	for (OCRDatum *datum in self.datums)
 	{
-		for (OCRDatum *datum in self.datums)
+		if (datum.image != nil)
 		{
-			if (datum.image != nil)
+			for (VNRecognizedTextObservation *piece in datum.textPieces)
 			{
-				for (VNRecognizedTextObservation *piece in datum.textPieces)
+				NSValue *rangeInAValue = datum.selectionPieces[piece];
+				if (rangeInAValue != nil)
 				{
-					NSValue *rangeInAValue = datum.selectionPieces[piece];
-					if (rangeInAValue != nil)
-					{
-						NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
-						NSString *s = text1.firstObject.string;
-						s = [s substringWithRange:[rangeInAValue rangeValue]];
-						[a addObject:s];
-					}
+					NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
+					NSString *s = text1.firstObject.string;
+					s = [s substringWithRange:[rangeInAValue rangeValue]];
+					[a addObject:s];
 				}
 			}
 		}
@@ -496,23 +475,20 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 /// @return the textPiece that contains that point
 - (nullable VNRecognizedTextObservation *)textPieceForPoint:(CGPoint)where API_AVAILABLE(macos(10.15))
 {
-	if (@available(macOS 10.15, *))
+	for (OCRDatum *datum in self.datums)
 	{
-		for (OCRDatum *datum in self.datums)
+		if (datum.image != nil && datum.textPieces)
 		{
-			if (datum.image != nil && datum.textPieces)
+			CGRect container = [[[self view] enclosingScrollView] documentVisibleRect];
+			CGSize imageSize = datum.selectionLayer.bounds.size;
+			for (VNRecognizedTextObservation *piece in datum.textPieces)
 			{
-				CGRect container = [[[self view] enclosingScrollView] documentVisibleRect];
-				CGSize imageSize = datum.selectionLayer.bounds.size;
-				for (VNRecognizedTextObservation *piece in datum.textPieces)
+				CGRect r = VNImageRectForNormalizedRect(piece.boundingBox, imageSize.width, imageSize.height);
+				r = [datum.selectionLayer convertRect:r toLayer:self.view.layer];
+				r = CGRectIntersection(r, container);
+				if (!CGRectIsEmpty(r) && CGRectContainsPoint(r, where))
 				{
-					CGRect r = VNImageRectForNormalizedRect(piece.boundingBox, imageSize.width, imageSize.height);
-					r = [datum.selectionLayer convertRect:r toLayer:self.view.layer];
-					r = CGRectIntersection(r, container);
-					if (!CGRectIsEmpty(r) && CGRectContainsPoint(r, where))
-					{
-						return piece;
-					}
+					return piece;
 				}
 			}
 		}
@@ -557,10 +533,8 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 {
 	NSArray *textPieces = @[];
 	NSError *error = results.ocrError;
-	if (@available(macOS 10.15, *)) {
-		self.datums[index].activeOCR = nil;
-		textPieces = results.textObservations;
-	}
+	self.datums[index].activeOCR = nil;
+	textPieces = results.textObservations;
 	// Since we are changing state that affects the U.I., we do it on the main thread in the future,
 	// but `complete` isn't guaranteed to exist then, so we assign to locals so it will be captured
 	// by the block.
@@ -576,25 +550,23 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
 - (void)ocrImage:(NSImage *)image index:(NSInteger)index
 {
-	if (@available(macOS 10.15, *)) {
-		OCRDatum *datum = self.datums[index];
-		datum.image = nil;
-		[datum.activeOCR cancel];
-		datum.activeOCR = nil;
-		datum.textPieces = @[];
-		[datum.selectionPieces removeAllObjects];
-		if (image)
-		{
-			__block OCRVision *ocrVision = [[OCRVision alloc] init];
-			datum.activeOCR = ocrVision;
-			__weak typeof(self) weakSelf = self;
-			dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-				[ocrVision ocrImage:image completion:^(id<OCRVisionResults> _Nonnull complete) {
-					[weakSelf ocrDidFinish:complete image:image index:index];
-					ocrVision = nil;
-				}];
-			});
-		}
+	OCRDatum *datum = self.datums[index];
+	datum.image = nil;
+	[datum.activeOCR cancel];
+	datum.activeOCR = nil;
+	datum.textPieces = @[];
+	[datum.selectionPieces removeAllObjects];
+	if (image)
+	{
+		__block OCRVision *ocrVision = [[OCRVision alloc] init];
+		datum.activeOCR = ocrVision;
+		__weak typeof(self) weakSelf = self;
+		dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+			[ocrVision ocrImage:image completion:^(id<OCRVisionResults> _Nonnull complete) {
+				[weakSelf ocrDidFinish:complete image:image index:index];
+				ocrVision = nil;
+			}];
+		});
 	}
 }
 
@@ -626,10 +598,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	if (!sIsEnabled) {
 		return NO;
 	}
-	NSObject *textPiece = nil;
-	if (@available(macOS 10.15, *)) {
-		textPiece = [self textPieceForMouseEvent:theEvent];
-	}
+	NSObject *textPiece = [self textPieceForMouseEvent:theEvent];
 	BOOL isDoingMouseDown = (textPiece != nil);
 	if (isDoingMouseDown)
 	{
@@ -689,10 +658,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	if (!sIsEnabled) {
 		return NO;
 	}
-	NSObject *textPiece = nil;
-	if (@available(macOS 10.15, *)) {
-		textPiece = [self textPieceForMouseEvent:theEvent];
-	}
+	NSObject *textPiece = [self textPieceForMouseEvent:theEvent];
 	BOOL isDoingMouseDragged = (textPiece != nil);
 	if (isDoingMouseDragged)
 	{
@@ -720,9 +686,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	{
 		[datum.selectionPieces removeAllObjects];
 	}
-	if (@available(macOS 10.15, *)) {
-		[self addSelectionPiecesFromDictionary:previousSelection];
-	}
+	[self addSelectionPiecesFromDictionary:previousSelection];
 	while ([theEvent type] != NSEventTypeLeftMouseUp)
 	{
 		if ([theEvent type] == NSEventTypeLeftMouseDragged)
@@ -741,45 +705,42 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 /// @param previousSelection - the selection as it was before the call to this. This method will update it.
 - (void)updateSelectionFromDownRect:(NSRect)downRect previousSelection:(NSMutableDictionary *)previousSelection
 {
-	if (@available(macOS 10.15, *))
-	{
-		BOOL needsDisplay = NO;
-
-		for (OCRDatum *datum in self.datums) {
-			if (datum.image != nil)
-			{
-				NSMutableDictionary *selectionDict = [NSMutableDictionary dictionary];
-				CGSize imageSize = datum.selectionLayer.bounds.size;
-				for (VNRecognizedTextObservation *piece in datum.textPieces)
-				{
-					CGRect pieceR = VNImageRectForNormalizedRect(piece.boundingBox, imageSize.width, imageSize.height);
-					pieceR = [datum.selectionLayer convertRect:pieceR toLayer:self.view.layer];
-					if (CGRectIntersectsRect(downRect, pieceR)) {
-						CGRect imageDownRect = [datum.selectionLayer convertRect:downRect fromLayer:self.view.layer];
-						CGRect pieceDownRect = VNNormalizedRectForImageRect(imageDownRect, imageSize.width, imageSize.height);
-						NSRange r = [self rangeOfPiece:piece intersectsRect:pieceDownRect];
-						NSValue *rangePtr = previousSelection[piece];
-						if (rangePtr != nil) {
-							NSRange oldRange = [rangePtr rangeValue];
-							r = UnionRanges(r, oldRange);
-							previousSelection[piece] = nil;
-						}
-						selectionDict[piece] = [NSValue valueWithRange:r];
-					}
-				}
-				[selectionDict addEntriesFromDictionary:previousSelection];
-				if (![datum.selectionPieces isEqual:selectionDict]) {
-					datum.selectionPieces = selectionDict;
-					needsDisplay = YES;
-				}
-
-			}
-		}
-		if (needsDisplay)
+	BOOL needsDisplay = NO;
+	
+	for (OCRDatum *datum in self.datums) {
+		if (datum.image != nil)
 		{
-			[self.view setNeedsDisplay:YES];
-			[self.view.window invalidateCursorRectsForView:self.view];
+			NSMutableDictionary *selectionDict = [NSMutableDictionary dictionary];
+			CGSize imageSize = datum.selectionLayer.bounds.size;
+			for (VNRecognizedTextObservation *piece in datum.textPieces)
+			{
+				CGRect pieceR = VNImageRectForNormalizedRect(piece.boundingBox, imageSize.width, imageSize.height);
+				pieceR = [datum.selectionLayer convertRect:pieceR toLayer:self.view.layer];
+				if (CGRectIntersectsRect(downRect, pieceR)) {
+					CGRect imageDownRect = [datum.selectionLayer convertRect:downRect fromLayer:self.view.layer];
+					CGRect pieceDownRect = VNNormalizedRectForImageRect(imageDownRect, imageSize.width, imageSize.height);
+					NSRange r = [self rangeOfPiece:piece intersectsRect:pieceDownRect];
+					NSValue *rangePtr = previousSelection[piece];
+					if (rangePtr != nil) {
+						NSRange oldRange = [rangePtr rangeValue];
+						r = UnionRanges(r, oldRange);
+						previousSelection[piece] = nil;
+					}
+					selectionDict[piece] = [NSValue valueWithRange:r];
+				}
+			}
+			[selectionDict addEntriesFromDictionary:previousSelection];
+			if (![datum.selectionPieces isEqual:selectionDict]) {
+				datum.selectionPieces = selectionDict;
+				needsDisplay = YES;
+			}
+			
 		}
+	}
+	if (needsDisplay)
+	{
+		[self.view setNeedsDisplay:YES];
+		[self.view.window invalidateCursorRectsForView:self.view];
 	}
 }
 
@@ -863,7 +824,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 		[self.view addCursorRect: [[[self view] enclosingScrollView] documentVisibleRect] cursor:[NSCursor IBeamCursor]];
 		return YES;
 	}
-	else if (@available(macOS 10.15, *))
+	else
 	{
 		for (OCRDatum *datum in self.datums)
 		{
@@ -1011,24 +972,12 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	}
 	else if ([menuItem action] == @selector(selectAll:))
 	{
-		if (@available(macOS 10.15, *))
-		{
-			NSInteger totalTextPiecesCount = self.totalTextPiecesCount;
-			return totalTextPiecesCount != 0 && totalTextPiecesCount != self.totalSelectionPiecesCount;
-		} else {
-			return  NO;
-		}
-		return YES;
+		NSInteger totalTextPiecesCount = self.totalTextPiecesCount;
+		return totalTextPiecesCount != 0 && totalTextPiecesCount != self.totalSelectionPiecesCount;
 	}
 	else if ([menuItem action] == @selector(startSpeaking:))
 	{
-		if (@available(macOS 10.15, *))
-		{
-			return self.isAnySelected;
-		} else {
-			return  NO;
-		}
-		return YES;
+		return self.isAnySelected;
 	}
 	else if ([menuItem action] == @selector(stopSpeaking:))
 	{
@@ -1063,24 +1012,21 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
 - (void)selectAll:(id)sender
 {
-	if (@available(macOS 10.15, *))
+	for (OCRDatum *datum in self.datums)
 	{
-		for (OCRDatum *datum in self.datums)
+		if (datum.image != nil)
 		{
-			if (datum.image != nil)
+			datum.selectionPieces = [NSMutableDictionary dictionary];
+			for (VNRecognizedTextObservation *piece in datum.textPieces)
 			{
-				datum.selectionPieces = [NSMutableDictionary dictionary];
-				for (VNRecognizedTextObservation *piece in datum.textPieces)
-				{
-					NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
-					NSRange r = NSMakeRange(0, text1.firstObject.string.length);
-					datum.selectionPieces[piece] = [NSValue valueWithRange:r];
-				}
+				NSArray<VNRecognizedText *> *text1 = [piece topCandidates:1];
+				NSRange r = NSMakeRange(0, text1.firstObject.string.length);
+				datum.selectionPieces[piece] = [NSValue valueWithRange:r];
 			}
 		}
-		[self.view setNeedsDisplay:YES];
-		[self.view.window invalidateCursorRectsForView:self.view];
 	}
+	[self.view setNeedsDisplay:YES];
+	[self.view.window invalidateCursorRectsForView:self.view];
 }
 
 /// @return the string for the dictionary panel.
@@ -1105,22 +1051,19 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
   /// @return point for the dictionary panel.
 - (NSPoint)lookUpPoint {
-	if (@available(macOS 10.15, *))
+	for (OCRDatum *datum in self.datums)
 	{
-		for (OCRDatum *datum in self.datums)
+		if (datum.image != nil)
 		{
-			if (datum.image != nil)
+			for (VNRecognizedTextObservation *piece in datum.textPieces)
 			{
-				for (VNRecognizedTextObservation *piece in datum.textPieces)
+				NSValue *rangeInAValue = datum.selectionPieces[piece];
+				if (rangeInAValue != nil)
 				{
-					NSValue *rangeInAValue = datum.selectionPieces[piece];
-					if (rangeInAValue != nil)
+					CGRect r = [self rectForPiece:piece datum:datum];
+					if (!CGRectIsEmpty(r))
 					{
-						CGRect r = [self rectForPiece:piece datum:datum];
-						if (!CGRectIsEmpty(r))
-						{
-							return CGPointMake(r.origin.x + r.size.width/2, r.origin.y + r.size.height/2);
-						}
+						return CGPointMake(r.origin.x + r.size.width/2, r.origin.y + r.size.height/2);
 					}
 				}
 			}
