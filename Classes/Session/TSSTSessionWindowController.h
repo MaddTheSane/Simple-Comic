@@ -41,7 +41,7 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 };
 
 
-/*!	This class deals with an unholy crapload of functionality
+/*!	This class deals with an unholy crapload of functionality:
 	- First and most importantly it controls the navigation
 		within a given session's pages.  This includes figuring
 		out whether or not two pages should be layed out side by side.
@@ -49,9 +49,9 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 		Event handling is mainly taken care of by the page view class.
 	- As the session window controller it handles the transition from
 		windowed to fullscreen mode.
-	- Mouse moved events are handled here. Which results in the following
-		- Handles the movement and positioning of the page loupe.
-		- Handles the layout of the info window
+	- Mouse moved events are handled here. Which results in the following:
+	-	- Handles the movement and positioning of the page loupe.
+	-	- Handles the layout of the info window
 			when the user scrubs the progress bar.
 */
 @interface TSSTSessionWindowController : NSWindowController <NSTextFieldDelegate, DTPageSelectionProtocol, NSWindowDelegate, NSMenuItemValidation>

@@ -753,7 +753,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-/* Used by all of the page selection methods to make both pages visible.  Also adds a small
+/*! Used by all of the page selection methods to make both pages visible.  Also adds a small
 	gutter around the images for cropping. */
 - (void)changeViewForSelection
 {
