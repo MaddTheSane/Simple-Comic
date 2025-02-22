@@ -32,8 +32,7 @@ internal class PartialArchiveParser: NSObject, XADArchiveParserDelegate {
 	}
 	
 	func archiveParser(_ parser: XADArchiveParser, foundEntryWith dict: [XADArchiveParser.Key : Any]) throws {
-		let resnum = dict[.isResourceFork] as? Bool
-		let isRes = resnum ?? false
+		let isRes = (dict[.isResourceFork] as? Bool) ?? false
 		searchResult = nil
 		
 		guard !isRes else {
