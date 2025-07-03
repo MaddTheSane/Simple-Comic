@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class TSSTScrubberBarItem: NSCustomTouchBarItem, NSScrubberDelegate, NSScrubberFlowLayoutDelegate {
+class TSSTScrubberBarItem: NSCustomTouchBarItem, NSScrubberDelegate, @MainActor NSScrubberFlowLayoutDelegate {
 	
 	static let itemViewIdentifier = NSUserInterfaceItemIdentifier("TSSTImageItemViewIdentifier")
 	

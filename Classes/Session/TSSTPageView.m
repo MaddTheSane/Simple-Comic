@@ -553,6 +553,15 @@ typedef struct {
 	[self resizeView];
 }
 
+- (void)setNilValueForKey:(NSString *)key
+{
+	if ([key isEqualToString:@"rotation"]) {
+		rotation = 0;
+		return;
+	}
+	[super setNilValueForKey:key];
+}
+
 - (CGAffineTransform)rotationCGTransformWithFrame:(NSRect)rect
 {
 	CGAffineTransform identity = CGAffineTransformIdentity;

@@ -268,6 +268,15 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	[[NSUserDefaults standardUserDefaults] addObserver: self forKeyPath: TSSTSessionRestore options: 0 context: nil];
 }
 
+- (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
+{
+	return NO;
+}
+
+- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app
+{
+	return YES;
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {

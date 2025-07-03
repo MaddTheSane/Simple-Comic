@@ -1477,7 +1477,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	
 	BOOL valid = YES;
-    int state;
+    NSControlStateValue state;
     if([menuItem action] == @selector(toggleFullScreen:))
     {
         state = [[self window] isFullscreen] ? NSControlStateValueOn : NSControlStateValueOff;
