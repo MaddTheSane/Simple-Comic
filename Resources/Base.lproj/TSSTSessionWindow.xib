@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23090" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24093.9" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23090"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24093.9"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -89,7 +90,7 @@
                     <constraint firstAttribute="trailing" secondItem="236" secondAttribute="trailing" id="rnt-uU-bky"/>
                 </constraints>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="1A96E21F-07EA-4D3B-B356-508A45D1FCBB" displayMode="iconOnly" sizeMode="regular" id="507">
+            <toolbar key="toolbar" implicitIdentifier="1A96E21F-07EA-4D3B-B356-508A45D1FCBB" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="507">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="ADD2836D-8728-474F-9355-80FA8EA9972C" label="Turn Page" paletteLabel="Turn Page" sizingBehavior="auto" navigational="YES" id="553" customClass="DTPageTurnToolbarItem" customModule="Simple_Comic" customModuleProvider="target">
                         <segmentedControl key="view" verticalHuggingPriority="750" id="554">
@@ -221,11 +222,11 @@
                             </connections>
                         </segmentedControl>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="55B2F7CD-2E3A-405A-BF65-65B5A68E94BD" label="Loupe" paletteLabel="Loupe" image="loupeTemplate" sizingBehavior="auto" id="575" customClass="DTToolbarItem" customModule="Simple_Comic" customModuleProvider="target">
+                    <toolbarItem implicitItemIdentifier="55B2F7CD-2E3A-405A-BF65-65B5A68E94BD" label="Loupe" paletteLabel="Loupe" image="loupe" catalog="system" sizingBehavior="auto" id="575" customClass="DTToolbarItem" customModule="Simple_Comic" customModuleProvider="target">
                         <button key="view" toolTip="Magnifying Glass" verticalHuggingPriority="750" id="573">
-                            <rect key="frame" x="5" y="14" width="30" height="23"/>
+                            <rect key="frame" x="6" y="14" width="28" height="23"/>
                             <autoresizingMask key="autoresizingMask"/>
-                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="loupeTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" inset="2" id="574">
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="loupe" catalog="system" imagePosition="overlaps" alignment="center" borderStyle="border" inset="2" id="574">
                                 <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -489,7 +490,7 @@ Gw
         <image name="horScaleTemplate" width="15" height="14"/>
         <image name="lastPageTemplate" width="16" height="15"/>
         <image name="leftRightOrderTemplate" width="16" height="14"/>
-        <image name="loupeTemplate" width="18" height="18"/>
+        <image name="loupe" catalog="system" width="16" height="14"/>
         <image name="onePageTemplate" width="12" height="14"/>
         <image name="rightLeftOrderTemplate" width="16" height="14"/>
         <image name="rotateLeftTemplate" width="11" height="14"/>
