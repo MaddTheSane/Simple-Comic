@@ -175,13 +175,13 @@
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="2FEB6E2E-5C3E-4725-B4B7-D5204BC8F2A8" label="Rotate" paletteLabel="Rotate" sizingBehavior="auto" id="585" customClass="DTToolbarItem" customModule="Simple_Comic" customModuleProvider="target">
                         <segmentedControl key="view" verticalHuggingPriority="750" id="586">
-                            <rect key="frame" x="0.0" y="14" width="49" height="24"/>
+                            <rect key="frame" x="0.0" y="14" width="59" height="24"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <segmentedCell key="cell" borderStyle="border" alignment="left" style="separated" trackingMode="momentary" id="587">
                                 <font key="font" metaFont="system"/>
                                 <segments>
-                                    <segment toolTip="Rotate Left" image="rotateLeftTemplate" tag="901"/>
-                                    <segment toolTip="Rotate Right" image="rotateRightTemplate" tag="902"/>
+                                    <segment toolTip="Rotate Left" image="arrow.trianglehead.counterclockwise.rotate.90" catalog="system" tag="901"/>
+                                    <segment toolTip="Rotate Right" image="arrow.trianglehead.clockwise.rotate.90" catalog="system" tag="902"/>
                                 </segments>
                             </segmentedCell>
                             <connections>
@@ -484,6 +484,8 @@ Gw
         <image name="NSQuickLookTemplate" width="26" height="17"/>
         <image name="NSRemoveTemplate" width="18" height="5"/>
         <image name="NSRightFacingTriangleTemplate" width="12" height="17"/>
+        <image name="arrow.trianglehead.clockwise.rotate.90" catalog="system" width="16" height="15"/>
+        <image name="arrow.trianglehead.counterclockwise.rotate.90" catalog="system" width="16" height="15"/>
         <image name="equalTemplate" width="11" height="6"/>
         <image name="extractTemplate" width="18" height="18"/>
         <image name="firstPageTemplate" width="16" height="15"/>
@@ -493,8 +495,6 @@ Gw
         <image name="loupe" catalog="system" width="16" height="14"/>
         <image name="onePageTemplate" width="12" height="14"/>
         <image name="rightLeftOrderTemplate" width="16" height="14"/>
-        <image name="rotateLeftTemplate" width="11" height="14"/>
-        <image name="rotateRightTemplate" width="11" height="14"/>
         <image name="twoPageTemplate" width="25" height="14"/>
         <image name="winScaleTemplate" width="10" height="14"/>
     </resources>
