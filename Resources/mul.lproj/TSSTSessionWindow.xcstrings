@@ -17,6 +17,12 @@
             "value" : "InfoPane"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InfoPane"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -74,6 +80,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Panel"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Panel"
           }
         },
@@ -137,6 +149,12 @@
             "value" : "Page:"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page:"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -151,8 +169,8 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Page:"
+            "state" : "translated",
+            "value" : "ページ："
           }
         },
         "ko" : {
@@ -164,7 +182,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page:"
+            "value" : "Página:"
           }
         },
         "zh-Hans" : {
@@ -175,8 +193,8 @@
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Page:"
+            "state" : "translated",
+            "value" : "頁面："
           }
         }
       }
@@ -258,6 +276,12 @@
             "value" : "Original Size"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Original Size"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -318,6 +342,12 @@
             "value" : "Scale to Window"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scale to Window"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -351,7 +381,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Scale to Window"
+            "value" : "缩放到窗口"
           }
         },
         "zh-Hant" : {
@@ -378,10 +408,16 @@
             "value" : "Horizontal Scaling"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horizontal Scaling"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Horizontal Scaling"
+            "value" : "Mise à l'échelle horizontale"
           }
         },
         "it" : {
@@ -393,7 +429,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Horizontal Scaling"
+            "value" : "水平スケーリング"
           }
         },
         "ko" : {
@@ -405,19 +441,19 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Horizontal Scaling"
+            "value" : "Escala Horizontal"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Horizontal Scaling"
+            "value" : "水平缩放"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Horizontal Scaling"
+            "value" : "水準縮放"
           }
         }
       }
@@ -437,10 +473,16 @@
             "value" : "Page Scaling"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Scaling"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Scaling"
+            "value" : "Mise à l'échelle des pages"
           }
         },
         "it" : {
@@ -452,7 +494,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Scaling"
+            "value" : "ページスケーリング"
           }
         },
         "ko" : {
@@ -464,7 +506,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Scaling"
+            "value" : "Dimensionamento da página"
           }
         },
         "zh-Hans" : {
@@ -475,8 +517,8 @@
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Page Scaling"
+            "state" : "translated",
+            "value" : "頁面縮放"
           }
         }
       }
@@ -497,10 +539,16 @@
             "value" : "Page Scaling"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Scaling"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Scaling"
+            "value" : "Mise à l'échelle des pages"
           }
         },
         "it" : {
@@ -512,7 +560,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Scaling"
+            "value" : "ページスケーリング"
           }
         },
         "ko" : {
@@ -524,7 +572,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Scaling"
+            "value" : "Dimensionamento da página"
           }
         },
         "zh-Hans" : {
@@ -535,8 +583,8 @@
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Page Scaling"
+            "state" : "translated",
+            "value" : "頁面縮放"
           }
         }
       }
@@ -554,6 +602,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Right to Left Page Order"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Right to Left Page Order"
           }
         },
@@ -596,7 +650,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "由右到左"
+            "value" : "從右到左的頁面順序"
           }
         }
       }
@@ -614,6 +668,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Left to Right Page Order"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Left to Right Page Order"
           }
         },
@@ -676,6 +736,12 @@
             "value" : "Page Order"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Order"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -691,7 +757,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Order"
+            "value" : "ページ順"
           }
         },
         "ko" : {
@@ -703,7 +769,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Order"
+            "value" : "Ordem da página"
           }
         },
         "zh-Hans" : {
@@ -715,7 +781,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Order"
+            "value" : "頁面順序"
           }
         }
       }
@@ -736,6 +802,12 @@
             "value" : "Page Order"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Order"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -751,7 +823,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Order"
+            "value" : "ページ順"
           }
         },
         "ko" : {
@@ -763,7 +835,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Order"
+            "value" : "Ordem da página"
           }
         },
         "zh-Hans" : {
@@ -775,7 +847,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Order"
+            "value" : "頁面順序"
           }
         }
       }
@@ -793,6 +865,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Single Page Layout"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Single Page Layout"
           }
         },
@@ -856,6 +934,12 @@
             "value" : "Two Page Layout"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Two Page Layout"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -905,8 +989,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Layout"
+            "state" : "translated",
+            "value" : "Seitenlayout"
           }
         },
         "en" : {
@@ -915,10 +999,16 @@
             "value" : "Page Layout"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Layout"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Layout"
+            "value" : "Mise en page"
           }
         },
         "it" : {
@@ -930,7 +1020,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Layout"
+            "value" : "ページレイアウト"
           }
         },
         "ko" : {
@@ -941,8 +1031,8 @@
         },
         "pt" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Page Layout"
+            "state" : "translated",
+            "value" : "Layout da página"
           }
         },
         "zh-Hans" : {
@@ -954,7 +1044,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Layout"
+            "value" : "頁面佈局"
           }
         }
       }
@@ -965,8 +1055,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Layout"
+            "state" : "translated",
+            "value" : "Seitenlayout"
           }
         },
         "en" : {
@@ -975,10 +1065,16 @@
             "value" : "Page Layout"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Layout"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Layout"
+            "value" : "Mise en page"
           }
         },
         "it" : {
@@ -990,7 +1086,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Layout"
+            "value" : "ページレイアウト"
           }
         },
         "ko" : {
@@ -1001,8 +1097,8 @@
         },
         "pt" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Page Layout"
+            "state" : "translated",
+            "value" : "Layout da página"
           }
         },
         "zh-Hans" : {
@@ -1014,7 +1110,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page Layout"
+            "value" : "頁面佈局"
           }
         }
       }
@@ -1035,10 +1131,16 @@
             "value" : "Turn Page"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn Page"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Turn Page"
+            "value" : "Tourner la page"
           }
         },
         "it" : {
@@ -1050,7 +1152,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Turn Page"
+            "value" : "ページをめくる"
           }
         },
         "ko" : {
@@ -1062,7 +1164,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Turn Page"
+            "value" : "Vire A Página"
           }
         },
         "zh-Hans" : {
@@ -1074,7 +1176,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Turn Page"
+            "value" : "翻頁"
           }
         }
       }
@@ -1095,10 +1197,16 @@
             "value" : "Turn Page"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn Page"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Turn Page"
+            "value" : "Tourner la page"
           }
         },
         "it" : {
@@ -1110,7 +1218,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Turn Page"
+            "value" : "ページをめくる"
           }
         },
         "ko" : {
@@ -1122,7 +1230,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Turn Page"
+            "value" : "Vire A Página"
           }
         },
         "zh-Hans" : {
@@ -1134,7 +1242,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Turn Page"
+            "value" : "翻頁"
           }
         }
       }
@@ -1155,10 +1263,16 @@
             "value" : "Left Page Turn"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left Page Turn"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left Page Turn"
+            "value" : "Tour de page à gauche"
           }
         },
         "it" : {
@@ -1170,7 +1284,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left Page Turn"
+            "value" : "左のページをめくる"
           }
         },
         "ko" : {
@@ -1181,20 +1295,20 @@
         },
         "pt" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Left Page Turn"
+            "state" : "translated",
+            "value" : "Virar A Página Esquerda"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left Page Turn"
+            "value" : "向左翻页"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left Page Turn"
+            "value" : "向左翻頁"
           }
         }
       }
@@ -1215,10 +1329,16 @@
             "value" : "Right Page Turn"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right Page Turn"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right Page Turn"
+            "value" : "Tour de page à droite"
           }
         },
         "it" : {
@@ -1230,7 +1350,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right Page Turn"
+            "value" : "右ページをめくる"
           }
         },
         "ko" : {
@@ -1241,20 +1361,20 @@
         },
         "pt" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Right Page Turn"
+            "state" : "translated",
+            "value" : "Virada De Página À Direita"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right Page Turn"
+            "value" : "右页翻"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right Page Turn"
+            "value" : "右頁翻"
           }
         }
       }
@@ -1269,6 +1389,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom In"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zoom In"
@@ -1307,7 +1433,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom In"
+            "value" : "放大"
           }
         },
         "zh-Hant" : {
@@ -1328,6 +1454,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom Out"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zoom Out"
@@ -1366,7 +1498,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom Out"
+            "value" : "缩小"
           }
         },
         "zh-Hant" : {
@@ -1390,6 +1522,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Zoom Reset"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Zoom Reset"
           }
         },
@@ -1426,7 +1564,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom Reset"
+            "value" : "缩放重置"
           }
         },
         "zh-Hant" : {
@@ -1453,6 +1591,12 @@
             "value" : "Zoom"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1474,7 +1618,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom"
+            "value" : "줌 렌즈"
           }
         },
         "pt" : {
@@ -1513,6 +1657,12 @@
             "value" : "Zoom"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1534,7 +1684,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom"
+            "value" : "줌 렌즈"
           }
         },
         "pt" : {
@@ -1573,10 +1723,16 @@
             "value" : "Magnifying Glass"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Magnifying Glass"
+          }
+        },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Magnifying Glass"
+            "state" : "translated",
+            "value" : "Loupe"
           }
         },
         "it" : {
@@ -1588,13 +1744,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Magnifying Glass"
+            "value" : "虫眼鏡"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Magnifying Glass"
+            "value" : "돋보기"
           }
         },
         "pt" : {
@@ -1606,13 +1762,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Magnifying Glass"
+            "value" : "放大镜"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Magnifying Glass"
+            "state" : "translated",
+            "value" : "放大鏡"
           }
         }
       }
@@ -1630,6 +1786,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Loupe"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Loupe"
           }
         },
@@ -1693,6 +1855,12 @@
             "value" : "Loupe"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loupe"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1753,6 +1921,12 @@
             "value" : "Thumbnails"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thumbnails"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1768,13 +1942,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnails"
+            "value" : "サムネイル"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnails"
+            "value" : "썸네일"
           }
         },
         "pt" : {
@@ -1792,7 +1966,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnails"
+            "value" : "縮圖"
           }
         }
       }
@@ -1813,6 +1987,12 @@
             "value" : "Thumbnails"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thumbnails"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1828,13 +2008,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnails"
+            "value" : "サムネイル"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnails"
+            "value" : "썸네일"
           }
         },
         "pt" : {
@@ -1852,7 +2032,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnails"
+            "value" : "縮圖"
           }
         }
       }
@@ -1863,13 +2043,19 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Übersicht"
+            "state" : "needs_review",
+            "value" : "Miniaturansicht"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Thumbnail View"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Thumbnail View"
           }
         },
@@ -1888,13 +2074,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnail View"
+            "value" : "サムネイルビュー"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Thumbnail View"
+            "state" : "translated",
+            "value" : "썸네일 보기"
           }
         },
         "pt" : {
@@ -1906,13 +2092,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnail View"
+            "value" : "缩略图视图"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Thumbnail View"
+            "value" : "縮圖檢視"
           }
         }
       }
@@ -1932,10 +2118,16 @@
             "value" : "Rotate"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rotate"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rotate"
+            "value" : "Faire pivoter"
           }
         },
         "it" : {
@@ -1953,7 +2145,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rotate"
+            "value" : "회전하다"
           }
         },
         "pt" : {
@@ -1971,7 +2163,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rotate"
+            "value" : "旋轉"
           }
         }
       }
@@ -1992,10 +2184,16 @@
             "value" : "Rotate"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rotate"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rotate"
+            "value" : "Faire pivoter"
           }
         },
         "it" : {
@@ -2013,7 +2211,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rotate"
+            "value" : "회전하다"
           }
         },
         "pt" : {
@@ -2031,7 +2229,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rotate"
+            "value" : "旋轉"
           }
         }
       }
@@ -2049,6 +2247,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Rotate Left"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Rotate Left"
           }
         },
@@ -2085,7 +2289,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rotate Left"
+            "value" : "向左旋转"
           }
         },
         "zh-Hant" : {
@@ -2109,6 +2313,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Rotate Right"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Rotate Right"
           }
         },
@@ -2145,7 +2355,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Rotate Right"
+            "value" : "右旋转"
           }
         },
         "zh-Hant" : {
@@ -2162,8 +2372,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seite extrahieren"
+            "state" : "needs_review",
+            "value" : "Seite erfassen"
           }
         },
         "en" : {
@@ -2172,10 +2382,16 @@
             "value" : "Capture Page"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture Page"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "Page de capture"
           }
         },
         "it" : {
@@ -2187,19 +2403,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "キャプチャページ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "캡처 페이지"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "Capturar Página"
           }
         },
         "zh-Hans" : {
@@ -2211,7 +2427,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "捕獲頁面"
           }
         }
       }
@@ -2222,8 +2438,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Extrahieren"
+            "state" : "needs_review",
+            "value" : "Seite erfassen"
           }
         },
         "en" : {
@@ -2232,10 +2448,16 @@
             "value" : "Capture Page"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture Page"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "Page de capture"
           }
         },
         "it" : {
@@ -2247,19 +2469,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "キャプチャページ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "캡처 페이지"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "Capturar Página"
           }
         },
         "zh-Hans" : {
@@ -2271,7 +2493,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "捕獲頁面"
           }
         }
       }
@@ -2292,10 +2514,16 @@
             "value" : "Capture Page"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture Page"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "Page de capture"
           }
         },
         "it" : {
@@ -2307,19 +2535,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "キャプチャページ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "캡처 페이지"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "Capturar Página"
           }
         },
         "zh-Hans" : {
@@ -2331,7 +2559,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page"
+            "value" : "捕獲頁面"
           }
         }
       }
@@ -2352,10 +2580,16 @@
             "value" : "Set Icon"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Icon"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "Définir l'icône"
           }
         },
         "it" : {
@@ -2367,19 +2601,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "セットアイコン"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "설정 아이콘"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "Ícone de configuração"
           }
         },
         "zh-Hans" : {
@@ -2391,7 +2625,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "設定圖示"
           }
         }
       }
@@ -2412,10 +2646,16 @@
             "value" : "Set Icon"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Icon"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "Définir l'icône"
           }
         },
         "it" : {
@@ -2427,19 +2667,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "セットアイコン"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "설정 아이콘"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "Ícone de configuração"
           }
         },
         "zh-Hans" : {
@@ -2451,7 +2691,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "設定圖示"
           }
         }
       }
@@ -2472,10 +2712,16 @@
             "value" : "Set Icon"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Icon"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "Définir l'icône"
           }
         },
         "it" : {
@@ -2487,19 +2733,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "セットアイコン"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "설정 아이콘"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "Ícone de configuração"
           }
         },
         "zh-Hans" : {
@@ -2511,7 +2757,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Icon"
+            "value" : "設定圖示"
           }
         }
       }
@@ -2532,10 +2778,16 @@
             "value" : "Jump"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jump"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Jump"
+            "value" : "Sauter"
           }
         },
         "it" : {
@@ -2547,13 +2799,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Jump"
+            "value" : "飛び降りる"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Jump"
+            "value" : "뛰어내리다"
           }
         },
         "pt" : {
@@ -2571,7 +2823,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Jump"
+            "value" : "跳"
           }
         }
       }
@@ -2589,6 +2841,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Cancel"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Cancel"
           }
         },
@@ -2643,7 +2901,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "Ende der Seite"
           }
         },
         "en" : {
@@ -2652,46 +2910,52 @@
             "value" : "Page End"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page End"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "Fin de page"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "Fine pagina"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "ページ終了"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "페이지 끝"
           }
         },
         "pt" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Page End"
+            "state" : "translated",
+            "value" : "O fim da página"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "页面结束"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "頁面結束"
           }
         }
       }
@@ -2703,7 +2967,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "Ende der Seite"
           }
         },
         "en" : {
@@ -2712,46 +2976,52 @@
             "value" : "Page End"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page End"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "Fin de page"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "Fine pagina"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "ページ終了"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "페이지 끝"
           }
         },
         "pt" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Page End"
+            "state" : "translated",
+            "value" : "O fim da página"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "页面结束"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page End"
+            "value" : "頁面結束"
           }
         }
       }
@@ -2772,6 +3042,12 @@
             "value" : "Zoom"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2793,7 +3069,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom"
+            "value" : "줌 렌즈"
           }
         },
         "pt" : {
@@ -2811,7 +3087,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom"
+            "value" : "變焦鏡頭"
           }
         }
       }
@@ -2832,6 +3108,12 @@
             "value" : "Zoom"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2853,7 +3135,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom"
+            "value" : "줌 렌즈"
           }
         },
         "pt" : {
@@ -2871,7 +3153,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom"
+            "value" : "變焦鏡頭"
           }
         }
       }
@@ -2886,6 +3168,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom In"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zoom In"
@@ -2924,7 +3212,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom In"
+            "value" : "放大"
           }
         },
         "zh-Hant" : {
@@ -2945,6 +3233,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom Out"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zoom Out"
@@ -2983,7 +3277,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Zoom Out"
+            "value" : "缩小"
           }
         },
         "zh-Hant" : {
@@ -3001,7 +3295,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left End Page"
+            "value" : "Linke Endseite"
           }
         },
         "en" : {
@@ -3010,46 +3304,52 @@
             "value" : "Left End Page"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left End Page"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left End Page"
+            "value" : "Page de fin gauche"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left End Page"
+            "value" : "Pagina di fine sinistra"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left End Page"
+            "value" : "左端のページ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left End Page"
+            "value" : "왼쪽 끝 페이지"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left End Page"
+            "value" : "Página final esquerda"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left End Page"
+            "value" : "左端页面"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Left End Page"
+            "value" : "左端頁面"
           }
         }
       }
@@ -3061,7 +3361,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right End Page"
+            "value" : "Rechte Endseite"
           }
         },
         "en" : {
@@ -3070,46 +3370,52 @@
             "value" : "Right End Page"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right End Page"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right End Page"
+            "value" : "Page de fin droite"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right End Page"
+            "value" : "Pagina di fine pagina destra"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Right End Page"
+            "state" : "translated",
+            "value" : "右端のページ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right End Page"
+            "value" : "오른쪽 끝 페이지"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right End Page"
+            "value" : "Página final direita"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right End Page"
+            "value" : "右端页面"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Right End Page"
+            "value" : "右結束頁面"
           }
         }
       }

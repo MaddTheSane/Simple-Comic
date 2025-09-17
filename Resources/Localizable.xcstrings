@@ -49,13 +49,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "\nDrag to crop"
+            "value" : "\n拖动以裁剪"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "\nDrag to crop"
+            "value" : "\n拖動以裁剪"
           }
         }
       }
@@ -107,13 +107,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Cancel"
+            "value" : "取消"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Cancel"
+            "value" : "取消"
           }
         }
       }
@@ -165,13 +165,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Click to select page"
+            "value" : "点击选择页面"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Click to select page"
+            "value" : "點選選擇頁面"
           }
         }
       }
@@ -179,10 +179,28 @@
     "Contains" : {
       "comment" : "Find options menu item",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Enthält"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Contains"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Contient"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "包含"
           }
         }
       }
@@ -194,10 +212,34 @@
     "Copy" : {
       "comment" : "Contextual menu item",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kopie"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Copie"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "复制品"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "複製"
           }
         }
       }
@@ -205,10 +247,34 @@
     "Copy Text" : {
       "comment" : "Contextual menu item",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Text kopieren"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy Text"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Copier le texte"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "复制文本"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "複製文字"
           }
         }
       }
@@ -230,7 +296,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Could not save changes while quitting. Quit anyway?"
+            "value" : "Impossible d'enregistrer les modifications lors de la quittation. Quitter quand même ?"
           }
         },
         "it" : {
@@ -260,13 +326,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Could not save changes while quitting. Quit anyway?"
+            "value" : "退出时无法保存更改。无论如何退出？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Could not save changes while quitting. Quit anyway?"
+            "value" : "退出時無法儲存更改。 無論如何退出？"
           }
         }
       }
@@ -318,13 +384,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract"
+            "value" : "摘录"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract"
+            "value" : "提取"
           }
         }
       }
@@ -376,13 +442,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract Page"
+            "value" : "提取页面"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract Page"
+            "value" : "提取頁面"
           }
         }
       }
@@ -390,10 +456,22 @@
     "Full Word" : {
       "comment" : "Find options menu item",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Volles Wort"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Full Word"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mot plein"
           }
         },
         "ko" : {
@@ -401,59 +479,17 @@
             "state" : "needs_review",
             "value" : "전체 단어"
           }
-        }
-      }
-    },
-    "Horizontal Fit" : {
-      "comment" : "Pages are scaled to fit window width",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Horizontal Fit"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajuster la largeur"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adatta larghezza"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "水平に合わせる"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "수평에 맞춤"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajustar à Largura"
-          }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "横向自适应"
+            "state" : "needs_review",
+            "value" : "完整的单词"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "符合水平"
+            "state" : "needs_review",
+            "value" : "完整的單詞"
           }
         }
       }
@@ -521,62 +557,15 @@
         }
       }
     },
-    "Left to Right Page Order" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Left to Right Page Order"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disposer les pages de gauche à droite"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ordine delle pagine da sinistra a destra"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "左から右へ"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "왼쪽에서 오른쪽으로"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estilo HQ"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从左到右顺序"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "由左到右"
-          }
-        }
-      }
-    },
     "Look Up" : {
       "comment" : "Contextual menu command to look up the selected word",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nach Oben Schauen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -594,16 +583,40 @@
             "state" : "needs_review",
             "value" : "찾아봐"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "查找单词"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "查詢"
+          }
         }
       }
     },
     "Look Up “%@”" : {
       "comment" : "Contextual menu command to look up the word",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Suchen Sie nach “%@”"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Look Up “%@”"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Cherchez « %@ »"
           }
         },
         "ja" : {
@@ -617,59 +630,17 @@
             "state" : "needs_review",
             "value" : "찾아봐 “%@”"
           }
-        }
-      }
-    },
-    "Original Size" : {
-      "comment" : "Pages are not scaled",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Original Size"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Taille réelle"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dimensione originale"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "実際のサイズ"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "실제 사이즈"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tamanho Original"
-          }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "原始大小"
+            "state" : "needs_review",
+            "value" : "向上查找“%@”"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "原來大小"
+            "state" : "needs_review",
+            "value" : "查詢「%@」"
           }
         }
       }
@@ -689,6 +660,12 @@
             "value" : "Page Layout"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mise en page"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -699,6 +676,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "页面布局"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "頁面佈局"
           }
         }
       }
@@ -735,6 +718,12 @@
             "state" : "translated",
             "value" : "阅读顺序"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "頁面順序"
+          }
         }
       }
     },
@@ -753,6 +742,12 @@
             "value" : "Page Scaling"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mise à l'échelle des pages"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -763,6 +758,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "页面缩放模式"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "頁面縮放"
           }
         }
       }
@@ -815,13 +816,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page %li"
+            "value" : "第%li页"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Page %li"
+            "value" : "第%li頁"
           }
         }
       }
@@ -844,7 +845,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si prega di ri-selezionare ‘%@’"
+            "value" : "Veuillez sélectionner à nouveau « %@ »"
           }
         },
         "it" : {
@@ -874,13 +875,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Please re-select '%@'"
+            "value" : "请重新选择“%@”"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Please re-select '%@'"
+            "value" : "請重新選擇「%@」"
           }
         }
       }
@@ -903,7 +904,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Prev/Next Comic"
+            "value" : "Bande dessinée précédente/suivante"
           }
         },
         "it" : {
@@ -939,7 +940,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Prev/Next Comic"
+            "value" : "上一個/下一個漫畫"
           }
         }
       }
@@ -961,7 +962,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit anyway"
+            "value" : "Arrête quand même"
           }
         },
         "it" : {
@@ -991,13 +992,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit anyway"
+            "value" : "无论如何退出"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit anyway"
+            "value" : "無論如何退出"
           }
         }
       }
@@ -1019,7 +1020,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit without saving session?"
+            "value" : "Quitter sans enregistrer la session ?"
           }
         },
         "it" : {
@@ -1049,13 +1050,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit without saving session?"
+            "value" : "不保存会话就退出？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit without saving session?"
+            "value" : "不儲存會話就退出？"
           }
         }
       }
@@ -1119,59 +1120,6 @@
         }
       }
     },
-    "Right to Left Page Order" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Right to Left Page Order"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disposer les pages de droite à gauche"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ordine delle pagine da destra a sinistra"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "右から左へ"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "오른쪽에서 왼쪽으로"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estilo Mangá"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从右到左顺序"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "由右到左"
-          }
-        }
-      }
-    },
     "Rotate Label" : {
       "comment" : "Rotate",
       "extractionState" : "extracted_with_value",
@@ -1186,6 +1134,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Rotate"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Faire pivoter"
           }
         },
         "it" : {
@@ -1268,67 +1222,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Scrubber"
+            "value" : "硬毛刷"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Scrubber"
-          }
-        }
-      }
-    },
-    "Single Page Layout" : {
-      "comment" : "Only a single page is displayed at a time",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Single Page Layout"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pages uniques"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Layout a pagina singola"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1ページレイアウト"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1 페이지 레이아웃"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uma Página Por Tela"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "单页布局"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "單頁配置"
+            "value" : "洗滌器"
           }
         }
       }
@@ -1336,10 +1236,34 @@
     "Start Speaking" : {
       "comment" : "Contextual menu item",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fangen Sie an zu sprechen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start Speaking"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Commencez à parler"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "开始说话"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "開始說話"
           }
         }
       }
@@ -1347,10 +1271,22 @@
     "Starts with" : {
       "comment" : "Find options menu item",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Beginnt mit"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starts with"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Commence par"
           }
         },
         "ja" : {
@@ -1358,70 +1294,52 @@
             "state" : "needs_review",
             "value" : "から始まる"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "开始於"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "開始於"
+          }
         }
       }
     },
     "Stop Speaking" : {
       "comment" : "Contextual menu item",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hör auf zu reden"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stop Speaking"
           }
-        }
-      }
-    },
-    "Two Page Layout" : {
-      "comment" : "Two pages are displayed side by side",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Two Page Layout"
-          }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pages opposées"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Layout a pagina doppia"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "見開きページ"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "양면페이지"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duas Páginas Por Tela"
+            "state" : "needs_review",
+            "value" : "Arrête De Parler"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "双页布局"
+            "state" : "needs_review",
+            "value" : "停止说话"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "雙頁延伸"
+            "state" : "needs_review",
+            "value" : "別說話了"
           }
         }
       }
@@ -1429,10 +1347,34 @@
     "Wrap around" : {
       "comment" : "Find options menu item",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Umwickeln"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wrap around"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Envelopper autour"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "包裹着"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "包裹著"
           }
         }
       }
