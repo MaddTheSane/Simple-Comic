@@ -11,6 +11,12 @@
             "value" : "Pages are never automatically scaled past their actual resolution"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pages are never automatically scaled past their actual resolution"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -32,6 +38,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Windows are dynamically resized to fit the page-view and screen"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Windows are dynamically resized to fit the page-view and screen"
           }
         },
@@ -62,6 +74,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Page scaling constrained by resolution"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Page scaling constrained by resolution"
           }
         },
@@ -107,6 +125,12 @@
             "value" : "Automatically resize windows"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically resize windows"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -146,6 +170,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Images will not exceed their actual resolution in \"fit to window\" scaling modes."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Images will not exceed their actual resolution in \"fit to window\" scaling modes."
           }
         },
@@ -335,6 +365,12 @@
             "value" : "Preferences"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preferences"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -429,6 +465,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Recognize Text"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recognise Text"
           }
         },
         "ja" : {

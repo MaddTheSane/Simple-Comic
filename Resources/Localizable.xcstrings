@@ -16,6 +16,12 @@
             "value" : "\nDrag to crop"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\nDrag to crop"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -74,6 +80,12 @@
             "value" : "Cancel"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -127,6 +139,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to select page"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Click to select page"
@@ -191,10 +209,22 @@
             "value" : "Contains"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contains"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Contient"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "包含"
           }
         },
         "zh-Hant" : {
@@ -219,6 +249,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy"
@@ -259,6 +295,12 @@
             "value" : "Copy Text"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Text"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -280,6 +322,7 @@
       }
     },
     "Could not save changes while quitting. Quit anyway?" : {
+      "comment" : "Could not save changes while quitting. Quit anyway?",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -288,6 +331,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not save changes while quitting. Quit anyway?"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Could not save changes while quitting. Quit anyway?"
@@ -351,6 +400,12 @@
             "value" : "Extract"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extract"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -404,6 +459,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extract Page"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Extract Page"
@@ -468,6 +529,12 @@
             "value" : "Full Word"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full Word"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -508,6 +575,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left to Right"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Left to Right"
@@ -572,6 +645,12 @@
             "value" : "Look Up"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Look Up"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -608,6 +687,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Look Up “%@”"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Look Up “%@”"
@@ -660,6 +745,12 @@
             "value" : "Page Layout"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Layout"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -696,6 +787,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Order"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Page Order"
@@ -742,6 +839,12 @@
             "value" : "Page Scaling"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page Scaling"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -778,6 +881,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %li"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Page %li"
@@ -842,6 +951,12 @@
             "value" : "Please re-select ‘%@’"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please re-select ‘%@’"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -901,6 +1016,12 @@
             "value" : "Prev/Next Comic"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prev/Next Comic"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -934,7 +1055,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Prev/Next Comic"
+            "value" : "上一个/下一个漫画"
           }
         },
         "zh-Hant" : {
@@ -946,6 +1067,7 @@
       }
     },
     "Quit anyway" : {
+      "comment" : "Quit anyway",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -954,6 +1076,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit anyway"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quit anyway"
@@ -1004,6 +1132,7 @@
       }
     },
     "Quit without saving session?" : {
+      "comment" : "Quit without saving session?",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1012,6 +1141,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit without saving session?"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quit without saving session?"
@@ -1071,6 +1206,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right to Left"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Right to Left"
@@ -1136,6 +1277,12 @@
             "value" : "Rotate"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rotate"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -1184,6 +1331,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scrubber"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scrubber"
@@ -1248,6 +1401,12 @@
             "value" : "Start Speaking"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Speaking"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -1278,6 +1437,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starts with"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starts with"
@@ -1324,6 +1489,12 @@
             "value" : "Stop Speaking"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop Speaking"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -1354,6 +1525,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wrap around"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wrap around"
