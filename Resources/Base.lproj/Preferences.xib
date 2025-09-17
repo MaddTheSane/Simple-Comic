@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23504" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24127" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24127"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,7 +18,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="140" y="154" width="320" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="944"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="948"/>
             <view key="contentView" id="247">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="282"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -32,7 +32,7 @@
                         </textFieldCell>
                     </textField>
                     <button toolTip="Windows are dynamically resized to fit the page-view and screen" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="152">
-                        <rect key="frame" x="18" y="107" width="204" height="18"/>
+                        <rect key="frame" x="20" y="108" width="200" height="16"/>
                         <buttonCell key="cell" type="check" title="Automatically resize windows" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="231">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -50,7 +50,7 @@
                         </textFieldCell>
                     </textField>
                     <button toolTip="Recognize Text so you can select and copy it. Requires macOS 11 or newer." allowsExpansionToolTips="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="252">
-                        <rect key="frame" x="18" y="38" width="118" height="18"/>
+                        <rect key="frame" x="20" y="39" width="114" height="16"/>
                         <buttonCell key="cell" type="check" title="Recognize Text" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="253">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -69,7 +69,7 @@
                         </connections>
                     </button>
                     <button toolTip="Pages are never automatically scaled past their actual resolution" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="36">
-                        <rect key="frame" x="18" y="176" width="260" height="18"/>
+                        <rect key="frame" x="20" y="177" width="256" height="16"/>
                         <buttonCell key="cell" type="check" title="Page scaling constrained by resolution" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="229">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -87,7 +87,7 @@
                         </textFieldCell>
                     </textField>
                     <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="238">
-                        <rect key="frame" x="11" y="242" width="26" height="24"/>
+                        <rect key="frame" x="14" y="244" width="20" height="20"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="20" id="LcY-29-3Cg"/>
                             <constraint firstAttribute="height" constant="20" id="oZD-F6-H5Q"/>

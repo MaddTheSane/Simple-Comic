@@ -31,6 +31,7 @@
 #import "OCRFindViewController.h"
 #import "OCRTracker.h"
 #import "OCRVision.h"
+#import "GeneratedAssetSymbols.h"
 
 #import "Simple_Comic-Swift.h"
 
@@ -1493,10 +1494,16 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
         if(session.pageOrder)
         {
             [menuItem setTitle: NSLocalizedString(@"Right to Left", @"Right to left page order menu item text")];
+			if (@available(macOS 26, *)) {
+				menuItem.image = [NSImage imageNamed:ACImageNameRightLeftOrderTemplate];
+			}
         }
         else
         {
             [menuItem setTitle: NSLocalizedString(@"Left to Right", @"Left to right page order menu item text")];
+			if (@available(macOS 26, *)) {
+				menuItem.image = [NSImage imageNamed:ACImageNameLeftRightOrderTemplate];
+			}
         }
     }
 	else if([menuItem action] == @selector(pageRight:))
