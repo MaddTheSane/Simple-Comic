@@ -98,12 +98,11 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
 @property(weak) CALayer *selectionLayer;
 
-/// <VNRecognizedTextObservation *> - 10.15 and newer
-@property(nonatomic) NSArray *textPieces;
+@property(nonatomic) NSArray<VNRecognizedTextObservation *> *textPieces;
 
 // Key is VNRecognizedTextObservation.
 // The value is the NSRange of the underlying string to show as selected.
-@property NSMutableDictionary<NSObject *, NSValue *> *selectionPieces;
+@property NSMutableDictionary<VNRecognizedTextObservation *, NSValue *> *selectionPieces;
 
 @property(nonatomic, readonly) NSUInteger totalStringLength;
 
@@ -598,7 +597,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	if (!sIsEnabled) {
 		return NO;
 	}
-	NSObject *textPiece = [self textPieceForMouseEvent:theEvent];
+	VNRecognizedTextObservation *textPiece = [self textPieceForMouseEvent:theEvent];
 	BOOL isDoingMouseDown = (textPiece != nil);
 	if (isDoingMouseDown)
 	{
@@ -616,30 +615,45 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	return isDoingMouseDown;
 }
 
-- (void)mouseDown:(NSEvent *)theEvent textPiece:(NSObject *)textPiece
+- (BOOL)didRightMouseDown:(NSEvent *)theEvent
+{
+	if (!sIsEnabled) {
+		return NO;
+	}
+	BOOL didRightClick = NO;
+	VNRecognizedTextObservation *textPiece = [self textPieceForMouseEvent:theEvent];
+	if (textPiece != nil) {
+		NSValue * rangeValue = [self rangeValueOfSelectionOfTextPiece:textPiece];
+		if (rangeValue != nil) {
+			NSBezierPath *path = OCRBezierPathFromTextObservationRange(textPiece, [rangeValue rangeValue]);
+			if (path != nil) {
+				for (OCRDatum *datum in self.datums) {
+					if (datum.image != nil && [datum.textPieces containsObject:textPiece]) {
+						CGSize imageSize = datum.selectionLayer.bounds.size;
+						CGRect r = VNImageRectForNormalizedRect(path.bounds, imageSize.width, imageSize.height);
+						r = [datum.selectionLayer convertRect:r toLayer:self.view.layer];
+						NSPoint p = [self.view convertPoint:[theEvent locationInWindow] fromView:nil];
+						if (CGRectContainsPoint(r, p)) {
+							[self popUpTextContextMenu:theEvent];
+							didRightClick = YES;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	return didRightClick;
+}
+
+- (void)mouseDown:(NSEvent *)theEvent textPiece:(VNRecognizedTextObservation *)textPiece
 {
 	if (!sIsEnabled) {
 		return;
 	}
-	NSInteger i = 0;
-	NSValue *rangeValue = nil;
-	for (;i < self.datums.count; ++i) {
-		OCRDatum *datum = self.datums[i];
-		rangeValue = datum.selectionPieces[textPiece];
-		if (datum.image != nil && rangeValue != nil)
-		{
-			break;
-		}
-	}
+	NSValue * rangeValue = [self rangeValueOfSelectionOfTextPiece:textPiece];
 	if (rangeValue != nil && (theEvent.modifierFlags & NSEventModifierFlagControl) != 0) {
-		NSInteger i = 0;
-		NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Contextual Menu", @"")];
-		[theMenu insertItemWithTitle:NSLocalizedString(@"Copy", @"") action:@selector(copy:) keyEquivalent:@"" atIndex:i++];
-		[theMenu insertItemWithTitle:NSLocalizedString(@"Look Up", @"") action:@selector(lookUp:) keyEquivalent:@"" atIndex:i++];
-		[theMenu insertItem:[NSMenuItem separatorItem] atIndex:i++];
-		[theMenu insertItemWithTitle:NSLocalizedString(@"Start Speaking", @"") action:@selector(startSpeaking:) keyEquivalent:@"" atIndex:i++];
-		[theMenu insertItemWithTitle:NSLocalizedString(@"Stop Speaking", @"") action:@selector(stopSpeaking:) keyEquivalent:@"" atIndex:i++];
-		[NSMenu popUpContextMenu:theMenu withEvent:theEvent forView:self.view];
+		[self popUpTextContextMenu:theEvent];
 	} else {
 		[[NSCursor IBeamCursor] set];
 		if (!(theEvent.modifierFlags & NSEventModifierFlagCommand))
@@ -846,6 +860,34 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 		}
 	}
 	return NO;
+}
+
+/// @param textPiece - the piece to examine
+/// @return selected range else nil if no part selected
+- (NSValue *)rangeValueOfSelectionOfTextPiece:(VNRecognizedTextObservation *)textPiece {
+	NSInteger i = 0;
+	NSValue *rangeValue = nil;
+	for (;i < self.datums.count; ++i) {
+		OCRDatum *datum = self.datums[i];
+		rangeValue = datum.selectionPieces[textPiece];
+		if (datum.image != nil && rangeValue != nil)
+		{
+			break;
+		}
+	}
+	return rangeValue;
+}
+
+/// Show the contextual menu for text at the theEvent's point
+- (void)popUpTextContextMenu:(NSEvent *)theEvent {
+	NSInteger i = 0;
+	NSMenu *theMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Contextual Menu", @"")];
+	[theMenu insertItemWithTitle:NSLocalizedString(@"Copy", @"") action:@selector(copy:) keyEquivalent:@"" atIndex:i++];
+	[theMenu insertItemWithTitle:NSLocalizedString(@"Look Up", @"") action:@selector(lookUp:) keyEquivalent:@"" atIndex:i++];
+	[theMenu insertItem:[NSMenuItem separatorItem] atIndex:i++];
+	[theMenu insertItemWithTitle:NSLocalizedString(@"Start Speaking", @"") action:@selector(startSpeaking:) keyEquivalent:@"" atIndex:i++];
+	[theMenu insertItemWithTitle:NSLocalizedString(@"Stop Speaking", @"") action:@selector(stopSpeaking:) keyEquivalent:@"" atIndex:i++];
+	[NSMenu popUpContextMenu:theMenu withEvent:theEvent forView:self.view];
 }
 
 #pragma mark Find

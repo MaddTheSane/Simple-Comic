@@ -1286,8 +1286,11 @@ typedef struct {
 
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
-	BOOL loupe = !sessionController.session.loupe;
-	sessionController.session.loupe = loupe;
+	if(![sessionController.tracker didRightMouseDown:theEvent])
+	{
+		BOOL loupe = !sessionController.session.loupe;
+		sessionController.session.loupe = loupe;
+	}
 }
 
 
