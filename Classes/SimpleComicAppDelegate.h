@@ -66,14 +66,14 @@ extern NSString *const TSSTViewRotation;
 extern NSNotificationName const TSSTSessionEndNotification;
 
 /*!
-    This class is the application delegate.
-    It handles the following:
+ * This class is the application delegate.
+ * It handles the following:
 
-    The Core Data store
-    File loading
-    Session auto-save
-    Archive password prompts during their loading
-    Fallback archive encoding selection
+ * * The Core Data store
+ * * File loading
+ * * Session auto-save
+ * * Archive password prompts during their loading
+ * * Fallback archive encoding selection
 */
 @interface SimpleComicAppDelegate : NSObject <NSApplicationDelegate>
 /*! When opening encrypted zip or rar archives this panel is
@@ -104,12 +104,12 @@ extern NSNotificationName const TSSTSessionEndNotification;
 
 
 
-/*! Converts \c files into an array of NSURLs, then passes them
- *  to \c newSessionWithFileURLs: */
+/*! Converts `files` into an array of NSURLs, then passes them
+ *  to `-newSessionWithFileURLs:` */
 - (TSSTManagedSession *)newSessionWithFiles:(NSArray<NSString*> *)files NS_RETURNS_NOT_RETAINED;
 
 /*! Creates a new Session object based on user prefs and then
-    passes the files array to \c addFileURLs:toSesion: */
+    passes the files array to `-addFileURLs:toSesion:` */
 - (TSSTManagedSession *)newSessionWithFileURLs:(NSArray<NSURL*> *)files NS_RETURNS_NOT_RETAINED;
 
 /*! This method is called every time an existing session needs

@@ -71,11 +71,7 @@
 	[effectView addSubview:self.view];
 	effectView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 	effectView.blendingMode = NSVisualEffectBlendingModeWithinWindow;
-	if (@available(macOS 10.14, *)) {
-		effectView.material = NSVisualEffectMaterialHeaderView;
-	} else {
-		effectView.material = NSVisualEffectMaterialSelection;
-	}
+	effectView.material = NSVisualEffectMaterialHeaderView;
 	self.view = effectView;
 	[self.searchField addSubview:[self constructMenuRoot]];
 	if (self.engine.findString) {

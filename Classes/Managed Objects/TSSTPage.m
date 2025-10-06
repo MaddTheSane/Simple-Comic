@@ -51,14 +51,8 @@ static NSSize monospaceCharacterSize;
 		NSArray<NSString*> *imgTyp = self.imageTypes;
 		NSMutableSet<NSString*> *aimageTypes = [[NSMutableSet alloc] initWithCapacity:imgTyp.count * 2];
 		for (NSString *uti in imgTyp) {
-			NSArray *fileExts;
-			if (@available(macOS 11.0, *)) {
-				UTType *fileUTI = [UTType typeWithIdentifier:uti];
-				fileExts = fileUTI.tags[UTTagClassFilenameExtension];
-			} else {
-				fileExts =
-				CFBridgingRelease(UTTypeCopyAllTagsWithClass((__bridge CFStringRef)uti, kUTTagClassFilenameExtension));
-			}
+			UTType *fileUTI = [UTType typeWithIdentifier:uti];
+			NSArray *fileExts = fileUTI.tags[UTTagClassFilenameExtension];
 			[aimageTypes addObjectsFromArray:fileExts];
 		}
 		//Some early JPEGs have the extension jfi/jfif.

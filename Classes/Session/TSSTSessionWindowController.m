@@ -31,6 +31,7 @@
 #import "OCRFindViewController.h"
 #import "OCRTracker.h"
 #import "OCRVision.h"
+#import "GeneratedAssetSymbols.h"
 
 #import "Simple_Comic-Swift.h"
 
@@ -753,7 +754,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-/* Used by all of the page selection methods to make both pages visible.  Also adds a small
+/*! Used by all of the page selection methods to make both pages visible.  Also adds a small
 	gutter around the images for cropping. */
 - (void)changeViewForSelection
 {
@@ -985,21 +986,16 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)observationsForFindIndex:(NSInteger)index completion:(void (^)(NSArray<VNRecognizedTextObservation *> *pieces)) completion
 {
-	if (@available(macOS 10.15, *))
+	NSImage *image = [[[[self pageController] arrangedObjects] objectAtIndex:index] pageImage];
+	if (image)
 	{
-		NSImage *image = [[[[self pageController] arrangedObjects] objectAtIndex:index] pageImage];
-		if (image)
-		{
-			self.ocrVision = [[OCRVision alloc] init];
-			__weak typeof(self) weakSelf = self;
-			[self.ocrVision ocrImage:image completion:^(id<OCRVisionResults> ocrResults) {
-				NSArray<VNRecognizedTextObservation *> *textObservations = ocrResults.textObservations;
-				weakSelf.ocrVision = nil;
-				completion(textObservations ?: @[]);
-			}];
-		} else {
-			completion( @[] );
-		}
+		self.ocrVision = [[OCRVision alloc] init];
+		__weak typeof(self) weakSelf = self;
+		[self.ocrVision ocrImage:image completion:^(id<OCRVisionResults> ocrResults) {
+			NSArray<VNRecognizedTextObservation *> *textObservations = ocrResults.textObservations;
+			weakSelf.ocrVision = nil;
+			completion(textObservations ?: @[]);
+		}];
 	} else {
 		completion( @[] );
 	}
@@ -1007,11 +1003,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)cancelObservations
 {
-	if (@available(macOS 10.15, *))
-	{
-		[self.ocrVision cancel];
-		self.ocrVision = nil;
-	}
+	[self.ocrVision cancel];
+	self.ocrVision = nil;
 }
 
 #pragma mark - Applescript
@@ -1164,21 +1157,16 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			if (bothAreGood) {
 				theSame = [dat1 isEqual:dat2];
 			}
-			if (theSame) {
-				titleString = [NSString stringWithFormat:@"%@ — %@", fileName, titleString];
-			}
-		} else {
-			titleString = [NSString stringWithFormat:@"%@ — %@", fileName, titleString];
 		}
 	}
 	if (fileName == nil) {
 		fileName = representationURL.lastPathComponent;
 	}
-	if (@available(macOS 11.0, *)) {
-		self.window.title = fileName;
-		self.window.subtitle = [titleString stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@ — ", fileName] withString:@""];
+	self.window.title = fileName;
+	if ([fileName isEqualToString:titleString]) {
+		self.window.subtitle = @"";
 	} else {
-		self.window.title = titleString;
+		self.window.subtitle = titleString;
 	}
 	[pageView setFirstPage: pageOne.pageImage secondPageImage: pageTwo.pageImage];
 	
@@ -1490,7 +1478,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	
 	BOOL valid = YES;
-    int state;
+    NSControlStateValue state;
     if([menuItem action] == @selector(toggleFullScreen:))
     {
         state = [[self window] isFullscreen] ? NSControlStateValueOn : NSControlStateValueOff;
@@ -1506,10 +1494,16 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
         if(session.pageOrder)
         {
             [menuItem setTitle: NSLocalizedString(@"Right to Left", @"Right to left page order menu item text")];
+			if (@available(macOS 26, *)) {
+				menuItem.image = [NSImage imageNamed:ACImageNameRightLeftOrderTemplate];
+			}
         }
         else
         {
             [menuItem setTitle: NSLocalizedString(@"Left to Right", @"Left to right page order menu item text")];
+			if (@available(macOS 26, *)) {
+				menuItem.image = [NSImage imageNamed:ACImageNameLeftRightOrderTemplate];
+			}
         }
     }
 	else if([menuItem action] == @selector(pageRight:))

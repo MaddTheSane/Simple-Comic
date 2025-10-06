@@ -37,20 +37,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
- *	@class		UKXattrMetadataStore
- *	@brief		\c xattr wrapper class.
- *	@discussion	This is a wrapper around The Mac OS X 10.4 and later xattr
- *	API that lets you attach arbitrary metadata to a file. Currently it
- *	allows querying and changing the attributes of a file, as well as
- *	retrieving a list of attribute names.
- *
- *	It also includes some conveniences for storing/retrieving UTF8 strings,
- *	and objects as property lists in addition to the raw data.
- *
- *	NOTE: keys (i.e. xattr names) are strings of 127 characters or less and
- *	should be made like bundle identifiers, e.g. @"de.zathras.myattribute".
- */
+/// `xattr` wrapper class.
+///
+/// This is a wrapper around The Mac OS X 10.4 and later xattr
+/// API that lets you attach arbitrary metadata to a file. Currently it
+/// allows querying and changing the attributes of a file, as well as
+/// retrieving a list of attribute names.
+///
+/// It also includes some conveniences for storing/retrieving UTF8 strings,
+/// and objects as property lists in addition to the raw data.
+///
+/// NOTE: keys (i.e. xattr names) are strings of 127 characters or less and
+/// should be made like bundle identifiers, e.g. @"de.zathras.myattribute".
 @interface UKXattrMetadataStore : NSObject
 
 /*!
@@ -62,23 +60,19 @@ NS_ASSUME_NONNULL_BEGIN
  *	@return		An \c NSArray of <code>NSString</code>s, or an empty \c NSArray on failure.
  *	@discussion	Returns an \c NSArray of <code>NSString</code>s containing all xattr names currently set
  *				for the file at the specified path.
+ *	@deprecated	This method does not do any error checking.
  */
 +(NSArray<NSString*>*) allKeysAtPath:(NSString*)path traverseLink:(BOOL)travLnk UKXDEPRECATED("allKeys(atPath:traverseLink:) throws", "+allKeysAtPath:traverseLink:error:");
 
-/*!
- *	@method		allKeysAtPath:traverseLink:
- *	@param		path
- *				The file to get xattr names from.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		error
- *				If the method does not complete successfully, upon return
- *				contains an \c NSError object that describes the problem.
- *	@return		An \c NSArray of <code>NSString</code>s, or \c nil on failure.
- *	@discussion	Returns an \c NSArray of <code>NSString</code>s containing all xattr names currently set
- *				for the file at the specified path.
- */
-+(nullable NSArray<NSString*>*) allKeysAtPath:(NSString*)path traverseLink:(BOOL)travLnk error:(NSError**)error;
+/// Returns an `NSArray` of `NSString`s containing all xattr names currently set
+/// for the file at the specified path.
+/// - parameter path: The file to get xattr names from.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter error: If the method does not complete successfully, upon return contains an
+/// `NSError` object that describes the problem.
+/// - throws: If the method does not complete successfully.
+/// - returns: An `NSArray` of `NSString`s, or `nil` on failure.
++(nullable NSArray<NSString*>*) allKeysAtPath:(NSString*)path traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)error;
 
 #pragma mark Store UTF8 strings:
 /*!
@@ -99,25 +93,17 @@ NS_ASSUME_NONNULL_BEGIN
 +(void) setString:(NSString*)str forKey:(NSString*)key
 		   atPath:(NSString*)path traverseLink:(BOOL)travLnk UKXDEPRECATED("setString(_:forKey:atPath:traverseLink:) throws", "+setString:forKey:atPath:traverseLink:error:");
 
-/*!
- *	@method		setString:forKey:atPath:traverseLink:error:
- *	@brief		Set the xattr with name \c key to the UTF8 representation of <code>str</code>.
- *	@param		str
- *				The string to set.
- *	@param		key
- *				the key to set \c str to.
- *	@param		path
- *				The file whose xattr you want to set.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		outError
- *				If the method does not complete successfully, upon return 
- *				contains an \c NSError object that describes the problem.
- *	@return		\c YES on success, \c NO on failure.
- *	@discussion	Set the xattr with name \c key to the UTF8 representation of <code>str</code>.
- */
+/// Set the xattr with name `key` to the UTF8 representation of `str`.
+/// - parameter str: The string to set.
+/// - parameter key: the key to set `str` to.
+/// - parameter path: The file whose xattr you want to set.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter outError: If the method does not complete successfully, upon return
+/// contains an `NSError` object that describes the problem.
+/// - throws: If the method does not complete successfully.
+/// - returns: `YES` on success, `NO` on failure.
 +(BOOL) setString:(NSString*)str forKey:(NSString*)key
-		   atPath:(NSString*)path traverseLink:(BOOL)travLnk error:(NSError**)outError;
+		   atPath:(NSString*)path traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)outError;
 
 /*!
  *	@method		stringForKey:atPath:traverseLink:
@@ -135,23 +121,16 @@ NS_ASSUME_NONNULL_BEGIN
 +(nullable NSString*) stringForKey:(NSString*)key atPath:(NSString*)path
 					  traverseLink:(BOOL)travLnk UKXDEPRECATED("string(forKey:atPath:traverseLink:) throws", "+stringForKey:atPath:traverseLink:error:");
 
-/*!
- *	@method		stringForKey:atPath:traverseLink:error:
- *	@brief		Get the xattr with name \c key as a UTF8 string.
- *	@param		key
- *				the key to set \c str to.
- *	@param		path
- *				The file whose xattr you want to get.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		error
- *				If the method does not complete successfully, upon return
- *				contains an \c NSError object that describes the problem.
- *	@return		an \c NSString on succes, or \c nil on failure.
- *	@discussion	Get the xattr with name \c key as a UTF-8 string.
- */
+/// Get the xattr with name `key` as a UTF8 string.
+/// - parameter key: the key to set `str` to.
+/// - parameter path: The file whose xattr you want to get.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter error: If the method does not complete successfully, upon return
+///contains an `NSError` object that describes the problem.
+/// - throws: If the method does not complete successfully.
+/// - returns: an `NSString` on succes, or `nil` on failure.
 +(nullable NSString*) stringForKey:(NSString*)key atPath:(NSString*)path
-					  traverseLink:(BOOL)travLnk error:(NSError**)error;
+					  traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)error;
 
 #pragma mark Store raw data:
 /*!
@@ -169,25 +148,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(void) setData:(NSData*)data forKey:(NSString*)key
 		 atPath:(NSString*)path traverseLink:(BOOL)travLnk UKXDEPRECATED("setData(_:forKey:atPath:traverseLink:) throws", "+setData:forKey:atPath:traverseLink:error:");
-/*!
- *	@method		setData:forKey:atPath:traverseLink:error:
- *	@brief		Set the xattr with name \c key to the raw data in <code>data</code>.
- *	@param		data
- *				The data to set.
- *	@param		key
- *				the key to set \c data to.
- *	@param		path
- *				The file whose xattr you want to set.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		error
- *				If the method does not complete successfully, upon return
- *				contains an \c NSError object that describes the problem.
- *	@return		\c YES on success, \c NO on failure.
- *	@discussion	Set the xattr with name \c key to the raw data in <code>data</code>.
- */
+
+/// Set the xattr with name `key` to the raw data in `data`.
+/// - parameter data: The data to set.
+/// - parameter key: the key to set `data` to.
+/// - parameter path: The file whose xattr you want to set.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter error: If the method does not complete successfully, upon return
+/// contains an  `NSError` object that describes the problem.
+/// - throws: If the method does not complete successfully.
+/// - returns: `YES` on success, `NO` on failure.
 +(BOOL) setData:(NSData*)data forKey:(NSString*)key
-		 atPath:(NSString*)path traverseLink:(BOOL)travLnk error:(NSError**)error;
+		 atPath:(NSString*)path traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)error;
 
 /*!
  *	@method		dataForKey:atPath:traverseLink:
@@ -204,22 +176,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(nullable NSData*) dataForKey:(NSString*)key atPath:(NSString*)path
 				  traverseLink:(BOOL)travLnk UKXDEPRECATED("data(forKey:atPath:traverseLink:) throws", "+dataForKey:atPath:traverseLink:error:");
-/*!
- *	@method		dataForKey:atPath:traverseLink:error:
- *	@brief		Get the xattr with name \c key as raw data.
- *	@param		key
- *				the key to set \c str to.
- *	@param		path
- *				The file whose xattr you want to get.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		error
- *				If the method does not complete successfully, upon return
- *				contains an \c NSError object that describes the problem.
- *	@return		an \c NSData containing the contents of \c key on succes, or \c nil on failure
- */
+
+/// Get the xattr with name `key` as raw data.
+/// - parameter key: the key to set `str` to.
+/// - parameter path: The file whose xattr you want to get.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter error: If the method does not complete successfully, upon return
+/// contains an `NSError` object that describes the problem.
+/// - throws: If the method does not complete successfully.
+/// - returns: an `NSData` containing the contents of `key` on succes, or `nil` on failure.
 +(nullable NSData*) dataForKey:(NSString*)key atPath:(NSString*)path
-				  traverseLink:(BOOL)travLnk error:(NSError**)error;
+				  traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)error;
 
 #pragma mark Store objects: (Only can get/set plist-type objects for now)‚
 /*!
@@ -240,56 +207,37 @@ NS_ASSUME_NONNULL_BEGIN
 +(void) setObject:(id)obj forKey:(NSString*)key atPath:(NSString*)path
 	 traverseLink:(BOOL)travLnk UKXDEPRECATED("setObject(_:forKey:atPath:traverseLink:format:) throws", "+setObject:forKey:atPath:traverseLink:format:error:");
 
-/*!
- *	@method		setObject:forKey:atPath:traverseLink:error:
- *	@brief		Sets the xattr with name \c key to an XML property list representation of
- *				the specified object (or object graph).
- *	@param		obj
- *				The Property List object to set.
- *	@param		key
- *				The key to set \c obj to.
- *	@param		path
- *				The file whose xattr you want to set.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		error
- *				If the method does not complete successfully, upon return
- *				contains an \c NSError object that describes the problem.
- *	@return		\c YES on success, \c NO on failure.
- *	@discussion	Set the xattr with name \c key to an XML property list representation of
- *				the specified object (or object graph).
- *
- *				This is the same as calling \c +setObject:forKey:atPath:traverseLink:format:error: with \c NSPropertyListXMLFormat_v1_0 as the \c format
- */
+/// Sets the xattr with name `key` to an XML property list representation of the specified object (or object graph).
+/// - parameter obj: The Property List object to set.
+/// - parameter key: The key to set `obj` to.
+/// - parameter path: The file whose xattr you want to set.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter error: If the method does not complete successfully, upon return contains an `NSError`
+/// object that describes the problem.
+/// - throws: If the method does not complete successfully.
+/// - returns: `YES` on success, `NO` on failure.
+///
+/// This is the same as calling `+setObject:forKey:atPath:traverseLink:format:error:`
+/// with `NSPropertyListXMLFormat_v1_0` as the `format`.
 +(BOOL) setObject:(id)obj forKey:(NSString*)key atPath:(NSString*)path
-	 traverseLink:(BOOL)travLnk error:(NSError**)error;
+	 traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)error;
 
-/*!
- *	@method		setObject:forKey:atPath:traverseLink:format:error:
- *	@brief		Sets the xattr with name \c key to a property list representation of
- *				the specified object (or object graph) using the specified format.
- *	@param		obj
- *				The Property List object to set.
- *	@param		key
- *				the key to set \c obj to.
- *	@param		path
- *				The file whose xattr you want to set.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		error
- *				If the method does not complete successfully, upon return
- *				contains an \c NSError object that describes the problem.
- *	@param		format
- *				The property list format to save the encoded data.
- *				Remember: Foundation does not support generating
- *				\c NSPropertyListOpenStepFormat property lists.
- *	@return		\c YES on success, \c NO on failure.
- *	@discussion	Set the xattr with name \c key to a property list representation of
- *				the specified object (or object graph). The Property list format is
- *				specified by the \c format parameter.
- */
+/// Sets the xattr with name `key` to a property list representation of the specified object (or object graph)
+/// using the specified format.
+/// - parameter obj: The Property List object to set.
+/// - parameter key: the key to set `obj` to.
+/// - parameter path: The file whose xattr you want to set.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter error: If the method does not complete successfully, upon return
+/// contains an `NSError` object that describes the problem.
+/// - parameter format: The property list format to save the encoded data.
+/// Remember: Foundation does not support generating `NSPropertyListOpenStepFormat` property lists.
+/// - throws: If the method does not complete successfully.
+/// - returns: `YES` on success, `NO` on failure.
+///
+/// The Property list format is specified by the `format` parameter.
 +(BOOL) setObject:(id)obj forKey:(NSString*)key atPath:(NSString*)path
-	 traverseLink:(BOOL)travLnk format:(NSPropertyListFormat)format error:(NSError**)error;
+	 traverseLink:(BOOL)travLnk format:(NSPropertyListFormat)format error:(NSError*__autoreleasing*)error;
 
 /*!
  *	@method		objectForKey:atPath:traverseLink:
@@ -307,42 +255,29 @@ NS_ASSUME_NONNULL_BEGIN
 +(nullable id) objectForKey:(NSString*)key atPath:(NSString*)path
 			   traverseLink:(BOOL)travLnk UKXDEPRECATED("object(forKey:atPath:traverseLink:) throws", "+objectForKey:atPath:traverseLink:error:");
 
-/*!
- *	@method		objectForKey:atPath:traverseLink:error:
- *	@brief		Get the xattr with name \c key as a property list
- *	@param		key
- *				the key to get the Property List object from.
- *	@param		path
- *				The file whose xattr you want to get.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		outError
- *				If the method does not complete successfully, upon return
- *				contains an \c NSError object that describes the problem.
- *	@return		a Property List object from contents of \c key on succes, or \c nil on failure
- *	@discussion	Get the xattr with name \c key as a property list object (<code>NSString</code>, <code>NSArray</code>, etc...)
- *
- *				The data has to be stored as a property list.
- */
+/// Get the xattr with name `key` as a property list object (`NSString`, `NSArray`, etc...)
+/// - parameter key: the key to get the Property List object from.
+/// - parameter path: The file whose xattr you want to get.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter outError: If the method does not complete successfully, upon return contains an `NSError` object
+/// that describes the problem.
+/// - throws: If the method does not complete successfully.
+/// - returns: a Property List object from contents of `key` on succes, or `nil` on failure.
+///
+/// The data has to be stored as a property list.
 +(nullable id) objectForKey:(NSString*)key atPath:(NSString*)path
-			   traverseLink:(BOOL)travLnk error:(NSError**)outError;
+			   traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)outError;
 
-/*!
- *	@method		removeKey:atPath:traverseLink:error:
- *	@brief		Removes the xattr with name \c key
- *	@param		key
- *				the key to delete.
- *	@param		path
- *				The file whose xattr you want to remove.
- *	@param		travLnk
- *				If <code>YES</code>, follows symlinks.
- *	@param		outError
- *				If the method does not complete successfully, upon return
- *				contains an \c NSError object that describes the problem.
- *	@return		\c YES on success, \c NO on failure.
- */
+/// Removes the xattr with name `key`.
+/// - parameter key: the key to delete.
+/// - parameter path: The file whose xattr you want to remove.
+/// - parameter travLnk: If `YES`, follows symlinks.
+/// - parameter outError: If the method does not complete successfully, upon return contains
+/// an `NSError` object that describes the problem.
+/// - throws: If the method does not complete successfully.
+/// - returns: `YES` on success, `NO` on failure.
 +(BOOL) removeKey:(NSString*)key atPath:(NSString*)path
-	 traverseLink:(BOOL)travLnk error:(NSError**)outError;
+	 traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)outError;
 
 @end
 

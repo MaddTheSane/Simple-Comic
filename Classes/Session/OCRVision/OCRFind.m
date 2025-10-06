@@ -131,10 +131,7 @@ typedef NS_OPTIONS(NSUInteger, OCRIndicator) {
 
 - (void)scrollRangeToVisible:(NSRange)range
 {
-	if (@available(macOS 10.15, *))
-	{
-		[self.tracker scrollFindRangeToVisible:range];
-	}
+	[self.tracker scrollFindRangeToVisible:range];
 }
 
 - (NSString *)expanded
@@ -248,36 +245,34 @@ anchorRanges:(NSArray<NSValue *> *)anchorRanges
 		[self didNotFind];
 		return;
 	}
-	if (@available(macOS 10.15, *)) {
-		NSInteger increment = ((options & OCRBackwardSearch) ? -1 : 1);
-		OCRRangeEnumerator *rangeEnumerator = [[OCRRangeEnumerator alloc] initWithStart:start end:end increment:increment];
-		__weak typeof(self) weakSelf = self;
-		[weakSelf find:findString options:options enumerator:rangeEnumerator findCompletion:
-			 ^(NSInteger index, NSRange r, NSArray<VNRecognizedTextObservation *> *pieces)
-		 {
-			if (index != NSNotFound) {
-				[weakSelf didFindIndex:index range:r];
-			} else if (wrap) {
-				NSInteger start1 = (options & OCRBackwardSearch) ? self.delegate.findCount - 1 : 0;
-				NSInteger end1 = anchorIndex;
-				[self flashImage:(options & OCRBackwardSearch) ? @"OCRBackWrap" : @"OCRWrap"];
-				OCRRangeEnumerator *rangeEnumerator1 = [[OCRRangeEnumerator alloc] initWithStart:start1 end:end1 increment:increment];
-				[weakSelf find:findString options:options enumerator:rangeEnumerator1 findCompletion:
-					 ^(NSInteger index, NSRange r, NSArray<VNRecognizedTextObservation *> *pieces)
-				 {
-					if (index != NSNotFound) {
-						[weakSelf didFindIndex:index range:r];
-					} else {
-						[weakSelf didNotFind];
-					}
+	NSInteger increment = ((options & OCRBackwardSearch) ? -1 : 1);
+	OCRRangeEnumerator *rangeEnumerator = [[OCRRangeEnumerator alloc] initWithStart:start end:end increment:increment];
+	__weak typeof(self) weakSelf = self;
+	[weakSelf find:findString options:options enumerator:rangeEnumerator findCompletion:
+		 ^(NSInteger index, NSRange r, NSArray<VNRecognizedTextObservation *> *pieces)
+	 {
+		if (index != NSNotFound) {
+			[weakSelf didFindIndex:index range:r];
+		} else if (wrap) {
+			NSInteger start1 = (options & OCRBackwardSearch) ? self.delegate.findCount - 1 : 0;
+			NSInteger end1 = anchorIndex;
+			[self flashImage:(options & OCRBackwardSearch) ? @"OCRBackWrap" : @"OCRWrap"];
+			OCRRangeEnumerator *rangeEnumerator1 = [[OCRRangeEnumerator alloc] initWithStart:start1 end:end1 increment:increment];
+			[weakSelf find:findString options:options enumerator:rangeEnumerator1 findCompletion:
+				 ^(NSInteger index, NSRange r, NSArray<VNRecognizedTextObservation *> *pieces)
+			 {
+				if (index != NSNotFound) {
+					[weakSelf didFindIndex:index range:r];
+				} else {
+					[weakSelf didNotFind];
 				}
-				];
-			} else {
-				[weakSelf didNotFind];
 			}
+			];
+		} else {
+			[weakSelf didNotFind];
 		}
-		];
 	}
+	];
 }
 
 
@@ -289,38 +284,36 @@ anchorRanges:(NSArray<NSValue *> *)anchorRanges
 	if (findString.length == 0) {
 		return;
 	}
-	if (@available(macOS 10.15, *)) {
-		self.findState = OCRFindStateInProgress;
-		NSString *expanded = self.expanded;
-		NSRange findRange = NSMakeRange(0, expanded.length);
-		NSInteger anchorIndex = self.delegate.findIndex;
-		NSArray<NSValue *> *anchorRanges = self.tracker.selectedFindRanges;
-		if (anchorRanges.count) {
-			if (options & OCRBackwardSearch) {
-				findRange.length = MIN(findRange.length, anchorRanges.firstObject.rangeValue.location);
-			} else {
-				NSRange last = anchorRanges.lastObject.rangeValue;
-				NSInteger prefixLength = last.location + last.length;
-				findRange.location += prefixLength;
-				findRange.length -= MIN(findRange.length, prefixLength);
-			}
-		}
-		// Sanity check:
-		NSRange r = findRange.length ?
-			[expanded ocr_rangeOfString:findString options:options range:findRange] :
-			NSMakeRange(NSNotFound, 0);
-		// result is in expanded units. Convert to compressed units. Set the selection.
-		if (r.location != NSNotFound) {
-			if (self.findState == OCRFindStateInProgress) {
-				[self.tracker setSelectedFindRange:r];
-				[self.tracker scrollFindRangeToVisible:r];
-			}
-			self.findState = OCRFindStateIdle;
+	self.findState = OCRFindStateInProgress;
+	NSString *expanded = self.expanded;
+	NSRange findRange = NSMakeRange(0, expanded.length);
+	NSInteger anchorIndex = self.delegate.findIndex;
+	NSArray<NSValue *> *anchorRanges = self.tracker.selectedFindRanges;
+	if (anchorRanges.count) {
+		if (options & OCRBackwardSearch) {
+			findRange.length = MIN(findRange.length, anchorRanges.firstObject.rangeValue.location);
 		} else {
-			NSInteger start = anchorIndex + ((options & OCRBackwardSearch) ? -1 : 1);
-			NSInteger end = (options & OCRBackwardSearch) ? 0 : self.delegate.findCount - 1;
-			[self find:findString options:options anchorIndex:anchorIndex anchorRanges:anchorRanges start:start end:end wrap:wrap];
+			NSRange last = anchorRanges.lastObject.rangeValue;
+			NSInteger prefixLength = last.location + last.length;
+			findRange.location += prefixLength;
+			findRange.length -= MIN(findRange.length, prefixLength);
 		}
+	}
+	// Sanity check:
+	NSRange r = findRange.length ?
+	[expanded ocr_rangeOfString:findString options:options range:findRange] :
+	NSMakeRange(NSNotFound, 0);
+	// result is in expanded units. Convert to compressed units. Set the selection.
+	if (r.location != NSNotFound) {
+		if (self.findState == OCRFindStateInProgress) {
+			[self.tracker setSelectedFindRange:r];
+			[self.tracker scrollFindRangeToVisible:r];
+		}
+		self.findState = OCRFindStateIdle;
+	} else {
+		NSInteger start = anchorIndex + ((options & OCRBackwardSearch) ? -1 : 1);
+		NSInteger end = (options & OCRBackwardSearch) ? 0 : self.delegate.findCount - 1;
+		[self find:findString options:options anchorIndex:anchorIndex anchorRanges:anchorRanges start:start end:end wrap:wrap];
 	}
 }
 

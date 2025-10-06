@@ -72,7 +72,7 @@ typedef NS_ENUM(NSInteger, DTPageScaling) {
 /*!  This is where it all begins sets the two pages.
     Starts any animations
     Calls resize view
-    Calls \c correctViewPoint */
+    Calls `correctViewPoint` */
 - (void)setFirstPage:(nullable NSImage *)first secondPageImage:(nullable NSImage *)second;
 
 
@@ -114,7 +114,7 @@ typedef NS_ENUM(NSInteger, DTPageScaling) {
 	This is what enables the page rotation. */
 - (NSAffineTransform *)rotationTransformWithFrame:(NSRect)rect;
 
-/*!	Returns an affine transform to apply to a CALayer.
+/*!	Returns an affine transform to apply to a `CALayer`.
 This is what enables the page rotation. */
 - (CGAffineTransform)rotationCGTransformWithFrame:(NSRect)rect;
 
@@ -125,7 +125,7 @@ This is what enables the page rotation. */
 - (void)startAnimationForImage:(nullable NSImage *)image;
 - (void)animateImage:(NSTimer *)timer;
 
-/*	My rather crappy smooth scrolling timer.
+/*!	My rather crappy smooth scrolling timer.
 	It does allow for multi axis keyboard scrolling though which is pretty cool. */
 - (void)scroll:(NSTimer *)timer;
 

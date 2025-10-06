@@ -8,7 +8,6 @@
 
 import Cocoa
 
-@available(macOS 10.12.2, *)
 extension NSTouchBarItem.Identifier {
 	static let prevNext = NSTouchBarItem.Identifier("com.ToWatchList.prevNextButton")
 	static let pageOrder = NSTouchBarItem.Identifier("com.ToWatchList.pageOrder")
@@ -18,7 +17,6 @@ extension NSTouchBarItem.Identifier {
 	static let scrubber = NSTouchBarItem.Identifier("com.ToWatchList.scrubberBar")
 }
 
-@available(macOS 10.12.2, *)
 extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource {
 	
 	static let touchBar: NSTouchBar.CustomizationIdentifier = "com.ToWatchList.touchBar"
@@ -83,13 +81,8 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 			item.customizationLabel = NSLocalizedString("Rotate Label", value: "Rotate", comment: "Rotate")
 			
 			let prevNext = NSSegmentedControl(images: [NSImage(named: NSImage.touchBarRotateLeftTemplateName)!, NSImage(named: NSImage.touchBarRotateRightTemplateName)!], trackingMode: .momentary, target: self, action: #selector(self.rotate(_:)))
-			if #available(macOS 10.13, *) {
-				prevNext.setTag(901, forSegment: 0)
-				prevNext.setTag(902, forSegment: 1)
-			} else {
-				(prevNext.cell as? NSSegmentedCell)?.setTag(901, forSegment: 0)
-				(prevNext.cell as? NSSegmentedCell)?.setTag(902, forSegment: 1)
-			}
+			prevNext.setTag(901, forSegment: 0)
+			prevNext.setTag(902, forSegment: 1)
 
 			item.view = prevNext
 			
