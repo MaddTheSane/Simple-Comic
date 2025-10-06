@@ -62,6 +62,9 @@ extern NSString *const OCRDisableKey;
 /// @return YES if this handles the mouse drag.
 - (BOOL)didMouseDragged:(NSEvent *)theEvent;
 
+/// @return YES if this handles the mouse down.
+- (BOOL)didRightMouseDown:(NSEvent *)theEvent;
+
 /// @return YES if this handles setting the cursor rects.
 - (BOOL)didResetCursorRects;
 
