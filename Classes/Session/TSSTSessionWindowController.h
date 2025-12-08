@@ -93,12 +93,14 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 
 - (instancetype)initWithSession:(TSSTManagedSession *)aSession;
 
-// View Actions
+#pragma mark View Actions
 - (IBAction)changePageOrder:(nullable id)sender;
 /*! Toggles between two page spread and single page */
 - (IBAction)changeTwoPage:(nullable id)sender;
 /*! Action that changes the view scaling between the three modes */
 - (IBAction)changeScaling:(nullable id)sender;
+//! Action that changes the view scaling between the three modes from the new toolbar.
+- (IBAction)changeScalingNewToolbar:(nullable id)sender;
 
 - (IBAction)zoom:(nullable id)sender;
 - (IBAction)zoomIn:(nullable id)sender;
@@ -112,8 +114,9 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 
 - (IBAction)toggleLoupe:(nullable id)sender;
 
-// Selection Actions
+#pragma mark Selection Actions
 - (IBAction)turnPage:(nullable id)sender;
+- (IBAction)pageEnd:(nullable id)sender;
 - (IBAction)pageRight:(nullable id)sender;
 - (IBAction)pageLeft:(nullable id)sender;
 - (IBAction)shiftPageRight:(nullable id)sender;

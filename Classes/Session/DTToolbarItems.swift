@@ -19,7 +19,17 @@ class DTToolbarItem: NSToolbarItem {
 	}
 }
 
-class DTPageTurnToolbarItem: DTToolbarItem {
+class DTToolbarItemGroup: NSToolbarItemGroup {
+	override func validate() {
+		guard let toolbarDelegate = toolbar?.delegate as? TSSTSessionWindowController else { return }
+		
+		if toolbarDelegate.responds(to: #selector(getter: TSSTSessionWindowController.pageSelectionInProgress)) {
+			(view as? NSControl)?.isEnabled = !(toolbarDelegate.pageSelectionInProgress)
+		}
+	}
+}
+
+class DTPageTurnToolbarItem: DTToolbarItemGroup {
 	
 	override func validate() {
 		guard let toolbarDelegate = toolbar?.delegate as? TSSTSessionWindowController else { return }

@@ -84,6 +84,7 @@
 		55EE6BD62945CD4500C1AAE7 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; };
 		55EE6BD92945D40300C1AAE7 /* QuickComicCommonSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EE6BD82945D40300C1AAE7 /* QuickComicCommonSwift.swift */; };
 		55EE6BDF2945D4AA00C1AAE7 /* TSSTSortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 286AEDB60C4161C20031E3D9 /* TSSTSortDescriptor.m */; };
+		55F1FA142EE6985A0001CB75 /* TSSTSessionWindowToolbar.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 55F1FA132EE6985A0001CB75 /* TSSTSessionWindowToolbar.xcstrings */; };
 		55FFF1BE1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1BC1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m */; };
 		55FFF1DF1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1DB1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m */; };
 		55FFF1E61DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1E41DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m */; };
@@ -436,6 +437,7 @@
 		55EE6BBA2945CA5B00C1AAE7 /* QuickComic_Preview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickComic_Preview.entitlements; sourceTree = "<group>"; };
 		55EE6BD82945D40300C1AAE7 /* QuickComicCommonSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickComicCommonSwift.swift; sourceTree = "<group>"; };
 		55EE6BDC2945D49A00C1AAE7 /* QuickComic Preview-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuickComic Preview-Bridging-Header.h"; sourceTree = "<group>"; };
+		55F1FA132EE6985A0001CB75 /* TSSTSessionWindowToolbar.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = TSSTSessionWindowToolbar.xcstrings; sourceTree = "<group>"; };
 		55FFF1BB1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TSSTPage+CoreDataProperties.h"; sourceTree = "<group>"; };
 		55FFF1BC1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSSTPage+CoreDataProperties.m"; sourceTree = "<group>"; };
 		55FFF1DA1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TSSTManagedGroup+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -657,6 +659,7 @@
 				28A266081285C34300ED6391 /* Preferences.xib */,
 				28A2660C1285C35700ED6391 /* MainMenu.xib */,
 				28A266141285C3A700ED6391 /* TSSTSessionWindow.xib */,
+				55F1FA132EE6985A0001CB75 /* TSSTSessionWindowToolbar.xcstrings */,
 				5545647D2B2BC6F100983407 /* Localizable.xcstrings */,
 				551275E12584AE5D0030269F /* SimpleComic Help.help */,
 				28195B410C166DF5001F5E95 /* Info.plist */,
@@ -1203,6 +1206,7 @@
 				63BA27152874BEF100E540C0 /* SimpleComic.sdef in Resources */,
 				8F54DD531CCA336B001403DA /* container-migration.plist in Resources */,
 				63A57A152872683F00D0A88B /* OCRFindViewController.xib in Resources */,
+				55F1FA142EE6985A0001CB75 /* TSSTSessionWindowToolbar.xcstrings in Resources */,
 				28A266161285C3A700ED6391 /* TSSTSessionWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

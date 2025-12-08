@@ -117,6 +117,17 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	} else {
 		[super windowDidLoad];
 	}
+	
+	// Set up the toolbar, because Apple decided it hates Interface Builder for toolbars.
+	NSToolbar *newToolbar = [[NSToolbar alloc] initWithIdentifier:@"1A96E21F-07EA-4D3B-B356-508A45D1FCBB"];
+	
+	newToolbar.delegate = self;
+	newToolbar.allowsUserCustomization = YES;
+	newToolbar.autosavesConfiguration = YES;
+	newToolbar.displayMode = NSToolbarDisplayModeIconOnly;
+	
+	self.window.toolbar = newToolbar;
+	[self.window.toolbar validateVisibleItems];
 }
 
 
@@ -434,9 +445,15 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
+- (IBAction)changeScalingNewToolbar:(id)sender
+{
+	DTPageScaling scaleType = [sender selectedIndex];
+	session.scaleOptions = scaleType;
+}
+
 - (IBAction)turnPage:(id)sender
 {
-	NSInteger segmentTag = [[sender cell] tagForSegment: [sender selectedSegment]];
+	NSInteger segmentTag = [(NSToolbarItem*)[[sender subitems] objectAtIndex: [sender selectedIndex]] tag];
 	if(segmentTag == 701)
 	{
 		[self pageLeft: self];
@@ -449,7 +466,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (IBAction)pageEnd:(id)sender
 {
-	BOOL right = ([sender selectedSegment] > 0);
+	BOOL right = ([sender selectedIndex] > 0);
 	if(session.pageOrder ^ right)
 	{
 		[self firstPage:sender];
@@ -569,7 +586,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 /* Zoom method for the zoom segmented control. Each segment has its own tag. */
 - (IBAction)zoom:(id)sender
 {
-	NSInteger segmentTag = [[sender cell] tagForSegment: [sender selectedSegment]];
+	NSInteger segmentTag = [(NSToolbarItem*)[[sender subitems] objectAtIndex: [sender selectedIndex]] tag];
 	if(segmentTag == 801)
 	{
 		[self zoomIn: self];
@@ -630,7 +647,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (IBAction)rotate:(id)sender
 {
-	NSInteger segmentTag = [[sender cell] tagForSegment: [sender selectedSegment]];
+	NSInteger segmentTag = [(NSToolbarItem*)[[sender subitems] objectAtIndex: [sender selectedIndex]] tag];
 	if(segmentTag == 901)
 	{
 		[self rotateLeft: self];
