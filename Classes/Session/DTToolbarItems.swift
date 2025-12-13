@@ -18,30 +18,3 @@ class DTToolbarItem: NSToolbarItem {
 		}
 	}
 }
-
-class DTToolbarItemGroup: NSToolbarItemGroup {
-	override func validate() {
-		guard let toolbarDelegate = toolbar?.delegate as? TSSTSessionWindowController else { return }
-		
-		if toolbarDelegate.responds(to: #selector(getter: TSSTSessionWindowController.pageSelectionInProgress)) {
-			(view as? NSControl)?.isEnabled = !(toolbarDelegate.pageSelectionInProgress)
-		}
-	}
-}
-
-class DTPageTurnToolbarItem: DTToolbarItemGroup {
-	
-	override func validate() {
-		guard let toolbarDelegate = toolbar?.delegate as? TSSTSessionWindowController else { return }
-		
-		if toolbarDelegate.responds(to: #selector(getter: TSSTSessionWindowController.canTurnPageLeft)) {
-			(view as? NSSegmentedControl)?.setEnabled(toolbarDelegate.canTurnPageLeft, forSegment: 0)
-		}
-		
-		if toolbarDelegate.responds(to: #selector(getter: TSSTSessionWindowController.canTurnPageRight)) {
-			(view as? NSSegmentedControl)?.setEnabled(toolbarDelegate.canTurnPageRight, forSegment: 1)
-		}
-		
-		super.validate()
-	}
-}
