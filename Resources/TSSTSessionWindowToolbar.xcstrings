@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "516.ibShadowedToolTips[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 516.ibShadowedToolTips[0] = \"Original Size\"; ObjectID = \"516\";",
+      "comment" : "Original Size",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -68,7 +68,7 @@
       }
     },
     "516.ibShadowedToolTips[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 516.ibShadowedToolTips[1] = \"Scale to Window\"; ObjectID = \"516\";",
+      "comment" : "Scale to Window",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -134,7 +134,7 @@
       }
     },
     "516.ibShadowedToolTips[2]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 516.ibShadowedToolTips[2] = \"Horizontal Scaling\"; ObjectID = \"516\";",
+      "comment" : "Horizontal Scaling",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -200,7 +200,7 @@
       }
     },
     "517.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Scaling\"; ObjectID = \"517\";",
+      "comment" : "Page Scaling label",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -265,7 +265,7 @@
       }
     },
     "517.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Page Scaling\"; ObjectID = \"517\";",
+      "comment" : "Page Scaling palette label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -331,7 +331,7 @@
       }
     },
     "519.ibShadowedToolTips[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 519.ibShadowedToolTips[0] = \"Right to Left Page Order\"; ObjectID = \"519\";",
+      "comment" : "Right to Left Page Order",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -397,7 +397,7 @@
       }
     },
     "519.ibShadowedToolTips[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 519.ibShadowedToolTips[1] = \"Left to Right Page Order\"; ObjectID = \"519\";",
+      "comment" : "Left to Right Page Order",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -463,7 +463,7 @@
       }
     },
     "520.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Order\"; ObjectID = \"520\";",
+      "comment" : "Page Order",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -528,7 +528,7 @@
       }
     },
     "520.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Page Order\"; ObjectID = \"520\";",
+      "comment" : "Page Order",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -594,7 +594,7 @@
       }
     },
     "522.ibShadowedToolTips[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 522.ibShadowedToolTips[0] = \"Single Page Layout\"; ObjectID = \"522\";",
+      "comment" : "Single Page Layout",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -660,7 +660,7 @@
       }
     },
     "522.ibShadowedToolTips[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 522.ibShadowedToolTips[1] = \"Two Page Layout\"; ObjectID = \"522\";",
+      "comment" : "Two Page Layout",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -726,7 +726,7 @@
       }
     },
     "523.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Page Layout\"; ObjectID = \"523\";",
+      "comment" : "Page Layout label",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -791,7 +791,7 @@
       }
     },
     "523.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Page Layout\"; ObjectID = \"523\";",
+      "comment" : "Page Layout palette label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -857,7 +857,7 @@
       }
     },
     "553.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Turn Page\"; ObjectID = \"553\";",
+      "comment" : "Turn Page label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -923,7 +923,7 @@
       }
     },
     "553.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Turn Page\"; ObjectID = \"553\";",
+      "comment" : "Turn Page palette label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -989,7 +989,7 @@
       }
     },
     "555.ibShadowedToolTips[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 555.ibShadowedToolTips[0] = \"Left Page Turn\"; ObjectID = \"555\";",
+      "comment" : "Left Page Turn",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1055,7 +1055,7 @@
       }
     },
     "555.ibShadowedToolTips[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 555.ibShadowedToolTips[1] = \"Right Page Turn\"; ObjectID = \"555\";",
+      "comment" : "Right Page Turn",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1121,7 +1121,7 @@
       }
     },
     "558.ibShadowedToolTips[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 558.ibShadowedToolTips[0] = \"Zoom Out\"; ObjectID = \"558\";",
+      "comment" : "Zoom Out",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1186,7 +1186,7 @@
       }
     },
     "558.ibShadowedToolTips[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 558.ibShadowedToolTips[1] = \"Zoom In\"; ObjectID = \"558\";",
+      "comment" : "Zoom In",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1251,7 +1251,7 @@
       }
     },
     "558.ibShadowedToolTips[2]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 558.ibShadowedToolTips[2] = \"Zoom Reset\"; ObjectID = \"558\";",
+      "comment" : "Zoom Reset",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1317,7 +1317,7 @@
       }
     },
     "559.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Zoom\"; ObjectID = \"559\";",
+      "comment" : "\"Zoom\" label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1383,7 +1383,7 @@
       }
     },
     "559.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Zoom\"; ObjectID = \"559\";",
+      "comment" : "\"Zoom\" Palette Label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1449,7 +1449,7 @@
       }
     },
     "573.ibShadowedToolTip" : {
-      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Magnifying Glass\"; ObjectID = \"573\";",
+      "comment" : "Magnifying Glass tool tip",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1515,7 +1515,7 @@
       }
     },
     "575.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Loupe\"; ObjectID = \"575\";",
+      "comment" : "Loupe label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1581,7 +1581,7 @@
       }
     },
     "575.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Loupe\"; ObjectID = \"575\";",
+      "comment" : "Loupe palette label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1647,7 +1647,7 @@
       }
     },
     "577.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Thumbnails\"; ObjectID = \"577\";",
+      "comment" : "Thumbnails",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1713,7 +1713,7 @@
       }
     },
     "577.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Thumbnails\"; ObjectID = \"577\";",
+      "comment" : "Thumbnails",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1779,7 +1779,7 @@
       }
     },
     "578.ibShadowedToolTip" : {
-      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Thumbnail View\"; ObjectID = \"578\";",
+      "comment" : "Thumbnail View",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1845,7 +1845,7 @@
       }
     },
     "585.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Rotate\"; ObjectID = \"585\";",
+      "comment" : "Rotate label",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1910,7 +1910,7 @@
       }
     },
     "585.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Rotate\"; ObjectID = \"585\";",
+      "comment" : "Rotate palette label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -1976,7 +1976,7 @@
       }
     },
     "587.ibShadowedToolTips[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 587.ibShadowedToolTips[0] = \"Rotate Left\"; ObjectID = \"587\";",
+      "comment" : "Rotate Left",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2042,7 +2042,7 @@
       }
     },
     "587.ibShadowedToolTips[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; 587.ibShadowedToolTips[1] = \"Rotate Right\"; ObjectID = \"587\";",
+      "comment" : "Rotate Right",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2108,7 +2108,7 @@
       }
     },
     "688.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Capture Page\"; ObjectID = \"688\";",
+      "comment" : "\"Capture Page\" Label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2174,7 +2174,7 @@
       }
     },
     "688.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Capture Page\"; ObjectID = \"688\";",
+      "comment" : "\"Capture Page\" Palette Label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2240,7 +2240,7 @@
       }
     },
     "689.ibShadowedToolTip" : {
-      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Capture Page\"; ObjectID = \"689\";",
+      "comment" : "\"Capture Page\" Tool Tip",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2306,7 +2306,7 @@
       }
     },
     "693.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Set Icon\"; ObjectID = \"693\";",
+      "comment" : "\"Set Icon\" Label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2372,7 +2372,7 @@
       }
     },
     "693.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Set Icon\"; ObjectID = \"693\";",
+      "comment" : "\"Set Icon\" Palette Label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2438,7 +2438,7 @@
       }
     },
     "694.ibShadowedToolTip" : {
-      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Set Icon\"; ObjectID = \"694\";",
+      "comment" : "\"Set Icon\" Shadowed Tooltip",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2504,7 +2504,7 @@
       }
     },
     "dMP-Th-vKR.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Page End\"; ObjectID = \"dMP-Th-vKR\";",
+      "comment" : "Page End label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2570,7 +2570,7 @@
       }
     },
     "dMP-Th-vKR.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Page End\"; ObjectID = \"dMP-Th-vKR\";",
+      "comment" : "Page End palette label",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2635,270 +2635,8 @@
         }
       }
     },
-    "fTI-g2-r3b.label" : {
-      "comment" : "Class = \"NSToolbarItem\"; label = \"Zoom\"; ObjectID = \"fTI-g2-r3b\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoomen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Zoom"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Zoom"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "拡大／縮小"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "줌 렌즈"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Zoom"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "缩放"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "變焦鏡頭"
-          }
-        }
-      }
-    },
-    "fTI-g2-r3b.paletteLabel" : {
-      "comment" : "Class = \"NSToolbarItem\"; paletteLabel = \"Zoom\"; ObjectID = \"fTI-g2-r3b\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoomen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Zoom"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Zoom"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "拡大／縮小"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "줌 렌즈"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Zoom"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "缩放"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "變焦鏡頭"
-          }
-        }
-      }
-    },
-    "lV3-24-KZL.ibShadowedToolTips[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; lV3-24-KZL.ibShadowedToolTips[0] = \"Zoom Out\"; ObjectID = \"lV3-24-KZL\";",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seite vergrößern"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom In"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom In"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom avant"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingrandisci"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "拡大"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "확대"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ampliar"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "放大"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "放大"
-          }
-        }
-      }
-    },
-    "lV3-24-KZL.ibShadowedToolTips[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; lV3-24-KZL.ibShadowedToolTips[1] = \"Zoom In\"; ObjectID = \"lV3-24-KZL\";",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seite verkleinern"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom Out"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom Out"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom arrière"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Riduci"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "縮小"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "축소"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reduzir"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "缩小"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "縮小"
-          }
-        }
-      }
-    },
     "msg-5l-0tY.ibShadowedToolTips[0]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; msg-5l-0tY.ibShadowedToolTips[0] = \"Left Page Turn\"; ObjectID = \"msg-5l-0tY\";",
+      "comment" : "Left End Page",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
@@ -2964,7 +2702,7 @@
       }
     },
     "msg-5l-0tY.ibShadowedToolTips[1]" : {
-      "comment" : "Class = \"NSSegmentedCell\"; msg-5l-0tY.ibShadowedToolTips[1] = \"Right Page Turn\"; ObjectID = \"msg-5l-0tY\";",
+      "comment" : "Right End Page",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {

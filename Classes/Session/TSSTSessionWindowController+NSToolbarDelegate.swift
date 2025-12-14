@@ -26,12 +26,26 @@ private extension NSToolbarItem.Identifier {
 extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidation {
 	public func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
 		if pageSelectionInProgress {
+			if item.itemIdentifier == .turnPageEnd {
+				if let item = item as? NSToolbarItemGroup {
+					item.subitems[0].isEnabled = false
+					item.subitems[1].isEnabled = false
+				}
+			}
+			
+			if item.itemIdentifier == .turnPage {
+				if let item = item as? NSToolbarItemGroup {
+					item.subitems[0].isEnabled = false
+					item.subitems[1].isEnabled = false
+				}
+			}
+
 			return false
 		}
 		if item.itemIdentifier == .turnPageEnd {
 			if let item = item as? NSToolbarItemGroup {
-				item.subitems[0].isEnabled = !canTurnPageLeft
-				item.subitems[1].isEnabled = !canTurnPageRight
+				item.subitems[0].isEnabled = canTurnPageLeft
+				item.subitems[1].isEnabled = canTurnPageRight
 			}
 		}
 		
@@ -81,12 +95,12 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			let images = [NSImage(named: NSImage.leftFacingTriangleTemplateName)!,
 						  NSImage(named: NSImage.rightFacingTriangleTemplateName)!]
 			
-			let labels = [NSLocalizedString("555.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Left Page Turn", comment: "Class = \"NSSegmentedCell\"; 555.ibShadowedToolTips[0] = \"Left Page Turn\"; ObjectID = \"555\";"),
-						  NSLocalizedString("555.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Right Page Turn", comment: "Class = \"NSSegmentedCell\"; 555.ibShadowedToolTips[1] = \"Right Page Turn\"; ObjectID = \"555\";")]
+			let labels = [NSLocalizedString("555.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Left Page Turn", comment: "Left Page Turn"),
+						  NSLocalizedString("555.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Right Page Turn", comment: "Right Page Turn")]
 			
 			let item = NSToolbarItemGroup(itemIdentifier: .turnPage, images: images, selectionMode: .momentary, labels: labels, target: self, action: #selector(self.turnPage(_:)))
-			item.label = NSLocalizedString("553.label", tableName: "TSSTSessionWindowToolbar", value: "Turn Page", comment: #"Class = "NSToolbarItem"; label = "Turn Page"; ObjectID = "553";"#)
-			item.paletteLabel = NSLocalizedString("553.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Turn Page", comment: #"Class = "NSToolbarItem"; paletteLabel = "Turn Page"; ObjectID = "553";"#)
+			item.label = NSLocalizedString("553.label", tableName: "TSSTSessionWindowToolbar", value: "Turn Page", comment: "Turn Page label")
+			item.paletteLabel = NSLocalizedString("553.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Turn Page", comment: "Turn Page palette label")
 			item.subitems[0].autovalidates = false
 			item.subitems[1].autovalidates = false
 			item.subitems[0].tag = 701
@@ -100,12 +114,12 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			let images = [NSImage(resource: .firstPageTemplate),
 						  NSImage(resource: .lastPageTemplate)]
 			
-			let labels = [NSLocalizedString("msg-5l-0tY.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Left End Page", comment: "Class = \"NSSegmentedCell\"; msg-5l-0tY.ibShadowedToolTips[0] = \"Left Page Turn\"; ObjectID = \"msg-5l-0tY\";"),
-						  NSLocalizedString("msg-5l-0tY.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Right End Page", comment: "Class = \"NSSegmentedCell\"; msg-5l-0tY.ibShadowedToolTips[1] = \"Right Page Turn\"; ObjectID = \"msg-5l-0tY\";")]
+			let labels = [NSLocalizedString("msg-5l-0tY.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Left End Page", comment: "Left End Page"),
+						  NSLocalizedString("msg-5l-0tY.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Right End Page", comment: "Right End Page")]
 			
 			let item = NSToolbarItemGroup(itemIdentifier: .turnPageEnd, images: images, selectionMode: .momentary, labels: labels, target: self, action: #selector(self.pageEnd(_:)))
-			item.label = NSLocalizedString("dMP-Th-vKR.label", tableName: "TSSTSessionWindowToolbar", value: "Page End", comment: #"Class = "NSToolbarItem"; label = "Page End"; ObjectID = "dMP-Th-vKR";"#)
-			item.paletteLabel = NSLocalizedString("dMP-Th-vKR.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Page End", comment: #"Class = "NSToolbarItem"; paletteLabel = "Page End"; ObjectID = "dMP-Th-vKR";"#)
+			item.label = NSLocalizedString("dMP-Th-vKR.label", tableName: "TSSTSessionWindowToolbar", value: "Page End", comment: "Page End label")
+			item.paletteLabel = NSLocalizedString("dMP-Th-vKR.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Page End", comment: "Page End palette label")
 			item.isNavigational = true
 			item.subitems[0].autovalidates = false
 			item.subitems[1].autovalidates = false
@@ -118,12 +132,12 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 		case .pageOrder:
 			let images = [NSImage(resource: .rightLeftOrderTemplate),
 						  NSImage(resource: .leftRightOrderTemplate)]
-			let labels = [NSLocalizedString("519.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Right to Left Page Order", comment: #"Class = "NSSegmentedCell"; 519.ibShadowedToolTips[0] = "Right to Left Page Order"; ObjectID = "519";"#),
-						  NSLocalizedString("519.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Left to Right Page Order", comment: #"Class = "NSSegmentedCell"; 519.ibShadowedToolTips[1] = "Left to Right Page Order"; ObjectID = "519";"#)]
+			let labels = [NSLocalizedString("519.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Right to Left Page Order", comment: "Right to Left Page Order"),
+						  NSLocalizedString("519.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Left to Right Page Order", comment: "Left to Right Page Order")]
 
 			let item = NSToolbarItemGroup(itemIdentifier: .pageOrder, images: images, selectionMode: .selectOne, labels: labels, target: self, action: #selector(self.changePageOrder(_:)))
-			item.label = NSLocalizedString("520.label", tableName: "TSSTSessionWindowToolbar", value: "Page Order", comment: #"Class = "NSToolbarItem"; label = "Page Order"; ObjectID = "520";"#)
-			item.paletteLabel = NSLocalizedString("520.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Page Order", comment: #"Class = "NSToolbarItem"; paletteLabel = "Page Order"; ObjectID = "520";"#)
+			item.label = NSLocalizedString("520.label", tableName: "TSSTSessionWindowToolbar", value: "Page Order", comment: "Page Order")
+			item.paletteLabel = NSLocalizedString("520.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Page Order", comment: "Page Order")
 			item.selectionMode = .selectOne
 
 			if flag {
@@ -135,12 +149,12 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 		case .pageLayout:
 			let images = [NSImage(resource: .onePageTemplate),
 						  NSImage(resource: .twoPageTemplate)]
-			let labels = [NSLocalizedString("522.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Single Page Layout", comment: "Class = \"NSSegmentedCell\"; 522.ibShadowedToolTips[0] = \"Single Page Layout\"; ObjectID = \"522\";"),
-						  NSLocalizedString("522.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Two Page Layout", comment: "Class = \"NSSegmentedCell\"; 522.ibShadowedToolTips[1] = \"Two Page Layout\"; ObjectID = \"522\";")]
+			let labels = [NSLocalizedString("522.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Single Page Layout", comment: "Single Page Layout"),
+						  NSLocalizedString("522.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Two Page Layout", comment: "Two Page Layout")]
 
 			let item = NSToolbarItemGroup(itemIdentifier: .pageLayout, images: images, selectionMode: .selectOne, labels: labels, target: self, action: #selector(self.changeTwoPage(_:)))
-			item.label = NSLocalizedString("523.label", tableName: "TSSTSessionWindowToolbar", value: "Page Layout", comment: "Class = \"NSToolbarItem\"; label = \"Page Layout\"; ObjectID = \"523\";")
-			item.paletteLabel = NSLocalizedString("523.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Page Layout", comment: "Class = \"NSToolbarItem\"; paletteLabel = \"Page Layout\"; ObjectID = \"523\";")
+			item.label = NSLocalizedString("523.label", tableName: "TSSTSessionWindowToolbar", value: "Page Layout", comment: "Page Layout label")
+			item.paletteLabel = NSLocalizedString("523.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Page Layout", comment: "Page Layout palette label")
 			item.selectionMode = .selectOne
 
 			if flag {
@@ -153,13 +167,13 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			let images = [NSImage(resource: .equalTemplate),
 						  NSImage(resource: .winScaleTemplate),
 						  NSImage(resource: .horScaleTemplate)]
-			let labels = [NSLocalizedString("516.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Original Size", comment: "Class = \"NSSegmentedCell\"; 516.ibShadowedToolTips[0] = \"Original Size\"; ObjectID = \"516\";"),
-						  NSLocalizedString("516.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Scale to Window", comment: "Class = \"NSSegmentedCell\"; 516.ibShadowedToolTips[1] = \"Scale to Window\"; ObjectID = \"516\";"),
-						  NSLocalizedString("516.ibShadowedToolTips[2]", tableName: "TSSTSessionWindowToolbar", value: "Horizontal Scaling", comment: "Class = \"NSSegmentedCell\"; 516.ibShadowedToolTips[2] = \"Horizontal Scaling\"; ObjectID = \"516\";")]
+			let labels = [NSLocalizedString("516.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Original Size", comment: "Original Size"),
+						  NSLocalizedString("516.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Scale to Window", comment: "Scale to Window"),
+						  NSLocalizedString("516.ibShadowedToolTips[2]", tableName: "TSSTSessionWindowToolbar", value: "Horizontal Scaling", comment: "Horizontal Scaling")]
 
 			let item = NSToolbarItemGroup(itemIdentifier: .pageScaling, images: images, selectionMode: .selectOne, labels: labels, target: self, action: #selector(self.changeScalingNewToolbar(_:)))
-			item.label = NSLocalizedString("517.label", tableName: "TSSTSessionWindowToolbar", value: "Page Scaling", comment: "Class = \"NSToolbarItem\"; label = \"Page Scaling\"; ObjectID = \"517\";")
-			item.paletteLabel = NSLocalizedString("517.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Page Scaling", comment: "Class = \"NSToolbarItem\"; paletteLabel = \"Page Scaling\"; ObjectID = \"517\";")
+			item.label = NSLocalizedString("517.label", tableName: "TSSTSessionWindowToolbar", value: "Page Scaling", comment: "Page Scaling label")
+			item.paletteLabel = NSLocalizedString("517.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Page Scaling", comment: "Page Scaling palette label")
 			item.selectionMode = .selectOne
 
 			if flag {
@@ -171,9 +185,9 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 		case .loupe:
 			let item = DTToolbarItem(itemIdentifier: .loupe)
 			item.image = NSImage(systemSymbolName: "loupe", accessibilityDescription: nil)
-			item.label = NSLocalizedString("575.label", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Class = \"NSToolbarItem\"; label = \"Loupe\"; ObjectID = \"575\";")
-			item.paletteLabel = NSLocalizedString("575.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Class = \"NSToolbarItem\"; paletteLabel = \"Loupe\"; ObjectID = \"575\";")
-			item.toolTip = NSLocalizedString("573.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Magnifying Glass", comment: #"Class = "NSButton"; ibShadowedToolTip = "Magnifying Glass"; ObjectID = "573";"#)
+			item.label = NSLocalizedString("575.label", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Loupe label")
+			item.paletteLabel = NSLocalizedString("575.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Loupe palette label")
+			item.toolTip = NSLocalizedString("573.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Magnifying Glass", comment: "Magnifying Glass tool tip")
 			if flag {
 				item.bind(.value, to: self, withKeyPath: "session.loupe")
 			}
@@ -185,9 +199,9 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			item.image = NSImage(named: NSImage.iconViewTemplateName)
 			item.target = self
 			item.action = #selector(self.togglePageExpose(_:))
-			item.label = NSLocalizedString("577.label", tableName: "TSSTSessionWindowToolbar", value: "Thumbnails", comment: "Class = \"NSToolbarItem\"; label = \"Thumbnails\"; ObjectID = \"577\";")
-			item.paletteLabel = NSLocalizedString("577.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Thumbnails", comment: "Class = \"NSToolbarItem\"; paletteLabel = \"Thumbnails\"; ObjectID = \"577\";")
-			item.toolTip = NSLocalizedString("578.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Thumbnail View", comment: #"Class = "NSButton"; ibShadowedToolTip = "Thumbnail View"; ObjectID = "578";"#)
+			item.label = NSLocalizedString("577.label", tableName: "TSSTSessionWindowToolbar", value: "Thumbnails", comment: "Thumbnails")
+			item.paletteLabel = NSLocalizedString("577.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Thumbnails", comment: "Thumbnails")
+			item.toolTip = NSLocalizedString("578.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Thumbnail View", comment: "Thumbnail View")
 
 			return item
 			
@@ -196,9 +210,9 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			item.image = NSImage(resource: .extractTemplate)
 			item.target = self
 			item.action = #selector(self.extractPage(_:))
-			item.label = NSLocalizedString("688.label", tableName: "TSSTSessionWindowToolbar", value: "Capture Page", comment: "Class = \"NSToolbarItem\"; label = \"Capture Page\"; ObjectID = \"688\";")
-			item.paletteLabel = NSLocalizedString("688.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Capture Page", comment: "Class = \"NSToolbarItem\"; paletteLabel = \"Capture Page\"; ObjectID = \"688\";")
-			item.toolTip = NSLocalizedString("689.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Capture Page", comment: #"Class = "NSButton"; ibShadowedToolTip = "Capture Page"; ObjectID = "689";"#)
+			item.label = NSLocalizedString("688.label", tableName: "TSSTSessionWindowToolbar", value: "Capture Page", comment: #""Capture Page" Label"#)
+			item.paletteLabel = NSLocalizedString("688.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Capture Page", comment: #""Capture Page" Palette Label"#)
+			item.toolTip = NSLocalizedString("689.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Capture Page", comment: #""Capture Page" Tool Tip"#)
 
 			return item
 			
@@ -207,9 +221,9 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			item.image = NSImage(named: NSImage.quickLookTemplateName)
 			item.target = self
 			item.action = #selector(self.setArchiveIcon(_:))
-			item.label = NSLocalizedString("693.label", tableName: "TSSTSessionWindowToolbar", value: "Set Icon", comment: "Class = \"NSToolbarItem\"; label = \"Set Icon\"; ObjectID = \"693\";")
-			item.paletteLabel = NSLocalizedString("693.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Set Icon", comment: "Class = \"NSToolbarItem\"; paletteLabel = \"Set Icon\"; ObjectID = \"693\";")
-			item.toolTip = NSLocalizedString("694.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Set Icon", comment: #"Class = "NSButton"; ibShadowedToolTip = "Set Icon"; ObjectID = "694";"#)
+			item.label = NSLocalizedString("693.label", tableName: "TSSTSessionWindowToolbar", value: "Set Icon", comment: #""Set Icon" Label"#)
+			item.paletteLabel = NSLocalizedString("693.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Set Icon", comment: #""Set Icon" Palette Label"#)
+			item.toolTip = NSLocalizedString("694.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Set Icon", comment: #""Set Icon" Shadowed Tooltip"#)
 
 			return item
 			
@@ -217,12 +231,12 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			let images = [NSImage(named: NSImage.removeTemplateName)!,
 						  NSImage(named: NSImage.addTemplateName)!]
 			
-			let labels = [NSLocalizedString("lV3-24-KZL.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Out", comment: #"Class = "NSSegmentedCell"; lV3-24-KZL.ibShadowedToolTips[0] = "Zoom Out"; ObjectID = "lV3-24-KZL";"#),
-						  NSLocalizedString("lV3-24-KZL.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Zoom In", comment: #"Class = "NSSegmentedCell"; lV3-24-KZL.ibShadowedToolTips[1] = "Zoom In"; ObjectID = "lV3-24-KZL";"#)]
+			let labels = [NSLocalizedString("558.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Out", comment: "Zoom Out"),
+						  NSLocalizedString("558.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Zoom In", comment: "Zoom In")]
 			
 			let item = NSToolbarItemGroup(itemIdentifier: .imageZoom, images: images, selectionMode: .momentary, labels: labels, target: self, action: #selector(self.zoom(_:)))
-			item.label = NSLocalizedString("fTI-g2-r3b.label", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: #"Class = "NSToolbarItem"; label = "Zoom"; ObjectID = "fTI-g2-r3b";"#)
-			item.paletteLabel = NSLocalizedString("fTI-g2-r3b.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: #"Class = "NSToolbarItem"; paletteLabel = "Zoom"; ObjectID = "fTI-g2-r3b";"#)
+			item.label = NSLocalizedString("559.label", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" label")
+			item.paletteLabel = NSLocalizedString("559.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" Palette Label")
 			item.subitems[0].tag = 802
 			item.subitems[1].tag = 801
 			item.selectionMode = .momentary
@@ -233,13 +247,13 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 						  NSImage(named: NSImage.addTemplateName)!,
 						  NSImage(resource: .equalTemplate)]
 			
-			let labels = [NSLocalizedString("558.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Out", comment: #"Class = "NSSegmentedCell"; 558.ibShadowedToolTips[0] = "Zoom Out"; ObjectID = "558";"#),
-						  NSLocalizedString("558.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Zoom In", comment: #"Class = "NSSegmentedCell"; 558.ibShadowedToolTips[1] = "Zoom In"; ObjectID = "558";"#),
-						  NSLocalizedString("558.ibShadowedToolTips[2]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Reset", comment: #"Class = "NSSegmentedCell"; 558.ibShadowedToolTips[2] = "Zoom Reset"; ObjectID = "558";"#)]
+			let labels = [NSLocalizedString("558.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Out", comment: "Zoom Out"),
+						  NSLocalizedString("558.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Zoom In", comment: "Zoom In"),
+						  NSLocalizedString("558.ibShadowedToolTips[2]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Reset", comment: "Zoom Reset")]
 			
 			let item = NSToolbarItemGroup(itemIdentifier: .zoom, images: images, selectionMode: .momentary, labels: labels, target: self, action: #selector(self.zoom(_:)))
-			item.label = NSLocalizedString("559.label", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: #"Class = "NSToolbarItem"; label = "Zoom"; ObjectID = "559";"#)
-			item.paletteLabel = NSLocalizedString("559.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: #"Class = "NSToolbarItem"; paletteLabel = "Zoom"; ObjectID = "559";"#)
+			item.label = NSLocalizedString("559.label", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" label")
+			item.paletteLabel = NSLocalizedString("559.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" Palette Label")
 			item.subitems[0].tag = 802
 			item.subitems[1].tag = 801
 			item.subitems[2].tag = 803
@@ -250,12 +264,12 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			let images = [NSImage(systemSymbolName: "arrow.trianglehead.counterclockwise.rotate.90", accessibilityDescription: nil) ?? NSImage(resource: .arrowTriangleheadCounterclockwiseRotate90),
 						  NSImage(systemSymbolName: "arrow.trianglehead.clockwise.rotate.90", accessibilityDescription: nil) ?? NSImage(resource: .arrowTriangleheadClockwiseRotate90)]
 			
-			let labels = [NSLocalizedString("587.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Rotate Left", comment: #"Class = "NSSegmentedCell"; 587.ibShadowedToolTips[0] = "Rotate Left"; ObjectID = "587";"#),
-						  NSLocalizedString("587.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Rotate Right", comment: #"Class = "NSSegmentedCell"; 587.ibShadowedToolTips[1] = "Rotate Right"; ObjectID = "587";"#)]
+			let labels = [NSLocalizedString("587.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Rotate Left", comment: "Rotate Left"),
+						  NSLocalizedString("587.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Rotate Right", comment: "Rotate Right")]
 			
 			let item = NSToolbarItemGroup(itemIdentifier: .rotation, images: images, selectionMode: .momentary, labels: labels, target: self, action: #selector(self.rotate(_:)))
-			item.label = NSLocalizedString("585.label", tableName: "TSSTSessionWindowToolbar", value: "Rotate", comment: #"Class = "NSToolbarItem"; label = "Rotate"; ObjectID = "585";"#)
-			item.paletteLabel = NSLocalizedString("585.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Rotate", comment: #"Class = "NSToolbarItem"; paletteLabel = "Rotate"; ObjectID = "585";"#)
+			item.label = NSLocalizedString("585.label", tableName: "TSSTSessionWindowToolbar", value: "Rotate", comment: "Rotate label")
+			item.paletteLabel = NSLocalizedString("585.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Rotate", comment: "Rotate palette label")
 			item.subitems[0].tag = 901
 			item.subitems[1].tag = 902
 			item.selectionMode = .momentary
