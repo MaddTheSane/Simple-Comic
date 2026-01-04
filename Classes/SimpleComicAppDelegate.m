@@ -396,7 +396,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 }
 
 
-- (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames
+- (void)application:(NSApplication *)sender openFiles:(NSArray<NSString*> *)filenames
 {
 	BOOL option = ([NSEvent modifierFlags] & (NSEventModifierFlagOption)) != 0;
 	if(!launchInProgress)
