@@ -28,8 +28,9 @@
 #import "Simple_Comic-Swift.h"
 #import "TSSTManagedSession+CoreDataProperties.h"
 #import "OCRTracker.h"
+#import "NSImageRep+WebP.h"
 
-#import <WebPMac/TSSTWebPImageRep.h>
+@import SDWebImageWebPCoder;
 
 
 @interface SimpleComicAppDelegate () <XADArchiveDelegate>
@@ -261,9 +262,8 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	launchInProgress = YES;
 	preferences = nil;
 	optionHeldAtlaunch = NO;
-	if (![NSImageRep imageRepClassForType:@"org.webmproject.webp"]) {
-		[NSImageRep registerImageRepClass:[TSSTWebPImageRep class]];
-	}
+	// Register WebP support (including animated WebP)
+	[NSImageRep registerWebPSupport];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endSession:) name: TSSTSessionEndNotification object: nil];
 	[[NSUserDefaults standardUserDefaults] addObserver: self forKeyPath: TSSTSessionRestore options: 0 context: nil];
 }
