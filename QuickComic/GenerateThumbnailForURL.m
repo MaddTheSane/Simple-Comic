@@ -8,7 +8,7 @@
 #import "TSSTImageUtilities.h"
 #import "DTPartialArchiveParser.h"
 #include "main.h"
-#import <WebPMac/TSSTWebPImageRep.h>
+@import SDWebImageWebPCoder;
 
 #ifdef NON_APPSTORE
 extern const CFStringRef kQLThumbnailPropertyIconFlavorKey;
@@ -28,9 +28,11 @@ typedef NS_ENUM(NSInteger, QLThumbnailIconFlavor)
 OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize)
 {
 	@autoreleasepool {
-		if (![NSImageRep imageRepClassForType:@"org.webmproject.webp"]) {
-			[NSImageRep registerImageRepClass:[TSSTWebPImageRep class]];
-		}
+		// Register WebP coder with SDWebImage
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			[[SDImageCodersManager sharedManager] addCoder:[SDImageWebPCoder sharedCoder]];
+		});
 		NSURL *archiveURL = (__bridge NSURL *)url;
 		NSString * archivePath = [archiveURL path];
 //	NSLog(@"base path %@",archivePath);

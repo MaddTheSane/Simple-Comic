@@ -5,7 +5,7 @@
 #import <XADMaster/XADArchive.h>
 #import "DTQuickComicCommon.h"
 #include "main.h"
-#import <WebPMac/TSSTWebPImageRep.h>
+@import SDWebImageWebPCoder;
 
 /* -----------------------------------------------------------------------------
    Generate a preview for file
@@ -17,9 +17,11 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 {
 	@autoreleasepool {
 		// TODO: implement kQLReturnHasMore somehow
-		if (![NSImageRep imageRepClassForType:@"org.webmproject.webp"]) {
-			[NSImageRep registerImageRepClass:[TSSTWebPImageRep class]];
-		}
+		// Register WebP coder with SDWebImage
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			[[SDImageCodersManager sharedManager] addCoder:[SDImageWebPCoder sharedCoder]];
+		});
 
 		XADArchive * archive = [[XADArchive alloc] initWithFileURL: (__bridge NSURL *)url delegate: nil error: NULL];
 		NSMutableArray<NSDictionary<NSString*,id>*> * fileList = fileListForArchive(archive);
