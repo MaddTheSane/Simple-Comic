@@ -177,7 +177,8 @@ typedef struct {
 							  @"pageImage": firstPageImage,
 							  @"loopCount": [testBMImageRep valueForProperty: NSImageLoopCount]};
 			frameDuration = [[testBMImageRep valueForProperty: NSImageCurrentFrameDuration] doubleValue];
-			frameDuration = frameDuration > 0.1 ? frameDuration : 0.1;
+			// any reason for max 10fps? lets allow faster animations (minimum 20ms = 50 FPS) for smoother WebP playback
+			frameDuration = frameDuration > 0.02 ? frameDuration : 0.02;
 			[NSTimer scheduledTimerWithTimeInterval: frameDuration
 											 target: self
 										   selector: @selector(animateImage:)
@@ -225,7 +226,8 @@ typedef struct {
 	if(loopCount != 1)
 	{
 		frameDuration = [[testImageRep valueForProperty: NSImageCurrentFrameDuration] doubleValue];
-		frameDuration = frameDuration > 0.1 ? frameDuration : 0.1;
+			// any reason for max 10fps? lets allow faster animations (minimum 20ms = 50 FPS) for smoother WebP playback
+		frameDuration = frameDuration > 0.02 ? frameDuration : 0.02;
 		[NSTimer scheduledTimerWithTimeInterval: frameDuration
 										 target: self selector: @selector(animateImage:)
 									   userInfo: animationInfo
