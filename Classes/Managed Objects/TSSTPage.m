@@ -25,6 +25,8 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import <ImageIO/ImageIO.h>
 
+@import SDWebImage;
+
 static NSDictionary * TSSTInfoPageAttributes = nil;
 static NSSize monospaceCharacterSize;
 
@@ -303,7 +305,21 @@ static NSSize monospaceCharacterSize;
 	{
 		return nil;
 	}
-	NSImage * imageFromData = [[NSImage alloc] initWithData: imageData];
+	NSImage * imageFromData = nil;
+	// WebP goes through SDAnimatedImageRep so animated files play like GIFs.
+	if ([NSData sd_imageFormatForImageData: imageData] == SDImageFormatWebP)
+	{
+		SDAnimatedImageRep * webpRep = [SDAnimatedImageRep imageRepWithData: imageData];
+		if (webpRep)
+		{
+			imageFromData = [[NSImage alloc] initWithSize: webpRep.size];
+			[imageFromData addRepresentation: webpRep];
+		}
+	}
+	if (!imageFromData)
+	{
+		imageFromData = [[NSImage alloc] initWithData: imageData];
+	}
 	if (!imageFromData)
 	{
 		return nil;
