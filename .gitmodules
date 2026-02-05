@@ -4,9 +4,6 @@
 [submodule "XADMaster-2"]
 	path = Vendor/XADMaster
 	url = https://github.com/MaddTheSane/XADMaster-2.git
-[submodule "Vendor/ios-osx-webp-decoder"]
-	path = Vendor/ios-osx-webp-decoder
-	url = https://github.com/MaddTheSane/ios-osx-webp-decoder.git
 [submodule "Vendor/SDWebImage"]
 	path = Vendor/SDWebImage
 	url = https://github.com/SDWebImage/SDWebImage.git
