@@ -5,7 +5,7 @@
 #import <XADMaster/XADArchive.h>
 #import "DTQuickComicCommon.h"
 #include "main.h"
-@import SDWebImageWebPCoder;
+#import <SDWebImageWebPCoder/SDImageWebPCoder.h>
 
 /* -----------------------------------------------------------------------------
    Generate a preview for file

@@ -8,8 +8,9 @@
 #import "NSImageRep+WebP.h"
 
 // SDWebImageWebPCoder integration
-@import SDWebImageWebPCoder;
-@import SDWebImage;
+#import <SDWebImage/SDImageAWebPCoder.h>
+#import <SDWebImage/SDWebImage.h>
+#import <SDWebImageWebPCoder/SDImageWebPCoder.h>
 
 @implementation NSImageRep (WebP)
 
@@ -17,7 +18,16 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // Register WebP coder with SDWebImage
-        SDImageWebPCoder *webPCoder = [SDImageWebPCoder sharedCoder];
+        // Use SDImageAWebPCoder (system-provided) on macOS 11.0+ for better performance,
+        // fallback to SDImageWebPCoder (libwebp-based) on older systems
+        id<SDImageCoder> webPCoder;
+        
+        if (@available(macOS 11.0, *)) {
+            webPCoder = [SDImageAWebPCoder sharedCoder];
+        } else {
+            webPCoder = [SDImageWebPCoder sharedCoder];
+        }
+        
         [[SDImageCodersManager sharedManager] addCoder:webPCoder];
         
         // Register SDAnimatedImageRep with NSImage so it can handle animated images (including WebP)
