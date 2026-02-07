@@ -30,9 +30,6 @@
 #import "OCRTracker.h"
 #import "NSImageRep+WebP.h"
 
-@import SDWebImageWebPCoder;
-
-
 @interface SimpleComicAppDelegate () <XADArchiveDelegate>
 
 @end
