@@ -8,7 +8,8 @@
 #import "TSSTImageUtilities.h"
 #import "DTPartialArchiveParser.h"
 #include "main.h"
-@import SDWebImageWebPCoder;
+#import <SDWebImageWebPCoder/SDImageWebPCoder.h>
+#import <SDWebImage/SDImageAWebPCoder.h>
 
 #ifdef NON_APPSTORE
 extern const CFStringRef kQLThumbnailPropertyIconFlavorKey;
@@ -31,7 +32,17 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 		// Register WebP coder with SDWebImage
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
-			[[SDImageCodersManager sharedManager] addCoder:[SDImageWebPCoder sharedCoder]];
+			// Use SDImageAWebPCoder (system-provided) on macOS 11.0+ for better performance,
+			// fallback to SDImageWebPCoder (libwebp-based) on older systems
+			id<SDImageCoder> webPCoder;
+			
+			if (@available(macOS 11.0, *)) {
+				webPCoder = [SDImageAWebPCoder sharedCoder];
+			} else {
+				webPCoder = [SDImageWebPCoder sharedCoder];
+			}
+			
+			[[SDImageCodersManager sharedManager] addCoder:webPCoder];
 		});
 		NSURL *archiveURL = (__bridge NSURL *)url;
 		NSString * archivePath = [archiveURL path];

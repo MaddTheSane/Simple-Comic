@@ -25,7 +25,7 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import <ImageIO/ImageIO.h>
 
-@import SDWebImage;
+#import <SDWebImage/SDWebImage.h>
 
 static NSDictionary * TSSTInfoPageAttributes = nil;
 static NSSize monospaceCharacterSize;
