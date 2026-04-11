@@ -4,8 +4,10 @@
 //
 
 #import "OCRVision.h"
+#import "Simple_Comic-Swift.h"
 
 #import <Vision/Vision.h>
+#import <ImageIO/CGImageProperties.h>
 
 NSString *const OCRLanguageKey = @"OCRLanguageKey";
 
@@ -29,6 +31,7 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 
 @property(readwrite) NSArray<VNRecognizedTextObservation *> *textObservations;
 @property(readwrite, nullable, setter=setOCRError:) NSError *ocrError;
+@property(readwrite, nullable) NSString *rawOCRText;
 @end
 
 @implementation OCRVision
@@ -41,7 +44,7 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 		NSString *defaultOCRLanguage = @"";	// i.e., off.
 		if (@available(macOS 12.0, *))
 		{
-			defaultOCRLanguage = @"en-US";
+			defaultOCRLanguage = @"ja";
 		}
 		NSDictionary* standardDefaults =
 		@{
@@ -85,15 +88,46 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 		  observations:(NSArray<VNRecognizedTextObservation *> *)observations
 				 error:(NSError *)error
 {
+	NSString *joinedText = @"";
+	if (observations.count != 0) {
+		NSMutableArray<NSString *> *lines = [NSMutableArray arrayWithCapacity:observations.count];
+		for (VNRecognizedTextObservation *observation in observations) {
+			VNRecognizedText *topText = [observation topCandidates:1].firstObject;
+			if (topText.string.length != 0) {
+				[lines addObject:topText.string];
+			}
+		}
+		joinedText = [lines componentsJoinedByString:@"\n"];
+	}
+	self.rawOCRText = joinedText;
 	self.textObservations = observations;
 	self.ocrError = error;
 	completion(self);
+	self.rawOCRText = nil;
+	self.textObservations = @[];
+	self.ocrError = nil;
+}
+
+- (void)callCompletion:(void (^)(id<OCRVisionResults> _Nonnull))completion
+		  observations:(NSArray<VNRecognizedTextObservation *> *)observations
+				 text:(NSString *)text
+				 error:(NSError *)error
+{
+	self.rawOCRText = text ?: @"";
+	self.textObservations = observations;
+	self.ocrError = error;
+	completion(self);
+	self.rawOCRText = nil;
 	self.textObservations = @[];
 	self.ocrError = nil;
 }
 
 - (NSString *)allText
 {
+	if (self.rawOCRText.length != 0) {
+		return self.rawOCRText;
+	}
+
 	NSMutableArray *a = [NSMutableArray array];
 	for (VNRecognizedTextObservation *piece in self.textObservations)
 	{
@@ -101,6 +135,75 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 		[a addObject:text1.firstObject.string];
 	}
 	return [a componentsJoinedByString:@"\n"];
+}
+
+- (BOOL)containsJapaneseCharacters:(NSString *)text
+{
+	for (NSUInteger idx = 0; idx < text.length; idx++) {
+		unichar ch = [text characterAtIndex:idx];
+		if ((ch >= 0x3040 && ch <= 0x309F) ||
+			(ch >= 0x30A0 && ch <= 0x30FF) ||
+			(ch >= 0x31F0 && ch <= 0x31FF) ||
+			(ch >= 0x4E00 && ch <= 0x9FFF)) {
+			return YES;
+		}
+	}
+	return NO;
+}
+
+- (void)performVisionOCRForImage:(NSImage *)image completion:(void (^)(id<OCRVisionResults> _Nonnull))completion
+{
+	NSLog(@"[OCRVision] OCR_ENGINE=Vision");
+
+	NSData *imageData = image.TIFFRepresentation;
+	if (imageData == nil) {
+		[self callCompletion:completion observations:@[] text:@"" error:nil];
+		return;
+	}
+
+	CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
+	if (imageSource == nil) {
+		[self callCompletion:completion observations:@[] text:@"" error:nil];
+		return;
+	}
+
+	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+	CFRelease(imageSource);
+	if (imageRef == nil) {
+		[self callCompletion:completion observations:@[] text:@"" error:nil];
+		return;
+	}
+
+	[self ocrCGImage:imageRef completion:completion];
+	CGImageRelease(imageRef);
+}
+
+- (void)performImageAnalyzerOCRForImage:(NSImage *)image completion:(void (^)(id<OCRVisionResults> _Nonnull))completion API_AVAILABLE(macos(13.0))
+{
+	NSLog(@"[OCRVision] OCR_ENGINE=ImageAnalyzer_Attempt");
+
+	if (![ImageAnalyzerBridge isAvailable]) {
+		NSLog(@"[OCRVision] OCR_ENGINE=ImageAnalyzer_Unavailable -> VisionFallback");
+		[self performVisionOCRForImage:image completion:completion];
+		return;
+	}
+
+	ImageAnalyzerBridge *bridge = [[ImageAnalyzerBridge alloc] init];
+	[bridge analyzeImage:image completion:^(NSString * _Nullable transcript, NSError * _Nullable error) {
+		NSString *safeTranscript = [transcript isKindOfClass:[NSString class]] ? transcript : @"";
+		safeTranscript = [safeTranscript stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+		// Mirror ImageOCRApp strategy: if transcript is too short, fall back to Vision OCR.
+		if (safeTranscript.length < 24) {
+			NSLog(@"[OCRVision] OCR_ENGINE=ImageAnalyzer_WeakResult(%lu) -> VisionFallback", (unsigned long)safeTranscript.length);
+			[self performVisionOCRForImage:image completion:completion];
+			return;
+		}
+
+		NSLog(@"[OCRVision] OCR_ENGINE=ImageAnalyzer_Success textLength=%lu", (unsigned long)safeTranscript.length);
+		NSLog(@"[OCRVision] OCR_TEXT=%@", safeTranscript);
+		[self callCompletion:completion observations:@[] text:safeTranscript error:error];
+	}];
 }
 
 
@@ -183,20 +286,16 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 
 - (void)ocrImage:(NSImage *)image completion:(void (^)(id<OCRVisionResults> _Nonnull))completion
 {
-	NSData *imageData = image.TIFFRepresentation;
-	if(imageData != nil)
-	{
-		CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
-		if (imageSource != nil)
-		{
-			CGImageRef imageRef =  CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-			if (imageRef != nil)
-			{
-				[self ocrCGImage:imageRef completion:completion];
-				CFRelease(imageRef);
-			}
-			CFRelease(imageSource);
-		}
+	NSString *ocrLanguage = [[self class] ocrLanguage];
+	if (ocrLanguage.length == 0) {
+		[self callCompletion:completion observations:@[] text:@"" error:nil];
+		return;
+	}
+
+	if (@available(macOS 13.0, *)) {
+		[self performImageAnalyzerOCRForImage:image completion:completion];
+	} else {
+		[self performVisionOCRForImage:image completion:completion];
 	}
 }
 
