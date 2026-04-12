@@ -72,6 +72,7 @@ typedef struct {
 	int pageSelection;
 	/*! This is the rect describing the users page selection. */
 	NSRect cropRect;
+	LiveTextOverlayCoordinator *liveTextCoordinator;
 }
 @synthesize imageBounds;
 @synthesize rotation;
@@ -83,6 +84,9 @@ typedef struct {
 	[super awakeFromNib];
 	/* Doing this so users can drag archives into the view. */
 	[self registerForDraggedTypes: @[NSFilenamesPboardType, NSPasteboardTypeFileURL]];
+	if ([LiveTextOverlayCoordinator isAvailable]) {
+		liveTextCoordinator = [[LiveTextOverlayCoordinator alloc] initWithHostView:self];
+	}
 }
 
 
@@ -90,6 +94,9 @@ typedef struct {
 {
 	if((self = [super initWithFrame: aRectangle]))
 	{
+		if ([LiveTextOverlayCoordinator isAvailable]) {
+			liveTextCoordinator = [[LiveTextOverlayCoordinator alloc] initWithHostView:self];
+		}
 		[self setFirstPage: nil secondPageImage: nil];
 		scrollKeys = 0;
 		scrollwheel.left = 0;
@@ -131,7 +138,9 @@ typedef struct {
 	if(first != firstPageImage)
 	{
 		firstPageImage = first;
-		if([self didStartAnimationForImage: firstPageImage])
+		if (liveTextCoordinator != nil) {
+			[sessionController.tracker ocrImage:nil];
+		} else if([self didStartAnimationForImage: firstPageImage])
 		{
 			[sessionController.tracker ocrImage:nil];
 		} else {
@@ -142,7 +151,9 @@ typedef struct {
 	if(second != secondPageImage)
 	{
 		secondPageImage = second;
-		if([self didStartAnimationForImage: secondPageImage])
+		if (liveTextCoordinator != nil) {
+			[sessionController.tracker ocrImage2:nil];
+		} else if([self didStartAnimationForImage: secondPageImage])
 		{
 			[sessionController.tracker ocrImage2:nil];
 		} else {
@@ -338,9 +349,13 @@ typedef struct {
 		NSRect frame = [self centerScanRect: firstPageRect];
 		[firstPageLayer setFrame:frame];
 		[newLayer addSublayer:firstPageLayer];
-		CALayer *selectionLayer = [sessionController.tracker layerForImage:firstPageImage imageLayer:firstPageLayer];
-		if (selectionLayer) {
-			[firstPageLayer addSublayer:selectionLayer];
+		if (liveTextCoordinator != nil) {
+			[liveTextCoordinator setImage:firstPageImage frame:frame key:@0 rotation:rotation];
+		} else {
+			CALayer *selectionLayer = [sessionController.tracker layerForImage:firstPageImage imageLayer:firstPageLayer];
+			if (selectionLayer) {
+				[firstPageLayer addSublayer:selectionLayer];
+			}
 		}
 	}
 
@@ -351,10 +366,17 @@ typedef struct {
 		NSRect frame = [self centerScanRect: secondPageRect];
 		[secondPageLayer setFrame:frame];
 		[newLayer addSublayer:secondPageLayer];
-		CALayer *selectionLayer = [sessionController.tracker layerForImage:secondPageImage imageLayer:secondPageLayer];
-		if (selectionLayer) {
-			[secondPageLayer addSublayer:selectionLayer];
+		if (liveTextCoordinator != nil) {
+			[liveTextCoordinator setImage:secondPageImage frame:frame key:@1 rotation:rotation];
+		} else {
+			CALayer *selectionLayer = [sessionController.tracker layerForImage:secondPageImage imageLayer:secondPageLayer];
+			if (selectionLayer) {
+				[secondPageLayer addSublayer:selectionLayer];
+			}
 		}
+	}
+	else if (liveTextCoordinator != nil) {
+			[liveTextCoordinator setImage:nil frame:NSZeroRect key:@1 rotation:rotation];
 	}
 	
 	NSColor* selectionBackgroundColor = [NSColor.selectedContentBackgroundColor colorWithAlphaComponent:0.5];
@@ -439,6 +461,9 @@ typedef struct {
 	
 	NSRect frame = [self frame];
 	CGAffineTransform rotationTransform = [self rotationCGTransformWithFrame:frame];
+	if (liveTextCoordinator != nil) {
+		[liveTextCoordinator updateContainerWithFrame:self.bounds transform:rotationTransform];
+	}
 	
 	[newLayer setAffineTransform:rotationTransform];
 	

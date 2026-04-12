@@ -8,6 +8,7 @@
 
 #import <Vision/Vision.h>
 #import <ImageIO/CGImageProperties.h>
+#import <float.h>
 
 NSString *const OCRLanguageKey = @"OCRLanguageKey";
 
@@ -151,7 +152,71 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 	return NO;
 }
 
+- (NSString *)normalizedOCRString:(NSString *)text
+{
+	if (text.length == 0) {
+		return @"";
+	}
+	NSCharacterSet *ws = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+	NSArray<NSString *> *parts = [text componentsSeparatedByCharactersInSet:ws];
+	return [[parts componentsJoinedByString:@""] lowercaseString];
+}
+
+- (double)referenceSimilarityScoreForCandidate:(NSString *)candidate reference:(NSString *)reference
+{
+	NSString *a = [self normalizedOCRString:candidate];
+	NSString *b = [self normalizedOCRString:reference];
+	if (a.length == 0 || b.length == 0) {
+		return 0.0;
+	}
+
+	NSCountedSet *aChars = [[NSCountedSet alloc] init];
+	for (NSUInteger i = 0; i < a.length; i++) {
+		[aChars addObject:@([a characterAtIndex:i])];
+	}
+
+	double overlap = 0.0;
+	for (NSUInteger i = 0; i < b.length; i++) {
+		NSNumber *ch = @([b characterAtIndex:i]);
+		if ([aChars countForObject:ch] > 0) {
+			overlap += 1.0;
+			[aChars removeObject:ch];
+		}
+	}
+
+	return overlap / (double)MAX(a.length, b.length);
+}
+
+- (BOOL)isLikelyNoiseLine:(NSString *)line
+{
+	if (line.length == 0) {
+		return YES;
+	}
+
+	NSUInteger useful = 0;
+	for (NSUInteger i = 0; i < line.length; i++) {
+		unichar c = [line characterAtIndex:i];
+		BOOL isLatin = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+		BOOL isDigit = (c >= '0' && c <= '9');
+		BOOL isJapanese = ((c >= 0x3040 && c <= 0x309F) ||
+						   (c >= 0x30A0 && c <= 0x30FF) ||
+						   (c >= 0x31F0 && c <= 0x31FF) ||
+						   (c >= 0x4E00 && c <= 0x9FFF));
+		if (isLatin || isDigit || isJapanese) {
+			useful += 1;
+		}
+	}
+
+	double usefulRatio = (double)useful / (double)line.length;
+	return usefulRatio < 0.45;
+}
+
 - (void)performVisionOCRForImage:(NSImage *)image completion:(void (^)(id<OCRVisionResults> _Nonnull))completion
+{
+	[self performVisionOCRForImage:image referenceText:nil completion:completion];
+}
+
+- (void)performVisionOCRForImage:(NSImage *)image referenceText:(NSString * _Nullable)referenceText completion:(void (^)(id<OCRVisionResults> _Nonnull))completion
 {
 	NSLog(@"[OCRVision] OCR_ENGINE=Vision");
 
@@ -174,8 +239,82 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 		return;
 	}
 
-	[self ocrCGImage:imageRef completion:completion];
+	NSArray<NSNumber *> *orientations = @[
+		@(kCGImagePropertyOrientationUp),
+		@(kCGImagePropertyOrientationLeft),
+		@(kCGImagePropertyOrientationRight),
+		@(kCGImagePropertyOrientationDown)
+	];
+
+	NSArray<VNRecognizedTextObservation *> *bestResults = @[];
+	NSString *bestJoinedText = @"";
+	double bestScore = -DBL_MAX;
+	NSError *lastError = nil;
+
+	for (NSNumber *orientationNumber in orientations) {
+		VNRecognizeTextRequest *textRequest = [[VNRecognizeTextRequest alloc] initWithCompletionHandler:nil];
+		// This pass powers selectable text, so favor quality over raw box count.
+		textRequest.recognitionLevel = VNRequestTextRecognitionLevelAccurate;
+		textRequest.usesLanguageCorrection = YES;
+		textRequest.recognitionLanguages = @[@"ja-JP", @"en-US"];
+		if (@available(macOS 13.0, *)) {
+			textRequest.automaticallyDetectsLanguage = YES;
+		}
+
+		NSError *requestError = nil;
+		CGImagePropertyOrientation orientation = (CGImagePropertyOrientation)orientationNumber.integerValue;
+		VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCGImage:imageRef orientation:orientation options:@{}];
+		self.activeTextRequest = textRequest;
+		BOOL ok = [handler performRequests:@[textRequest] error:&requestError];
+		if (!ok) {
+			if (lastError == nil) {
+				lastError = requestError;
+			}
+			continue;
+		}
+
+		NSMutableArray<VNRecognizedTextObservation *> *filtered = [NSMutableArray array];
+		NSMutableArray<NSString *> *joinedLines = [NSMutableArray array];
+		double orientationScore = 0.0;
+		for (VNRecognizedTextObservation *observation in textRequest.results) {
+			NSArray<VNRecognizedText *> *text1 = [observation topCandidates:1];
+			if (text1.count != 0) {
+				NSString *line = text1.firstObject.string ?: @"";
+				if ([self isLikelyNoiseLine:line]) {
+					continue;
+				}
+				[filtered addObject:observation];
+				[joinedLines addObject:line];
+				double lineScore = (double)line.length * (double)observation.confidence;
+				if ([self containsJapaneseCharacters:line]) {
+					lineScore *= 1.5;
+				}
+				orientationScore += lineScore;
+			}
+		}
+
+		NSString *joinedText = [joinedLines componentsJoinedByString:@"\n"];
+		if (referenceText.length != 0) {
+			double similarity = [self referenceSimilarityScoreForCandidate:joinedText reference:referenceText];
+			orientationScore *= (1.0 + similarity * 2.0);
+			NSLog(@"[OCRVision] OCR_ENGINE=Vision_Orientation_%ld similarity=%.3f", (long)orientation, similarity);
+		}
+
+		NSLog(@"[OCRVision] OCR_ENGINE=Vision_Orientation_%ld observations=%lu score=%.2f", (long)orientation, (unsigned long)filtered.count, orientationScore);
+		if (orientationScore > bestScore) {
+			bestScore = orientationScore;
+			bestResults = filtered;
+			bestJoinedText = joinedText;
+		}
+	}
+
+	self.activeTextRequest = nil;
 	CGImageRelease(imageRef);
+	NSLog(@"[OCRVision] OCR_ENGINE=Vision_BestObservationCount=%lu score=%.2f", (unsigned long)bestResults.count, bestScore);
+	if (bestJoinedText.length != 0) {
+		NSLog(@"[OCRVision] OCR_ENGINE=Vision_BestText=%@", bestJoinedText);
+	}
+	[self callCompletion:completion observations:bestResults error:lastError];
 }
 
 - (void)performImageAnalyzerOCRForImage:(NSImage *)image completion:(void (^)(id<OCRVisionResults> _Nonnull))completion API_AVAILABLE(macos(13.0))
@@ -196,13 +335,21 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 		// Mirror ImageOCRApp strategy: if transcript is too short, fall back to Vision OCR.
 		if (safeTranscript.length < 24) {
 			NSLog(@"[OCRVision] OCR_ENGINE=ImageAnalyzer_WeakResult(%lu) -> VisionFallback", (unsigned long)safeTranscript.length);
-			[self performVisionOCRForImage:image completion:completion];
+			[self performVisionOCRForImage:image referenceText:safeTranscript completion:completion];
 			return;
 		}
 
 		NSLog(@"[OCRVision] OCR_ENGINE=ImageAnalyzer_Success textLength=%lu", (unsigned long)safeTranscript.length);
 		NSLog(@"[OCRVision] OCR_TEXT=%@", safeTranscript);
-		[self callCompletion:completion observations:@[] text:safeTranscript error:error];
+
+		// ImageAnalyzer provides great transcript quality, but selection UI needs Vision observations
+		// with bounding boxes. Run Vision once and reuse its observations for selectable overlays.
+		[self performVisionOCRForImage:image completion:^(id<OCRVisionResults> _Nonnull visionResults) {
+			NSArray<VNRecognizedTextObservation *> *observations = visionResults.textObservations ?: @[];
+			NSError *combinedError = error ?: visionResults.ocrError;
+			NSLog(@"[OCRVision] OCR_ENGINE=ImageAnalyzer_WithVisionSelectionBoxes count=%lu", (unsigned long)observations.count);
+			[self callCompletion:completion observations:observations text:safeTranscript error:combinedError];
+		}];
 	}];
 }
 
