@@ -24,6 +24,8 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 #import <XADMaster/XADArchive.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
+#import <SDWebImage/SDWebImage.h>
+
 static NSDictionary * TSSTInfoPageAttributes = nil;
 static NSSize monospaceCharacterSize;
 
@@ -221,7 +223,22 @@ static NSSize monospaceCharacterSize;
 	if(imageData)
 	{
 		[self setOwnSizeInfoWithData: imageData];
-		imageFromData = [[NSImage alloc] initWithData: imageData];
+		
+		// Check if this is WebP data and use SDAnimatedImageRep for animation support
+		SDImageFormat imageFormat = [NSData sd_imageFormatForImageData:imageData];
+		if (imageFormat == SDImageFormatWebP) {
+			// Use SDAnimatedImageRep for WebP to support animation
+			SDAnimatedImageRep *webpRep = [SDAnimatedImageRep imageRepWithData:imageData];
+			if (webpRep) {
+				imageFromData = [[NSImage alloc] initWithSize:webpRep.size];
+				[imageFromData addRepresentation:webpRep];
+			}
+		}
+		
+		// Fall back to default NSImage loading for other formats
+		if (!imageFromData) {
+			imageFromData = [[NSImage alloc] initWithData: imageData];
+		}
 	}
 	
 	NSSize imageSize =  NSMakeSize(self.width, self.height);
