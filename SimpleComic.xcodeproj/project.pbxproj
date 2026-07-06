@@ -25,6 +25,9 @@
 		28A266161285C3A700ED6391 /* TSSTSessionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28A266141285C3A700ED6391 /* TSSTSessionWindow.xib */; };
 		28A266301285C73200ED6391 /* DTPreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A2662F1285C73200ED6391 /* DTPreferencesController.swift */; };
 		28B34A731013779B006C551C /* NSWindow+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B34A721013779B006C551C /* NSWindow+Extensions.swift */; };
+		5C0FA9E100000000000000A2 /* SCPaperFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0FA9E100000000000000A1 /* SCPaperFilter.swift */; };
+		5C0FA9E100000000000000C2 /* SCPaperSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0FA9E100000000000000C1 /* SCPaperSettingsController.swift */; };
+		5C0FA9E100000000000000B2 /* PaperKernels.metal in Sources */ = {isa = PBXBuildFile; fileRef = 5C0FA9E100000000000000B1 /* PaperKernels.metal */; settings = {COMPILER_FLAGS = "-fcikernel"; }; };
 		28BD08E60C9836E600BD7EAF /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28BD08E50C9836E600BD7EAF /* Quartz.framework */; };
 		28C1D4080DF18251003392B4 /* TSSTManagedSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 2803B2FF0D5E541800CD7906 /* TSSTManagedSession.m */; };
 		28C1D5600DF1FE37003392B4 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C1D55F0DF1FE37003392B4 /* QuickLook.framework */; };
@@ -366,6 +369,9 @@
 		28A2662F1285C73200ED6391 /* DTPreferencesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTPreferencesController.swift; sourceTree = "<group>"; };
 		28A8EAB00B412DE5006C036D /* TSSTPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTPageView.h; sourceTree = "<group>"; };
 		28B34A721013779B006C551C /* NSWindow+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSWindow+Extensions.swift"; sourceTree = "<group>"; };
+		5C0FA9E100000000000000A1 /* SCPaperFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCPaperFilter.swift; sourceTree = "<group>"; };
+		5C0FA9E100000000000000C1 /* SCPaperSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCPaperSettingsController.swift; sourceTree = "<group>"; };
+		5C0FA9E100000000000000B1 /* PaperKernels.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = PaperKernels.metal; sourceTree = "<group>"; };
 		28BD08E50C9836E600BD7EAF /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		28C1D55F0DF1FE37003392B4 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		28EF3FBE0E9970BD002AD2EE /* UKXattrMetadataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UKXattrMetadataStore.h; sourceTree = "<group>"; };
@@ -854,6 +860,9 @@
 				FA7257EF08A6CE2E006A2A19 /* TSSTPageView.m */,
 				284D381A101249BE00A37AB2 /* DTToolbarItems.swift */,
 				28B34A721013779B006C551C /* NSWindow+Extensions.swift */,
+				5C0FA9E100000000000000A1 /* SCPaperFilter.swift */,
+				5C0FA9E100000000000000C1 /* SCPaperSettingsController.swift */,
+				5C0FA9E100000000000000B1 /* PaperKernels.metal */,
 				6304B5C2284018E9009E7D61 /* OCRVision */,
 			);
 			path = Session;
@@ -1302,6 +1311,9 @@
 				554A1C0226478396009FE60D /* TSSTSessionWindowController+NSTouchBar.swift in Sources */,
 				5538C2021C0E1A7C00744130 /* TSSTInfoView.swift in Sources */,
 				28B34A731013779B006C551C /* NSWindow+Extensions.swift in Sources */,
+				5C0FA9E100000000000000A2 /* SCPaperFilter.swift in Sources */,
+				5C0FA9E100000000000000C2 /* SCPaperSettingsController.swift in Sources */,
+				5C0FA9E100000000000000B2 /* PaperKernels.metal in Sources */,
 				5526278D1BDEBF29005AAF63 /* TSSTImageView.swift in Sources */,
 				287D0C1210F0595900207768 /* Sessions_DataModel.xcdatamodel in Sources */,
 				8FBFF02E26EF71BF00E3CFC8 /* TSSTSessionWindowController+NSToolbarDelegate.swift in Sources */,
@@ -1714,6 +1726,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55E21B1123FBCCF900D53932 /* No Sign.xcconfig */;
 			buildSettings = {
+				MTLLINKER_FLAGS = "-cikernel";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "Accent Color";
 				CLANG_ENABLE_MODULES = YES;
@@ -1753,6 +1766,7 @@
 		FA7257E408A6CDEB006A2A19 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				MTLLINKER_FLAGS = "-cikernel";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "Accent Color";
 				CLANG_ENABLE_MODULES = YES;

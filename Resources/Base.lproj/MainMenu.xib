@@ -289,6 +289,16 @@ CA
                                     <action selector="toggleLoupe:" target="-1" id="1220"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Paper Effect" secondaryImage="newspaper" catalog="system" id="pe1-00-001">
+                                <connections>
+                                    <action selector="togglePaperEffect:" target="-1" id="pe1-00-002"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Paper Effect Settings…" id="pe2-00-001">
+                                <connections>
+                                    <action selector="showPaperSettings:" target="-1" id="pe2-00-002"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Thumbnail Exposé" secondaryImage="rectangle.grid.2x2" catalog="system" tag="305" keyEquivalent="t" id="670">
                                 <connections>
                                     <action selector="togglePageExpose:" target="-1" id="1219"/>

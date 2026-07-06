@@ -5304,6 +5304,30 @@
           }
         }
       }
+    },
+    "pe1-00-001.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Paper Effect\"; ObjectID = \"pe1-00-001\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Paper Effect"
+          }
+        }
+      }
+    },
+    "pe2-00-001.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Paper Effect Settings…\"; ObjectID = \"pe2-00-001\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Paper Effect Settings…"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

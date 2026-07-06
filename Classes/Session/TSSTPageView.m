@@ -54,7 +54,13 @@ typedef struct {
 	NSRect secondPageRect;
 	NSImage	* firstPageImage;
 	NSImage	* secondPageImage;
-	
+
+	//! Cached paper-filtered versions of the page images (see -paperEffect).
+	NSImage	* firstFilteredImage;
+	NSImage	* secondFilteredImage;
+	//! Backing store for the paperEffect property.
+	BOOL paperEffectEnabled;
+
 	TSSTArrowKeys scrollKeys;	//!< Stores which arrow keys are currently depressed. This enables multi axis keyboard scrolling.
 	NSTimer * scrollTimer;		//!< Timer that fires in between each keydown event to smooth out the scrolling.
 	NSDate * interfaceDelay;
@@ -131,6 +137,7 @@ typedef struct {
 	if(first != firstPageImage)
 	{
 		firstPageImage = first;
+		firstFilteredImage = nil;
 		if([self didStartAnimationForImage: firstPageImage])
 		{
 			[sessionController.tracker ocrImage:nil];
@@ -142,6 +149,7 @@ typedef struct {
 	if(second != secondPageImage)
 	{
 		secondPageImage = second;
+		secondFilteredImage = nil;
 		if([self didStartAnimationForImage: secondPageImage])
 		{
 			[sessionController.tracker ocrImage2:nil];
@@ -315,6 +323,65 @@ typedef struct {
 #pragma mark Drawing
 
 
+- (BOOL)paperEffect
+{
+	return paperEffectEnabled;
+}
+
+
+- (void)setPaperEffect:(BOOL)enabled
+{
+	if(paperEffectEnabled != enabled)
+	{
+		paperEffectEnabled = enabled;
+		[self setNeedsDisplay: YES];
+	}
+}
+
+
+- (void)invalidatePaperCache
+{
+	firstFilteredImage = nil;
+	secondFilteredImage = nil;
+	if(paperEffectEnabled)
+	{
+		[self setNeedsDisplay: YES];
+	}
+}
+
+
+/*! Cheap check for multi-frame (animated) images. Such images are drawn
+    unfiltered so their animation keeps working. */
+- (BOOL)isAnimatedImage:(NSImage *)image
+{
+	NSImageRep * rep = [image bestRepresentationForRect: NSZeroRect context: nil hints: nil];
+	if([rep isKindOfClass: [NSBitmapImageRep class]])
+	{
+		return [[(NSBitmapImageRep *)rep valueForProperty: NSImageFrameCount] integerValue] > 1;
+	}
+	return NO;
+}
+
+
+/*! Returns the layer contents for a page: the paper-filtered image (cached)
+    when the effect is on, otherwise the original image. */
+- (id)layerContentsForImage:(NSImage *)image cached:(NSImage * __strong *)cache
+{
+	if(paperEffectEnabled && image && ![self isAnimatedImage: image])
+	{
+		if(!*cache)
+		{
+			*cache = [[SCPaperFilter sharedFilter] paperImageFromImage: image];
+		}
+		if(*cache)
+		{
+			return *cache;
+		}
+	}
+	return image;
+}
+
+
 - (void)drawRect:(NSRect)aRect
 {
 	if(!firstPageImage)
@@ -334,7 +401,7 @@ typedef struct {
 
 	{
 		CALayer *firstPageLayer = [CALayer layer];
-		firstPageLayer.contents = firstPageImage;
+		firstPageLayer.contents = [self layerContentsForImage: firstPageImage cached: &firstFilteredImage];
 		NSRect frame = [self centerScanRect: firstPageRect];
 		[firstPageLayer setFrame:frame];
 		[newLayer addSublayer:firstPageLayer];
@@ -347,7 +414,7 @@ typedef struct {
 	if([secondPageImage isValid])
 	{
 		CALayer *secondPageLayer = [CALayer layer];
-		secondPageLayer.contents = secondPageImage;
+		secondPageLayer.contents = [self layerContentsForImage: secondPageImage cached: &secondFilteredImage];
 		NSRect frame = [self centerScanRect: secondPageRect];
 		[secondPageLayer setFrame:frame];
 		[newLayer addSublayer:secondPageLayer];

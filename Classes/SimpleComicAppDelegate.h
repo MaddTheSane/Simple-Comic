@@ -59,6 +59,7 @@ extern NSString *const TSSTScrollersVisible;
 extern NSString *const TSSTPreserveModDate;
 extern NSString *const TSSTUnifiedTitlebar;
 extern NSString *const TSSTFullscreenToolbar;
+extern NSString *const SCPaperEffectEnabled;
 
 extern NSString *const TSSTScrollPosition;
 extern NSString *const TSSTZoomLevel;

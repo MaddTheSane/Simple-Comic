@@ -68,6 +68,15 @@ typedef NS_ENUM(NSInteger, DTPageScaling) {
 @property (nonatomic, assign) NSInteger rotation;
 @property (weak) IBOutlet TSSTSessionWindowController * sessionController;
 
+/*!  When YES the pages are rendered through the "paper" image filter
+    (see SCPaperFilter) instead of being drawn verbatim. The original page
+    images are never modified; filtering happens at draw time and is cached. */
+@property (nonatomic) BOOL paperEffect;
+
+/*!  Drops the cached filtered images so the paper effect is recomputed with
+    the current settings on the next draw. Call when the paper parameters change. */
+- (void)invalidatePaperCache;
+
 
 /*!  This is where it all begins sets the two pages.
     Starts any animations

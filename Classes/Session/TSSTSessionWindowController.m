@@ -151,6 +151,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults addObserver: self forKeyPath: TSSTBackgroundColor options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTLoupeDiameter options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTLoupePower options: 0 context: nil];
+	[defaults addObserver: self forKeyPath: SCPaperEffectEnabled options: 0 context: nil];
+	pageView.paperEffect = [defaults boolForKey: SCPaperEffectEnabled];
 	[session addObserver: self forKeyPath: TSSTPageOrder options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTPageScaleOptions options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTTwoPageSpread options: 0 context: nil];
@@ -180,7 +182,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[jumpField setDelegate: self];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleMouseDragged:) name:TSSTMouseDragNotification object:nil];
-	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(paperSettingsChanged:) name:SCPaperFilter.settingsChangedNotification object:nil];
+
 	[self restoreSession];
 }
 
@@ -196,6 +199,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults removeObserver: self forKeyPath: TSSTConstrainScale];
 	[defaults removeObserver: self forKeyPath: TSSTLoupeDiameter];
 	[defaults removeObserver: self forKeyPath: TSSTLoupePower];
+	[defaults removeObserver: self forKeyPath: SCPaperEffectEnabled];
 	[pageController removeObserver: self forKeyPath: @"selectionIndex"];
 	[pageController removeObserver: self forKeyPath: @"arrangedObjects.@count"];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -280,10 +284,20 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	{
 		[self refreshLoupePanel];
 	}
+	else if([keyPath isEqualToString: SCPaperEffectEnabled])
+	{
+		pageView.paperEffect = [defaults boolForKey: SCPaperEffectEnabled];
+	}
 	else
 	{
 		[self changeViewImages];
 	}
+}
+
+
+- (void)paperSettingsChanged:(NSNotification *)note
+{
+	[pageView invalidatePaperCache];
 }
 
 
@@ -689,6 +703,13 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	BOOL loupe = session.loupe;
 	loupe = !loupe;
 	session.loupe = loupe;
+}
+
+
+- (IBAction)togglePaperEffect:(id)sender
+{
+	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setBool: ![defaults boolForKey: SCPaperEffectEnabled] forKey: SCPaperEffectEnabled];
 }
 
 
@@ -1499,6 +1520,11 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
     if([menuItem action] == @selector(toggleFullScreen:))
     {
         state = [[self window] isFullscreen] ? NSControlStateValueOn : NSControlStateValueOff;
+        [menuItem setState: state];
+    }
+    else if([menuItem action] == @selector(togglePaperEffect:))
+    {
+        state = [[NSUserDefaults standardUserDefaults] boolForKey: SCPaperEffectEnabled] ? NSControlStateValueOn : NSControlStateValueOff;
         [menuItem setState: state];
     }
     else if([menuItem action] == @selector(changeTwoPage:))

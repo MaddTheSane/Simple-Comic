@@ -53,6 +53,7 @@ NSString *const TSSTScrollersVisible =  @"scrollersVisible";
 NSString *const TSSTPreserveModDate =   @"preserveModDate";
 NSString *const TSSTUnifiedTitlebar =   @"unifiedTitlebar";
 NSString *const TSSTFullscreenToolbar =   @"fullscreenToolbar";
+NSString *const SCPaperEffectEnabled =    @"SCPaperEffectEnabled";
 
 NSString *const TSSTScrollPosition =    @"scrollPosition";
 NSString *const TSSTZoomLevel =         @"zoomLevel";
@@ -210,6 +211,12 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		  TSSTPreserveModDate: @NO,
 		  TSSTUnifiedTitlebar: @NO,
 		  TSSTFullscreenToolbar: @NO,
+		  SCPaperEffectEnabled: @NO,
+		  @"SCPaperShowThrough": @0.38,
+		  @"SCPaperGrain": @0.14,
+		  @"SCPaperWarmth": @1.0,
+		  @"SCPaperBlackLift": @1.0,
+		  @"SCPaperFiberScale": @2.0,
 		  };
 		
 		NSUserDefaultsController * sharedDefaultsController = [NSUserDefaultsController sharedUserDefaultsController];
@@ -738,6 +745,12 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		preferences = [DTPreferencesController new];
 	}
 	[preferences showWindow: self];
+}
+
+
+- (IBAction)showPaperSettings:(id)sender
+{
+	[[SCPaperSettingsController sharedController] showPanel: sender];
 }
 
 #pragma mark - Archive Encoding Handling
