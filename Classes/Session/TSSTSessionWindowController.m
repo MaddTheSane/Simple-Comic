@@ -1643,7 +1643,20 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
     if([aNotification object] == [self window])
     {
-        [NSApp setPresentationOptions: NSApplicationPresentationDefault];
+        if([[self window] isFullscreen])
+        {
+            // The window is regaining key status while still fullscreen (e.g. after
+            // dismissing the thumbnail panel, or returning from a Space switch).
+            // Re-derive the fullscreen presentation options instead of resetting to
+            // NSApplicationPresentationDefault, which would leave the toolbar/menu
+            // bar/dock stuck visible (or hidden) until fullscreen is toggled off and
+            // back on. See #112.
+            [NSApp setPresentationOptions: [self window: [self window] willUseFullScreenPresentationOptions: [NSApp presentationOptions]]];
+        }
+        else
+        {
+            [NSApp setPresentationOptions: NSApplicationPresentationDefault];
+        }
 		if(session.loupe)
 		{
 			[NSCursor hide];
