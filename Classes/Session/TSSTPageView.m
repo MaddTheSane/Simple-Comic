@@ -177,7 +177,9 @@ typedef struct {
 							  @"pageImage": firstPageImage,
 							  @"loopCount": [testBMImageRep valueForProperty: NSImageLoopCount]};
 			frameDuration = [[testBMImageRep valueForProperty: NSImageCurrentFrameDuration] doubleValue];
-			frameDuration = frameDuration > 0.1 ? frameDuration : 0.1;
+			// AppKit reports no duration for some GIFs, and 0 means "as fast as possible".
+			// Follow the browser convention: delays of 10 ms or less play at 100 ms.
+			frameDuration = frameDuration > 0.01 ? frameDuration : 0.1;
 			[NSTimer scheduledTimerWithTimeInterval: frameDuration
 											 target: self
 										   selector: @selector(animateImage:)
@@ -225,7 +227,9 @@ typedef struct {
 	if(loopCount != 1)
 	{
 		frameDuration = [[testImageRep valueForProperty: NSImageCurrentFrameDuration] doubleValue];
-		frameDuration = frameDuration > 0.1 ? frameDuration : 0.1;
+		// AppKit reports no duration for some GIFs, and 0 means "as fast as possible".
+		// Follow the browser convention: delays of 10 ms or less play at 100 ms.
+		frameDuration = frameDuration > 0.01 ? frameDuration : 0.1;
 		[NSTimer scheduledTimerWithTimeInterval: frameDuration
 										 target: self selector: @selector(animateImage:)
 									   userInfo: animationInfo
