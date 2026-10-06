@@ -151,6 +151,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults addObserver: self forKeyPath: TSSTBackgroundColor options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTLoupeDiameter options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTLoupePower options: 0 context: nil];
+	[defaults addObserver: self forKeyPath: TSSTUnifiedTitlebar options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTPageOrder options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTPageScaleOptions options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTTwoPageSpread options: 0 context: nil];
@@ -196,6 +197,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults removeObserver: self forKeyPath: TSSTConstrainScale];
 	[defaults removeObserver: self forKeyPath: TSSTLoupeDiameter];
 	[defaults removeObserver: self forKeyPath: TSSTLoupePower];
+	[defaults removeObserver: self forKeyPath: TSSTUnifiedTitlebar];
 	[pageController removeObserver: self forKeyPath: @"selectionIndex"];
 	[pageController removeObserver: self forKeyPath: @"arrangedObjects.@count"];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -279,6 +281,11 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	else if([keyPath isEqualToString: TSSTLoupePower])
 	{
 		[self refreshLoupePanel];
+	}
+	else if([keyPath isEqualToString: TSSTUnifiedTitlebar])
+	{
+		// Apply live so already-open windows follow the Preferences checkbox.
+		self.window.titleVisibility = [defaults boolForKey: TSSTUnifiedTitlebar] ? NSWindowTitleHidden : NSWindowTitleVisible;
 	}
 	else
 	{

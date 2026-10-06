@@ -17,10 +17,10 @@
         <window title="Settings" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="246" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="140" y="154" width="320" height="339"/>
+            <rect key="contentRect" x="140" y="154" width="320" height="447"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1512" height="948"/>
             <view key="contentView" id="247">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="459"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="213">
@@ -135,6 +135,60 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <button toolTip="Use a two-finger trackpad swipe to turn pages" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hp-01-swp">
+                        <rect key="frame" x="20" y="112" width="200" height="16"/>
+                        <buttonCell key="cell" type="check" title="Enable two-finger swipe to turn pages" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="off" inset="2" id="Hp-02-swp">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="42" name="value" keyPath="values.enableSwipe" id="Hp-09-swp"/>
+                        </connections>
+                    </button>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Hp-txt-swp">
+                        <rect key="frame" x="36" y="88" width="266" height="14"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Use a two-finger trackpad swipe to turn pages." id="Hp-txt-swp-cel">
+                            <font key="font" metaFont="menu" size="11"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button toolTip="Keep a file's modification date unchanged when using Set Archive Icon to tag a QuickLook cover page; no other action in Simple Comic touches the source file's date" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hp-05-pmd">
+                        <rect key="frame" x="20" y="64" width="200" height="16"/>
+                        <buttonCell key="cell" type="check" title="Preserve file modification date" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="off" inset="2" id="Hp-06-pmd">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="42" name="value" keyPath="values.preserveModDate" id="Hp-11-pmd"/>
+                        </connections>
+                    </button>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Hp-txt-pmd">
+                        <rect key="frame" x="36" y="36" width="266" height="28"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Only affects the file's date when using Set Archive Icon to tag a QuickLook cover page." id="Hp-txt-pmd-cel">
+                            <font key="font" metaFont="menu" size="11"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button toolTip="Merge the toolbar into the title bar" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hp-07-utb">
+                        <rect key="frame" x="20" y="40" width="200" height="16"/>
+                        <buttonCell key="cell" type="check" title="Unified toolbar and title bar" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="off" inset="2" id="Hp-08-utb">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="42" name="value" keyPath="values.unifiedTitlebar" id="Hp-12-utb"/>
+                        </connections>
+                    </button>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Hp-txt-utb">
+                        <rect key="frame" x="36" y="12" width="266" height="14"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Merge the toolbar into the title bar." id="Hp-txt-utb-cel">
+                            <font key="font" metaFont="menu" size="11"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="36" secondAttribute="trailing" constant="20" symbolic="YES" id="13n-Ap-zdv"/>
@@ -171,7 +225,25 @@
                     <constraint firstItem="Lfp-03-txt" firstAttribute="top" secondItem="Lfp-01-btn" secondAttribute="bottom" constant="5" id="Lfp-c4"/>
                     <constraint firstItem="Lfp-03-txt" firstAttribute="leading" secondItem="243" secondAttribute="leading" id="Lfp-c5"/>
                     <constraint firstItem="Lfp-03-txt" firstAttribute="trailing" secondItem="243" secondAttribute="trailing" id="Lfp-c6"/>
-                    <constraint firstAttribute="bottom" secondItem="Lfp-03-txt" secondAttribute="bottom" constant="20" id="Lfp-c7"/>
+                    <constraint firstItem="Hp-01-swp" firstAttribute="top" secondItem="Lfp-03-txt" secondAttribute="bottom" constant="20" id="Hp-c1"/>
+                    <constraint firstItem="Hp-01-swp" firstAttribute="leading" secondItem="152" secondAttribute="leading" id="Hp-c2"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Hp-01-swp" secondAttribute="trailing" constant="20" symbolic="YES" id="Hp-c3"/>
+                    <constraint firstItem="Hp-txt-swp" firstAttribute="top" secondItem="Hp-01-swp" secondAttribute="bottom" constant="5" id="Hp-c4"/>
+                    <constraint firstItem="Hp-txt-swp" firstAttribute="leading" secondItem="Hp-01-swp" secondAttribute="leading" constant="16" id="Hp-c5"/>
+                    <constraint firstAttribute="trailing" secondItem="Hp-txt-swp" secondAttribute="trailing" constant="20" symbolic="YES" id="Hp-c6"/>
+                    <constraint firstItem="Hp-05-pmd" firstAttribute="top" secondItem="Hp-txt-swp" secondAttribute="bottom" constant="20" id="Hp-c7"/>
+                    <constraint firstItem="Hp-05-pmd" firstAttribute="leading" secondItem="Hp-01-swp" secondAttribute="leading" id="Hp-c8"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Hp-05-pmd" secondAttribute="trailing" constant="20" symbolic="YES" id="Hp-c9"/>
+                    <constraint firstItem="Hp-txt-pmd" firstAttribute="top" secondItem="Hp-05-pmd" secondAttribute="bottom" constant="5" id="Hp-c14"/>
+                    <constraint firstItem="Hp-txt-pmd" firstAttribute="leading" secondItem="Hp-01-swp" secondAttribute="leading" constant="16" id="Hp-c15"/>
+                    <constraint firstAttribute="trailing" secondItem="Hp-txt-pmd" secondAttribute="trailing" constant="20" symbolic="YES" id="Hp-c16"/>
+                    <constraint firstItem="Hp-07-utb" firstAttribute="top" secondItem="Hp-txt-pmd" secondAttribute="bottom" constant="20" id="Hp-c10"/>
+                    <constraint firstItem="Hp-07-utb" firstAttribute="leading" secondItem="Hp-01-swp" secondAttribute="leading" id="Hp-c11"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Hp-07-utb" secondAttribute="trailing" constant="20" symbolic="YES" id="Hp-c12"/>
+                    <constraint firstItem="Hp-txt-utb" firstAttribute="top" secondItem="Hp-07-utb" secondAttribute="bottom" constant="5" id="Hp-c17"/>
+                    <constraint firstItem="Hp-txt-utb" firstAttribute="leading" secondItem="Hp-01-swp" secondAttribute="leading" constant="16" id="Hp-c18"/>
+                    <constraint firstAttribute="trailing" secondItem="Hp-txt-utb" secondAttribute="trailing" constant="20" symbolic="YES" id="Hp-c19"/>
+                    <constraint firstAttribute="bottom" secondItem="Hp-txt-utb" secondAttribute="bottom" constant="20" id="Hp-c13"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="143" y="162"/>
