@@ -87,18 +87,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) BOOL quicklookCompatible;
 
 /**
- Background-safe scan of the archive at `fileURL`. Opens the archive
- (XADArchive) itself and returns a record describing every entry, without
- touching any `NSManagedObject` / MOC. Safe to call from any thread.
- `password` may be nil; if the archive needs one and none is supplied, the
- password prompt is bounced to the main thread.
+ Name of an entry by index, preferring the fast zip index (when this
+ archive is a zip and one has been built) over -instance. Safe to call
+ whichever backend is in use.
+ */
+- (nullable NSString *)nameOfEntryAtIndex:(NSInteger)index;
+
+/**
+ Background-safe scan of the archive at `fileURL`. Builds the backend
+ (TSSTZipIndex or XADArchive) itself and returns a record describing every
+ entry, without touching any `NSManagedObject` / MOC. Safe to call from
+ any thread. `password` may be nil; if the archive needs one and none is
+ supplied, the password prompt is bounced to the main thread.
  */
 + (nullable TSSTArchiveScanRecord *)scanRecordForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password;
 
 /**
  Applies a scan record produced by `+scanRecordForFileURL:name:password:`
  to this (already-inserted) managed object: inserts the child entities,
- reuses the record's already-opened archive (no re-parsing), and sets
+ reuses the record's already-built backend (no re-parsing), and sets
  password / solidDirectory as needed. Must be called on the MOC's queue.
  */
 - (void)applyScanRecord:(TSSTArchiveScanRecord *)record;
