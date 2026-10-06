@@ -800,9 +800,14 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (BOOL)canSelectPageIndex:(NSInteger)selection
 {
-	NSUInteger index = [pageController selectionIndex];
-	index += selection;
-	TSSTPage * selectedPage = [pageController arrangedObjects][index];
+	// Signed math: stepping back from page 0 must not wrap around.
+	NSInteger index = (NSInteger)[pageController selectionIndex] + selection;
+	NSArray * arrangedObjects = [pageController arrangedObjects];
+	if(index < 0 || index >= (NSInteger)[arrangedObjects count])
+	{
+		return NO;
+	}
+	TSSTPage * selectedPage = arrangedObjects[index];
 	TSSTManagedGroup * selectedGroup = selectedPage.group;
 	/* Makes sure that the group is both an archive and not nested */
 	if([selectedGroup class] == [TSSTManagedArchive class] &&
@@ -1159,23 +1164,6 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	
 	NSString *fileName = nil;
 	[representationURL getResourceValue:&fileName forKey:NSURLLocalizedNameKey error:NULL];
-	if (fileName != nil && pageOne.group != nil) {
-		if (pageOne.group != nil && pageTwo.group != nil) {
-			NSURL *page2URL = [pageTwo valueForKeyPath: @"group.topLevelGroup.fileURL"];
-			BOOL bothAreGood = YES;
-			BOOL theSame = NO;
-			id dat1, dat2;
-			
-			if (![representationURL getResourceValue:&dat1 forKey:NSURLFileResourceIdentifierKey error:NULL]) {
-				bothAreGood = NO;
-			} else if (![page2URL getResourceValue:&dat2 forKey:NSURLFileResourceIdentifierKey error:NULL]) {
-				bothAreGood = NO;
-			}
-			if (bothAreGood) {
-				theSame = [dat1 isEqual:dat2];
-			}
-		}
-	}
 	if (fileName == nil) {
 		fileName = representationURL.lastPathComponent;
 	}

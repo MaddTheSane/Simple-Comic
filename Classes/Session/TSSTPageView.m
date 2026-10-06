@@ -951,9 +951,16 @@ typedef struct {
 		return;
 	}
 	
+	// Dead keys and some modifier events carry no characters.
+	NSString * characters = [event charactersIgnoringModifiers];
+	if ([characters length] == 0)
+	{
+		return;
+	}
+
 	NSEventModifierFlags modifier = [event modifierFlags];
 	BOOL shiftKey = modifier & NSEventModifierFlagShift ? YES : NO;
-	unichar charNumber = [[event charactersIgnoringModifiers] characterAtIndex: 0];
+	unichar charNumber = [characters characterAtIndex: 0];
 	NSRect visible = [[self enclosingScrollView] documentVisibleRect];
 	NSPoint scrollPoint = visible.origin;
 	BOOL scrolling = NO;
@@ -1138,7 +1145,13 @@ typedef struct {
 
 - (void)keyUp:(NSEvent *)event
 {
-	unichar charNumber = [[event charactersIgnoringModifiers] characterAtIndex: 0];
+	NSString * characters = [event charactersIgnoringModifiers];
+	if ([characters length] == 0)
+	{
+		return;
+	}
+
+	unichar charNumber = [characters characterAtIndex: 0];
 	switch (charNumber)
 	{
 		case NSUpArrowFunctionKey:

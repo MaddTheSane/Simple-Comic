@@ -173,14 +173,16 @@ textStyle: Dictionary of string attributes.
 		fillRect.fill()
 		
 		// Determine label positions and progress rect size+position
+		// An empty archive has maxValue 0; avoid dividing by zero (NaN width).
+		let fillFraction = maxValue > 0 ? CGFloat(currentValue + 1) / CGFloat(maxValue) : 0
 		if leftToRight {
-			fillRect.size.width = bounds2.width * CGFloat(currentValue + 1) / CGFloat(maxValue)
+			fillRect.size.width = bounds2.width * fillFraction
 			indicatorRect.origin.x = round(fillRect.width - 2)
 			
 			leftString = progressString
 			rightString = totalString
 		} else {
-			fillRect.size.width = bounds2.width * CGFloat(currentValue + 1) / CGFloat(maxValue)
+			fillRect.size.width = bounds2.width * fillFraction
 			fillRect.origin.x = round(bounds2.width - fillRect.width)
 			indicatorRect.origin.x = fillRect.minX
 			
@@ -269,6 +271,9 @@ textStyle: Dictionary of string attributes.
 	}
 	
 	deinit {
-		removeTrackingArea(trackingAreas[0])
+		// The tracking area may already be gone (e.g. never installed).
+		if let area = trackingAreas.first {
+			removeTrackingArea(area)
+		}
 	}
 }
