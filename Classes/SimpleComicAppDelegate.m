@@ -811,7 +811,8 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		NSUInteger index = [encodingIdentifiers indexOfObject: @(guess)];
 		NSUInteger counter = 0;
 		NSNumber * encoding;
-		while (!testText) {
+		/* Stop at the end of the list instead of reading past it. */
+		while (!testText && counter < [encodingIdentifiers count]) {
 			encoding = encodingIdentifiers[counter];
 			if ([encoding class] != [NSNull class])
 			{

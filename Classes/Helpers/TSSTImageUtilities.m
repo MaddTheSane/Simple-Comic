@@ -58,7 +58,7 @@ CGSize fitSizeInSize(CGSize constraint, CGSize size)
 {
 	if(size.width < constraint.width || size.height < constraint.height)
 	{
-		if( constraint.height / constraint.width > size.width / size.width)
+		if( constraint.height / constraint.width > size.height / size.width)
 		{
 			size = scaleSize(size, size.height / constraint.height);
 		}
@@ -112,7 +112,7 @@ NSImage * imageScaledToSizeFromImage(NSSize size, NSImage * image)
     
     [scaledImage lockFocus];
     [[NSGraphicsContext currentContext] setImageInterpolation: NSImageInterpolationHigh];
-    [scaledImage drawInRect: scaledRect fromRect: NSZeroRect operation: NSCompositingOperationSourceOver fraction: 1.0];
+    [image drawInRect: scaledRect fromRect: NSZeroRect operation: NSCompositingOperationSourceOver fraction: 1.0];
     [scaledImage unlockFocus];
     
     return scaledImage;

@@ -61,7 +61,8 @@
 - (void)setFileURL:(NSURL *)fileURL
 {
 	if (_url && _url != fileURL) {
-		[fileURL stopAccessingSecurityScopedResource];
+		// Balance the access we started on the old URL, not the new one.
+		[_url stopAccessingSecurityScopedResource];
 	}
 	_url = fileURL;
 	NSError * urlError = nil;
