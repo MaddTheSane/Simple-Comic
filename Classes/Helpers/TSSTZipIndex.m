@@ -56,6 +56,7 @@ typedef struct
 
 #pragma mark - Construction
 
+#if DEBUG
 + (nullable instancetype)indexWithFileURL:(NSURL *)url error:(NSError * _Nullable * _Nullable)error
 {
 	id<TSSTArchiveByteSource> source = [TSSTFileByteSource sourceWithFileURL: url error: error];
@@ -65,6 +66,7 @@ typedef struct
 	}
 	return [self indexWithByteSource: source error: error];
 }
+#endif
 
 + (nullable instancetype)indexWithByteSource:(id<TSSTArchiveByteSource>)source error:(NSError * _Nullable * _Nullable)error
 {

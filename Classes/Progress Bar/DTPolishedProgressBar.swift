@@ -43,6 +43,14 @@ private var barProgressColor: NSColor {
 		return NSColor(deviceRed: 0.44, green: 0.44, blue: 0.44, alpha: 1)
 	}
 }
+/// Colour for the "buffered" band,
+/// visually between the empty bar and the filled/progress bar, the way a
+/// video player's buffered range sits between its track and its played
+/// portion. Derived from the other two so it stays consistent with them
+/// in both light and dark mode instead of being a fixed color.
+private var barBufferedColor: NSColor {
+	return barBackgroundColor.blended(withFraction: 0.45, of: barProgressColor) ?? barBackgroundColor
+}
 private var borderColor: NSColor {
 	if #available(OSX 10.14, *) {
 		return NSColor.systemGray.withAlphaComponent(0.25)
@@ -125,6 +133,28 @@ textStyle: Dictionary of string attributes.
 			needsDisplay = true
 		}
 	}
+
+	/// Page positions (0-based, in the arranged order) whose bytes are
+	/// already cached by a background archive streamer -- drawn as a
+	/// "buffered" band between the empty and filled portions of the bar,
+	/// like a video player's buffered range. Empty (the default) when no
+	/// archive in the session streams, which hides the band entirely.
+	@objc dynamic var bufferedIndexes: IndexSet = IndexSet() {
+		didSet {
+			needsDisplay = true
+		}
+	}
+
+	/// Pure helper (unit tested): merges `indexes` into contiguous runs,
+	/// each expressed as a fractional [start, end) range of `total`. Split
+	/// out of `draw(_:)` so the run-merging logic can be tested without a
+	/// view/graphics context.
+	static func bufferedFractionalRuns(indexes: IndexSet, total: Int) -> [(start: CGFloat, end: CGFloat)] {
+		guard total > 0 else { return [] }
+		return indexes.rangeView.map { range in
+			(CGFloat(range.lowerBound) / CGFloat(total), CGFloat(range.upperBound) / CGFloat(total))
+		}
+	}
 	
 	/// This is the section of the view. Users can mouse over and click here.
 	@objc private(set) var progressRect = NSRect()
@@ -171,7 +201,24 @@ textStyle: Dictionary of string attributes.
 		barBackgroundColor.set()
 		var fillRect = barRect
 		fillRect.fill()
-		
+
+		// Draw the buffered band under the progress fill drawn below. Empty bufferedIndexes (local files,
+		// nothing streaming) draws nothing.
+		if !bufferedIndexes.isEmpty {
+			barBufferedColor.set()
+			for run in DTPolishedProgressBar.bufferedFractionalRuns(indexes: bufferedIndexes, total: maxValue) {
+				var segment = barRect
+				if leftToRight {
+					segment.origin.x = round(bounds2.width * run.start)
+					segment.size.width = round(bounds2.width * run.end) - segment.origin.x
+				} else {
+					segment.origin.x = round(bounds2.width * (1 - run.end))
+					segment.size.width = round(bounds2.width * (1 - run.start)) - segment.origin.x
+				}
+				segment.fill()
+			}
+		}
+
 		// Determine label positions and progress rect size+position
 		// An empty archive has maxValue 0; avoid dividing by zero (NaN width).
 		let fillFraction = maxValue > 0 ? CGFloat(currentValue + 1) / CGFloat(maxValue) : 0

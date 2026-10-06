@@ -17,6 +17,7 @@
 	TSSTSessionWindowController.m
 */
 
+#import <stdatomic.h>
 #import <XADMaster/XADArchive.h>
 #import "UKXattrMetadataStore.h"
 #import "SimpleComicAppDelegate.h"
@@ -29,6 +30,7 @@
 #import "TSSTManagedSession.h"
 #import "OCRFind.h"
 #import "TSSTEdgeBlurRenderer.h"
+#import "TSSTPageDecodeCache.h"
 #import "OCRFindViewController.h"
 #import "OCRTracker.h"
 #import "OCRVision.h"
@@ -70,6 +72,31 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	NSView *loadingOverlayView;
 	NSProgressIndicator *loadingSpinner;
 	NSTextField *loadingLabel;
+
+	/** Bumped on every -changeViewImages call; an async page load compares
+	    its captured value against the current one before applying its
+	    result, so a stale load (superseded by a later selection change)
+	    never clobbers what's on screen. */
+	_Atomic NSUInteger displayGeneration; // read off-main by the decode queue's staleness check
+	/** Set to `displayGeneration`'s value at the top of
+	    -finishDisplayForIndex:..., i.e. the generation that's actually on
+	    screen right now. Distinct from displayGeneration itself so the
+	    delayed HUD-show timer can tell "selection moved on" (generation
+	    changed) apart from "this generation already finished displaying,
+	    including possibly by a wait that resolved in under 150ms" (this
+	    generation was already displayed) -- either should suppress it. */
+	NSUInteger displayedGeneration;
+
+	/** Small HUD ("Loading page N...") shown over the page view when a
+	    page has to be fetched over the network and hasn't arrived within
+	    ~150ms. Built in code, like loadingOverlayView. */
+	NSView *pageLoadHUDView;
+	NSProgressIndicator *pageLoadSpinner;
+	NSTextField *pageLoadLabel;
+
+	/** Coalesces TSSTArchiveCacheProgressNotification bursts into at most
+	    one -refreshBufferedIndexes call per ~250ms. */
+	BOOL bufferedIndexesRefreshScheduled;
 }
 
 @synthesize pageTurn, pageSortDescriptor;
@@ -191,14 +218,81 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[jumpField setDelegate: self];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleMouseDragged:) name:TSSTMouseDragNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleArchiveCacheProgress:) name:TSSTArchiveCacheProgressNotification object:nil];
 
 	[self updateLoadingOverlay];
 	[self restoreSession];
 }
 
 
-#pragma mark - Loading overlay
+#pragma mark - Buffered band
 
+- (void)handleArchiveCacheProgress:(NSNotification *)notification
+{
+	[self scheduleBufferedIndexesRefresh];
+}
+
+/// Coalesces bursts of progress notifications (the streamer already
+/// throttles to ~4Hz, but a session can have more than one streaming
+/// archive) into at most one recompute per ~250ms.
+- (void)scheduleBufferedIndexesRefresh
+{
+	if (bufferedIndexesRefreshScheduled)
+	{
+		return;
+	}
+	bufferedIndexesRefreshScheduled = YES;
+	__weak typeof(self) weakSelf = self;
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		typeof(self) strongSelf = weakSelf;
+		if (!strongSelf)
+		{
+			return;
+		}
+		strongSelf->bufferedIndexesRefreshScheduled = NO;
+		[strongSelf refreshBufferedIndexes];
+	});
+}
+
+/// Recomputes the progress bar's buffered band from arrangedObjects. Hides
+/// the band entirely (empty set) unless at least one archive backing a
+/// page in this session actually streams (non-local volume, or
+/// SC_SIMULATE_LINK) -- a purely local session leaves every
+/// -isEntryIndexCached: answer YES, which would otherwise show a
+/// misleadingly full band.
+- (void)refreshBufferedIndexes
+{
+	NSArray<TSSTPage *> * pages = [pageController arrangedObjects];
+	NSMutableIndexSet * cached = [NSMutableIndexSet indexSet];
+	BOOL anyStreaming = NO;
+
+	for (NSUInteger i = 0; i < pages.count; ++i)
+	{
+		TSSTManagedGroup * group = pages[i].group;
+		if (![group isKindOfClass: [TSSTManagedArchive class]])
+		{
+			continue;
+		}
+		TSSTManagedArchive * archive = (TSSTManagedArchive *)group;
+		if (!archive.isStreamingArchive)
+		{
+			continue;
+		}
+		anyStreaming = YES;
+		NSNumber * pageIndex = pages[i].index;
+		if (pageIndex && [archive isEntryIndexCached: pageIndex.integerValue])
+		{
+			[cached addIndex: i];
+		}
+	}
+
+	progressBar.bufferedIndexes = anyStreaming ? cached : [NSIndexSet indexSet];
+}
+
+
+
+
+#pragma mark - Loading overlay
 
 /**
  Shows/hides a centered "Loading..." label + indeterminate spinner over
@@ -357,6 +451,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
 		}
 		[self changeViewImages];
+		[self scheduleBufferedIndexesRefresh];
 	}
 	else if([keyPath isEqualToString: TSSTPageOrder])
 	{
@@ -1257,6 +1352,93 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
+#pragma mark - Non-blocking page display
+
+/// Cheap (no network) check of whether calling -shouldDisplayAlone on
+/// `page` right now would have to block on the network: nil pages, text
+/// pages, pages whose aspect is already known, pages outside a streaming
+/// archive, and pages whose bytes are already cached are all safe. Only a
+/// page in a streaming archive with an unknown aspect and uncached bytes
+/// is not.
+- (BOOL)pageIsSafeToInspectSynchronously:(nullable TSSTPage *)page
+{
+	if (!page || page.text || page.aspectRatio != 0)
+	{
+		return YES;
+	}
+	if ([[TSSTPageDecodeCache sharedCache] imageForPage: page])
+	{
+		return YES; // decoding already set the aspect ratio as a side effect
+	}
+	TSSTManagedGroup * group = page.group;
+	if (![group isKindOfClass: [TSSTManagedArchive class]])
+	{
+		return YES; // local file / nested PDF page -- disk read is fast
+	}
+	if (page.index == nil)
+	{
+		return YES;
+	}
+	return [(TSSTManagedArchive *)group isEntryIndexCached: page.index.integerValue];
+}
+
+/// -shouldDisplayAlone, but safe to call from anywhere (including
+/// navigation logic run on the main thread): never fetches over the
+/// network. When the real answer isn't known without a network read, this
+/// guesses YES (display alone). A page-turn that could go either way then
+/// re-shows the mispredicted page as a single instead of skipping a page
+/// outright -- -changeViewImages self-corrects once the page is actually
+/// loaded and the real aspect ratio is known.
+- (BOOL)navigationShouldDisplayAlonePage:(nullable TSSTPage *)page
+{
+	if (!page)
+	{
+		return NO;
+	}
+	if ([self pageIsSafeToInspectSynchronously: page])
+	{
+		return page.shouldDisplayAlone;
+	}
+	// Bytes aren't cached and the aspect is unknown -- nudge the streamer
+	// toward this entry (we're likely headed there) without blocking here.
+	[(TSSTManagedArchive *)page.group prioritizeEntryIndex: page.index.integerValue];
+	return YES;
+}
+
+/// -pageImage, preferring an already-decoded image from the pre-decode
+/// cache. Safe to call on the main thread only when the caller has already
+/// established the page won't have to block on the network (see
+/// -pageIsSafeToInspectSynchronously:).
+- (nullable NSImage *)displayImageForPage:(nullable TSSTPage *)page
+{
+	if (!page)
+	{
+		return nil;
+	}
+	NSImage * cached = [[TSSTPageDecodeCache sharedCache] imageForPage: page];
+	return cached ?: page.pageImage;
+}
+
+/// Tells the page's archive (if any) that this is the page currently being
+/// read, so the background streamer follows the reader.
+- (void)noteReadingForPage:(nullable TSSTPage *)page
+{
+	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedArchive class]])
+	{
+		[(TSSTManagedArchive *)page.group noteReadingEntryIndex: page.index.integerValue];
+	}
+}
+
+/// Like -noteReadingForPage:, but also wakes the streamer immediately --
+/// used when a page has to be fetched now, not merely queued.
+- (void)prioritizeReadingForPage:(nullable TSSTPage *)page
+{
+	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedArchive class]])
+	{
+		[(TSSTManagedArchive *)page.group prioritizeEntryIndex: page.index.integerValue];
+	}
+}
+
 - (void)changeViewImages
 {
 	NSUInteger count = [[pageController arrangedObjects] count];
@@ -1273,13 +1455,102 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		index = 0;
 	}
 	TSSTPage * pageOne = [pageController arrangedObjects][index];
-	TSSTPage * pageTwo = (index + 1) < count ? [pageController arrangedObjects][(index + 1)] : nil;
+	TSSTPage * pageTwoCandidate = (index + 1) < count ? [pageController arrangedObjects][(index + 1)] : nil;
+	/* Don't wait on a second page that can't end up in the spread: on a
+	 slow link that would double the wait for pages that show alone anyway. */
+	BOOL pageOneKnownAlone = pageOne.text || (pageOne.aspectRatio != 0 && pageOne.aspectRatio > 1);
+	if (!session.twoPageSpread || pageOneKnownAlone ||
+		(index == 0 && [[NSUserDefaults standardUserDefaults] boolForKey: TSSTLonelyFirstPage]))
+	{
+		pageTwoCandidate = nil;
+	}
+
+	displayGeneration++;
+	NSUInteger generation = displayGeneration;
+
+	[self noteReadingForPage: pageOne];
+	[self noteReadingForPage: pageTwoCandidate];
+
+	BOOL oneReady = [[TSSTPageDecodeCache sharedCache] imageForPage: pageOne] != nil
+		|| pageOne.text || [self pageIsSafeToInspectSynchronously: pageOne];
+	BOOL twoReady = !pageTwoCandidate
+		|| [[TSSTPageDecodeCache sharedCache] imageForPage: pageTwoCandidate] != nil
+		|| pageTwoCandidate.text || [self pageIsSafeToInspectSynchronously: pageTwoCandidate];
+
+	if (oneReady && twoReady)
+	{
+		[self finishDisplayForIndex: index pageOne: pageOne candidateTwo: pageTwoCandidate generation: generation];
+	}
+	else
+	{
+		[self loadPagesAsynchronouslyForIndex: index pageOne: pageOne pageTwoCandidate: pageTwoCandidate generation: generation];
+	}
+}
+
+/// Kicks off an off-main fetch+decode of `pageOne` (and `pageTwoCandidate`,
+/// if any) when at least one of them isn't ready to show synchronously.
+/// The currently displayed page(s) stay on screen while this runs; a
+/// small HUD appears if it takes more than ~150ms.
+- (void)loadPagesAsynchronouslyForIndex:(NSUInteger)index pageOne:(TSSTPage *)pageOne pageTwoCandidate:(nullable TSSTPage *)pageTwoCandidate generation:(NSUInteger)generation
+{
+	[self prioritizeReadingForPage: pageOne];
+	[self prioritizeReadingForPage: pageTwoCandidate];
+
+	__weak typeof(self) weakSelf = self;
+	// A HUD left up by an earlier, still-loading generation now describes
+	// this one: retarget it at once rather than after another 150 ms.
+	if (pageLoadHUDView)
+	{
+		[self showPageLoadHUDForPageNumber: index + 1];
+	}
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		typeof(self) strongSelf = weakSelf;
+		if (!strongSelf || generation != strongSelf->displayGeneration || generation == strongSelf->displayedGeneration)
+		{
+			return; // selection already moved on, or this generation already finished displaying
+		}
+		[strongSelf showPageLoadHUDForPageNumber: index + 1];
+	});
+
+	NSArray<TSSTPage *> * pages = pageTwoCandidate ? @[pageOne, pageTwoCandidate] : @[pageOne];
+	[[TSSTPageDecodeCache sharedCache] decodePages: pages whileCurrent: ^BOOL{
+		typeof(self) strongSelf = weakSelf;
+		return strongSelf && generation == strongSelf->displayGeneration;
+	} completion: ^(BOOL ran) {
+		typeof(self) strongSelf = weakSelf;
+		// A generation the reader moved past neither displays nor touches
+		// the HUD: it belongs to the newer generation, which hides it in
+		// -finishDisplayForIndex:... (a stale completion hiding it made
+		// the current page's wait look finished while it was not).
+		if (!strongSelf || generation != strongSelf->displayGeneration)
+		{
+			return;
+		}
+		[strongSelf finishDisplayForIndex: index pageOne: pageOne candidateTwo: pageTwoCandidate generation: generation];
+	}];
+}
+
+/// Common tail of page display, whether pageOne/candidateTwo were ready
+/// immediately or just finished loading asynchronously: decides the final
+/// pairing (now that both pages' real aspect ratios are known, or safe to
+/// read), and pushes the images/title/prefetch. Main-thread only.
+- (void)finishDisplayForIndex:(NSUInteger)index pageOne:(TSSTPage *)pageOne candidateTwo:(nullable TSSTPage *)candidateTwo generation:(NSUInteger)generation
+{
+	if (generation != displayGeneration)
+	{
+		return; // superseded by a later selection change
+	}
+	displayedGeneration = generation;
+	// Whatever HUD is up was for a load that this display supersedes or ends.
+	[self hidePageLoadHUD];
+
+	TSSTPage * pageTwo = candidateTwo;
 	NSString * titleString = pageOne.name;
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-	
+
 	BOOL currentAllowed = ![pageOne shouldDisplayAlone] &&
 	!(index == 0 && [defaults boolForKey: TSSTLonelyFirstPage]);
-	
+
 	if(currentAllowed && session.twoPageSpread && pageTwo && ![pageTwo shouldDisplayAlone])
 	{
 		if(session.pageOrder)
@@ -1295,10 +1566,10 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	{
 		pageTwo = nil;
 	}
-	
+
 	NSURL *representationURL = pageOne.group ? [pageOne valueForKeyPath: @"group.topLevelGroup.fileURL"] : [NSURL fileURLWithPath:pageOne.imagePath];
 	[[self window] setRepresentedURL: representationURL];
-	
+
 	NSString *fileName = nil;
 	[representationURL getResourceValue:&fileName forKey:NSURLLocalizedNameKey error:NULL];
 	if (fileName == nil) {
@@ -1310,7 +1581,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	} else {
 		self.window.subtitle = titleString;
 	}
-	[pageView setFirstPage: pageOne.pageImage secondPageImage: pageTwo.pageImage];
+	[pageView setFirstPage: [self displayImageForPage: pageOne] secondPageImage: [self displayImageForPage: pageTwo]];
 	pageView.firstPageKey = pageOne.objectID;
 	pageView.secondPageKey = pageTwo.objectID;
 
@@ -1335,6 +1606,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[pageView correctViewPoint];
 	[self refreshLoupePanel];
 
+	[self predecodeNeighborsAroundIndex: index twoPageMode: (pageTwo != nil)];
 	[self prefetchEdgeBlurSourcesAroundIndex: index twoPageMode: (pageTwo != nil)];
 }
 
@@ -1397,6 +1669,114 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		}
 		[self prepareEdgeBlurSourceForPage: pages[candidate] completion: nil];
 	}
+}
+
+
+#pragma mark - Pre-decode
+
+/// Best-effort off-main pre-decode of the pages a reader is likely to turn
+/// to next: the next 2 pages in reading direction (4 in two-page mode) and
+/// the previous page. Only pages whose bytes are already cached (or that
+/// are local) are decoded, so this never competes with the network
+/// streamer for bandwidth.
+- (void)predecodeNeighborsAroundIndex:(NSUInteger)index twoPageMode:(BOOL)twoPageMode
+{
+	NSArray<TSSTPage *> * pages = [pageController arrangedObjects];
+	NSInteger count = (NSInteger)pages.count;
+	NSArray<NSNumber *> * offsets = twoPageMode ? @[@-1, @1, @2, @3, @4] : @[@-1, @1, @2];
+
+	NSMutableArray<TSSTPage *> * candidates = [NSMutableArray array];
+	for (NSNumber * offsetNumber in offsets)
+	{
+		NSInteger candidateIndex = (NSInteger)index + offsetNumber.integerValue;
+		if (candidateIndex < 0 || candidateIndex >= count)
+		{
+			continue;
+		}
+		TSSTPage * page = pages[candidateIndex];
+		if (page.text || [[TSSTPageDecodeCache sharedCache] imageForPage: page])
+		{
+			continue;
+		}
+		if ([self pageIsSafeToInspectSynchronously: page] && (page.group == nil || ![page.group isKindOfClass: [TSSTManagedArchive class]] || page.index == nil || [(TSSTManagedArchive *)page.group isEntryIndexCached: page.index.integerValue]))
+		{
+			[candidates addObject: page];
+		}
+	}
+
+	if (candidates.count == 0)
+	{
+		return;
+	}
+
+	TSSTPageDecodeCache * decodeCache = [TSSTPageDecodeCache sharedCache];
+	dispatch_async(decodeCache.decodeQueue, ^{
+		for (TSSTPage * page in candidates)
+		{
+			[decodeCache decodeAndCachePage: page];
+		}
+	});
+}
+
+
+#pragma mark - Page-load HUD
+
+/// Compact centered HUD ("Loading page N...") shown over the page view
+/// while a page is being fetched over the network. Unlike
+/// -updateLoadingOverlay, it never covers the whole page with an opaque
+/// view -- the currently displayed page stays visible underneath.
+- (void)showPageLoadHUDForPageNumber:(NSUInteger)pageNumber
+{
+	NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Loading page %lu…", @"HUD shown while a page is fetched over a slow network volume"), (unsigned long)pageNumber];
+
+	if (pageLoadHUDView)
+	{
+		pageLoadLabel.stringValue = message;
+		return;
+	}
+
+	NSView * container = pageScrollView.superview ?: pageScrollView;
+	NSSize hudSize = NSMakeSize(220, 60);
+
+	NSVisualEffectView * hud = [[NSVisualEffectView alloc] initWithFrame: NSMakeRect(0, 0, hudSize.width, hudSize.height)];
+	hud.material = NSVisualEffectMaterialHUDWindow;
+	hud.state = NSVisualEffectStateActive;
+	hud.wantsLayer = YES;
+	hud.layer.cornerRadius = 10;
+	hud.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+	pageLoadHUDView = hud;
+
+	pageLoadSpinner = [[NSProgressIndicator alloc] initWithFrame: NSMakeRect(NSMidX(hud.bounds) - 12, 26, 24, 24)];
+	pageLoadSpinner.style = NSProgressIndicatorStyleSpinning;
+	pageLoadSpinner.indeterminate = YES;
+	pageLoadSpinner.controlSize = NSControlSizeSmall;
+	[pageLoadSpinner startAnimation: nil];
+
+	pageLoadLabel = [[NSTextField alloc] initWithFrame: NSMakeRect(10, 8, hudSize.width - 20, 16)];
+	pageLoadLabel.editable = NO;
+	pageLoadLabel.bordered = NO;
+	pageLoadLabel.drawsBackground = NO;
+	pageLoadLabel.alignment = NSTextAlignmentCenter;
+	pageLoadLabel.font = [NSFont systemFontOfSize: 11];
+	pageLoadLabel.textColor = [NSColor labelColor];
+	pageLoadLabel.stringValue = message;
+
+	[hud addSubview: pageLoadSpinner];
+	[hud addSubview: pageLoadLabel];
+
+	NSRect containerBounds = container.bounds;
+	hud.frame = NSMakeRect(NSMidX(containerBounds) - hudSize.width / 2.0, NSMidY(containerBounds) - hudSize.height / 2.0, hudSize.width, hudSize.height);
+
+	[container addSubview: hud positioned: NSWindowAbove relativeTo: pageScrollView];
+}
+
+- (void)hidePageLoadHUD
+{
+	[pageLoadSpinner stopAnimation: nil];
+	[pageLoadHUDView removeFromSuperview];
+	pageLoadHUDView = nil;
+	pageLoadSpinner = nil;
+	pageLoadLabel = nil;
 }
 
 
@@ -1517,9 +1897,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-	BOOL current = ![[pageController arrangedObjects][selectionIndex] shouldDisplayAlone] &&
+	BOOL current = ![self navigationShouldDisplayAlonePage: [pageController arrangedObjects][selectionIndex]] &&
         !(selectionIndex == 0 &&[defaults boolForKey: TSSTLonelyFirstPage]);
-	BOOL next = ![[pageController arrangedObjects][(selectionIndex + 1)] shouldDisplayAlone];
+	BOOL next = ![self navigationShouldDisplayAlonePage: [pageController arrangedObjects][(selectionIndex + 1)]];
 	
 	if((!current || !next) && ((selectionIndex + 1) < numberOfImages))
 	{
@@ -1548,9 +1928,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	if((selectionIndex - 2) >= 0)
 	{
         NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-        
-        BOOL previousPage = ![[pageController arrangedObjects][(selectionIndex - 1)] shouldDisplayAlone];
-		BOOL pageBeforeLast = ![[pageController arrangedObjects][(selectionIndex - 2)] shouldDisplayAlone] &&
+
+        BOOL previousPage = ![self navigationShouldDisplayAlonePage: [pageController arrangedObjects][(selectionIndex - 1)]];
+		BOOL pageBeforeLast = ![self navigationShouldDisplayAlonePage: [pageController arrangedObjects][(selectionIndex - 2)]] &&
 		!((selectionIndex - 2) == 0 && [defaults boolForKey: TSSTLonelyFirstPage]);
         
         if(!previousPage || !pageBeforeLast)
@@ -1842,7 +2222,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
 	[self prepareToEnd];
 	[[NSNotificationCenter defaultCenter] postNotificationName: TSSTSessionEndNotification object: self];
-	
+
     return YES;
 }
 

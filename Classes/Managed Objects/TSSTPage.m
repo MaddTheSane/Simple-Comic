@@ -140,9 +140,8 @@ static NSSize monospaceCharacterSize;
 	return aspect != 0 ? aspect > defaultAspect : YES;
 }
 
-- (void)setOwnSizeInfoWithData:(NSData *)imageData
++ (BOOL)pixelSizeFromImageData:(NSData *)imageData size:(NSSize *)outSize
 {
-	CGFloat aspect;
 	NSSize imageSize = NSZeroSize;
 
 	// Try reading pixel dimensions from the image header only, via ImageIO. This avoids
@@ -175,12 +174,22 @@ static NSSize monospaceCharacterSize;
 		imageSize = NSMakeSize([pageRep pixelsWide], [pageRep pixelsHigh]);
 	}
 
-	if(!NSEqualSizes(NSZeroSize, imageSize))
+	if (NSEqualSizes(NSZeroSize, imageSize))
 	{
-		aspect = imageSize.width / imageSize.height;
+		return NO;
+	}
+	if (outSize) { *outSize = imageSize; }
+	return YES;
+}
+
+- (void)setOwnSizeInfoWithData:(NSData *)imageData
+{
+	NSSize imageSize;
+	if ([TSSTPage pixelSizeFromImageData: imageData size: &imageSize])
+	{
 		self.width = imageSize.width;
 		self.height = imageSize.height;
-		self.aspectRatio = aspect;
+		self.aspectRatio = imageSize.width / imageSize.height;
 	}
 }
 
@@ -237,29 +246,30 @@ static NSSize monospaceCharacterSize;
 	{
 		return [self textPage];
 	}
-	
-	NSImage * imageFromData = nil;
+
 	NSData * imageData = [self pageData];
-	
 	if(imageData)
 	{
 		[self setOwnSizeInfoWithData: imageData];
-		imageFromData = [[NSImage alloc] initWithData: imageData];
 	}
-	
-	NSSize imageSize =  NSMakeSize(self.width, self.height);
-	
-	if(!imageFromData || NSEqualSizes(NSZeroSize, imageSize))
+
+	return [TSSTPage imageWithData: imageData pixelSize: NSMakeSize(self.width, self.height)];
+}
+
++ (nullable NSImage *)imageWithData:(nullable NSData *)imageData pixelSize:(NSSize)pixelSize
+{
+	if (!imageData || NSEqualSizes(NSZeroSize, pixelSize))
 	{
-		imageFromData = nil;
+		return nil;
 	}
-	else
+	NSImage * imageFromData = [[NSImage alloc] initWithData: imageData];
+	if (!imageFromData)
 	{
-		[imageFromData setCacheMode: NSImageCacheNever];
-		[imageFromData setSize: imageSize];
-		[imageFromData setCacheMode: NSImageCacheBySize];
+		return nil;
 	}
-	
+	[imageFromData setCacheMode: NSImageCacheNever];
+	[imageFromData setSize: pixelSize];
+	[imageFromData setCacheMode: NSImageCacheBySize];
 	return imageFromData;
 }
 
