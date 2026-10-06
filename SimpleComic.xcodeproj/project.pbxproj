@@ -14,6 +14,7 @@
 		284348130DA95C4A00F602E2 /* UniversalDetector.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 55C374571BD9EAA1006385B6 /* UniversalDetector.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		284D381B101249BE00A37AB2 /* DTToolbarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284D381A101249BE00A37AB2 /* DTToolbarItems.swift */; };
 		285B4A700B9B9F23006A4727 /* TSSTPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7257EF08A6CE2E006A2A19 /* TSSTPageView.m */; };
+		AF59CE63585048A4A89A7538 /* TSSTEdgeBlurRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6A921C6A11486D91716385 /* TSSTEdgeBlurRenderer.m */; };
 		285FE3300F945E2300CD8F96 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 285FE32F0F945E2300CD8F96 /* Carbon.framework */; };
 		286236020AADDB6200B83E77 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286236010AADDB6200B83E77 /* QuartzCore.framework */; };
 		286AEDB70C4161C20031E3D9 /* TSSTSortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 286AEDB60C4161C20031E3D9 /* TSSTSortDescriptor.m */; };
@@ -97,6 +98,7 @@
 		63AA000728610004007F240B /* TSSTPreferencesLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000828610004007F240B /* TSSTPreferencesLayoutTests.m */; };
 		63AA000A28610005007F240B /* TSSTLonelyFirstPageLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000B28610005007F240B /* TSSTLonelyFirstPageLayoutTests.m */; };
 		63AA000C28610006007F240B /* TSSTHiddenPrefsLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */; };
+		63AA000E28610007007F240B /* TSSTBackgroundModeLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000F28610007007F240B /* TSSTBackgroundModeLayoutTests.m */; };
 		6323E4D528613FBE007F240B /* OCR_NSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D428613FBE007F240B /* OCR_NSString.m */; };
 		6323E4DB2861400B007F240B /* OCRFind.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D72861400B007F240B /* OCRFind.m */; };
 		6323E4DC2861400B007F240B /* OCRFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D82861400B007F240B /* OCRFindViewController.m */; };
@@ -371,6 +373,7 @@
 		28A266151285C3A700ED6391 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TSSTSessionWindow.xib; sourceTree = "<group>"; };
 		28A2662F1285C73200ED6391 /* DTPreferencesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTPreferencesController.swift; sourceTree = "<group>"; };
 		28A8EAB00B412DE5006C036D /* TSSTPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTPageView.h; sourceTree = "<group>"; };
+		B6DBB6E5D3AB4B0FB3FD4960 /* TSSTEdgeBlurRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTEdgeBlurRenderer.h; sourceTree = "<group>"; };
 		28B34A721013779B006C551C /* NSWindow+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSWindow+Extensions.swift"; sourceTree = "<group>"; };
 		28BD08E50C9836E600BD7EAF /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		28C1D55F0DF1FE37003392B4 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
@@ -463,6 +466,7 @@
 		63AA000828610004007F240B /* TSSTPreferencesLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPreferencesLayoutTests.m; sourceTree = "<group>"; };
 		63AA000B28610005007F240B /* TSSTLonelyFirstPageLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTLonelyFirstPageLayoutTests.m; sourceTree = "<group>"; };
 		63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTHiddenPrefsLayoutTests.m; sourceTree = "<group>"; };
+		63AA000F28610007007F240B /* TSSTBackgroundModeLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTBackgroundModeLayoutTests.m; sourceTree = "<group>"; };
 		6323E4D328613FBE007F240B /* OCR_NSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCR_NSString.h; sourceTree = "<group>"; };
 		6323E4D428613FBE007F240B /* OCR_NSString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCR_NSString.m; sourceTree = "<group>"; };
 		6323E4D62861400B007F240B /* OCRFindViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRFindViewController.h; sourceTree = "<group>"; };
@@ -485,6 +489,7 @@
 		8F54DD521CCA336B001403DA /* container-migration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "container-migration.plist"; sourceTree = SOURCE_ROOT; };
 		8FBFF02D26EF71BF00E3CFC8 /* TSSTSessionWindowController+NSToolbarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TSSTSessionWindowController+NSToolbarDelegate.swift"; sourceTree = "<group>"; };
 		FA7257EF08A6CE2E006A2A19 /* TSSTPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPageView.m; sourceTree = "<group>"; };
+		3E6A921C6A11486D91716385 /* TSSTEdgeBlurRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTEdgeBlurRenderer.m; sourceTree = "<group>"; };
 		FA9FB53408AADA270085AA55 /* TSSTCustomValueTransformers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCustomValueTransformers.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -851,6 +856,7 @@
 				63AA000828610004007F240B /* TSSTPreferencesLayoutTests.m */,
 				63AA000B28610005007F240B /* TSSTLonelyFirstPageLayoutTests.m */,
 				63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */,
+				63AA000F28610007007F240B /* TSSTBackgroundModeLayoutTests.m */,
 			);
 			path = "OCR Unit Tests";
 			sourceTree = "<group>";
@@ -872,6 +878,8 @@
 				8FBFF02D26EF71BF00E3CFC8 /* TSSTSessionWindowController+NSToolbarDelegate.swift */,
 				28A8EAB00B412DE5006C036D /* TSSTPageView.h */,
 				FA7257EF08A6CE2E006A2A19 /* TSSTPageView.m */,
+				B6DBB6E5D3AB4B0FB3FD4960 /* TSSTEdgeBlurRenderer.h */,
+				3E6A921C6A11486D91716385 /* TSSTEdgeBlurRenderer.m */,
 				284D381A101249BE00A37AB2 /* DTToolbarItems.swift */,
 				28B34A721013779B006C551C /* NSWindow+Extensions.swift */,
 				6304B5C2284018E9009E7D61 /* OCRVision */,
@@ -1283,6 +1291,7 @@
 				63AA000728610004007F240B /* TSSTPreferencesLayoutTests.m in Sources */,
 				63AA000A28610005007F240B /* TSSTLonelyFirstPageLayoutTests.m in Sources */,
 				63AA000C28610006007F240B /* TSSTHiddenPrefsLayoutTests.m in Sources */,
+				63AA000E28610007007F240B /* TSSTBackgroundModeLayoutTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1311,6 +1320,7 @@
 				6323E4DC2861400B007F240B /* OCRFindViewController.m in Sources */,
 				286BA1110C4D5F3100E9D06D /* TSSTSessionWindowController.m in Sources */,
 				285B4A700B9B9F23006A4727 /* TSSTPageView.m in Sources */,
+				AF59CE63585048A4A89A7538 /* TSSTEdgeBlurRenderer.m in Sources */,
 				281954EA0C1201E6001F5E95 /* TSSTManagedGroup.m in Sources */,
 				5590EB3924A1FD0900DA060E /* ManagedSmartFolder+CoreDataClass.m in Sources */,
 				286AEDB70C4161C20031E3D9 /* TSSTSortDescriptor.m in Sources */,
