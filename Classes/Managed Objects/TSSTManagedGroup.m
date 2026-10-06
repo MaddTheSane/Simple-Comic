@@ -14,11 +14,223 @@
 #import "TSSTImageUtilities.h"
 #import "TSSTPage.h"
 #import "TSSTPage+CoreDataProperties.h"
+#import "TSSTZipIndex.h"
+#import "TSSTArchiveByteSource.h"
 
 @interface TSSTManagedArchive () <XADArchiveDelegate>
+{
+	// Fast-path zip listing/reading, built lazily. Not persisted -- if the
+	// managed object is re-fetched (e.g. session restore) this is nil again
+	// and gets lazily rebuilt from fileURL, or the code falls back to XAD.
+	//
+	// The lock is a condition guarding only the state flags: a build (slow
+	// I/O on a network volume) runs with no lock held, and concurrent
+	// callers wait for its result instead of building a second index.
+	TSSTZipIndex *_zipIndex;
+	BOOL _zipIndexAttempted;
+	BOOL _zipIndexBuilding;
+	NSCondition *_zipIndexLock;
+}
 -(void)archiveNeedsPassword:(XADArchive *)archive;
 
 @end
+
+// Kinds of children a scan can produce, mirroring the entity types
+// -nestedArchiveContents used to insert directly.
+typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
+{
+	TSSTArchiveScanRecordKindImage,
+	TSSTArchiveScanRecordKindArchive,
+	TSSTArchiveScanRecordKindPDF,
+};
+
+/*
+ * Plain value object describing one archive's worth of scanned entries.
+ * Built entirely off values (no NSManagedObject / MOC access) so it can be
+ * produced on a background queue; a matching -applyScanRecord: on the main
+ * thread walks it and inserts the actual Core Data entities.
+ */
+@interface TSSTArchiveScanRecord : NSObject
+
+@property (nonatomic) TSSTArchiveScanRecordKind kind;
+@property (nonatomic, copy, nullable) NSString *name;      // entry name / archive name
+@property (nonatomic, copy, nullable) NSString *imagePath; // image/text kind: entry name used as imagePath
+@property (nonatomic, copy, nullable) NSString *path;      // archive/pdf kind: temp file path
+@property (nonatomic) NSInteger index;
+@property (nonatomic) BOOL text;
+
+// Archive/self-describing fields (used for the top-level record and for
+// TSSTArchiveScanRecordKindArchive children):
+@property (nonatomic, copy, nullable) NSString *password;
+@property (nonatomic, copy, nullable) NSString *solidDirectory;
+@property (nonatomic, strong, nullable) id builtInstance; // TSSTZipIndex or XADArchive, pre-built, ready to reuse
+@property (nonatomic, copy, nullable) NSArray<TSSTArchiveScanRecord *> *children;
+@property (nonatomic, copy, nullable) NSString *backendDescription; // "zip-index" / "XAD", for logging
+
+// PDF kind:
+@property (nonatomic) NSInteger pdfPageCount;
+
+@end
+
+@implementation TSSTArchiveScanRecord
+@end
+
+/*
+ * Lightweight XADArchiveDelegate used only while building an XADArchive on
+ * a background scan queue. It must never touch a managed object -- the
+ * password prompt itself is bounced to the main thread since it's UI.
+ */
+@interface TSSTScanArchiveDelegate : NSObject <XADArchiveDelegate>
+@property (nonatomic, copy) NSString *path;
+@property (nonatomic, copy, nullable) NSString *password;
+@end
+
+@implementation TSSTScanArchiveDelegate
+
+- (void)archiveNeedsPassword:(XADArchive *)archive
+{
+	NSString *password = self.password;
+	if (password)
+	{
+		archive.password = password;
+		return;
+	}
+
+	__block NSString *promptedPassword = nil;
+	NSString *path = self.path;
+	void (^promptBlock)(void) = ^{
+		promptedPassword = [(SimpleComicAppDelegate*)[NSApp delegate] passwordForArchiveWithPath: path];
+	};
+
+	if ([NSThread isMainThread])
+	{
+		promptBlock();
+	}
+	else
+	{
+		dispatch_sync(dispatch_get_main_queue(), ^{
+			promptBlock();
+		});
+	}
+	password = promptedPassword;
+
+	archive.password = password;
+	self.password = password;
+}
+
+@end
+
+/// Names a scan skips: empty, or whose last component starts with ".".
+static BOOL TSSTScanEntryNameIsHidden(NSString *fileName)
+{
+	return fileName.length == 0 || [fileName.lastPathComponent hasPrefix: @"."];
+}
+
+typedef NS_ENUM(NSInteger, TSSTScanEntryClass)
+{
+	TSSTScanEntryClassIgnored,
+	TSSTScanEntryClassImage,
+	TSSTScanEntryClassText,
+	TSSTScanEntryClassArchive,
+	TSSTScanEntryClassPDF,
+};
+
+/// What a scan does with an archive entry of this name.
+static TSSTScanEntryClass TSSTClassifyScanEntryName(NSString *fileName)
+{
+	if (TSSTScanEntryNameIsHidden(fileName)) { return TSSTScanEntryClassIgnored; }
+	NSString *extension = fileName.pathExtension.lowercaseString;
+	if ([[TSSTPage imageExtensions] containsObject: extension]) { return TSSTScanEntryClassImage; }
+	if ([[TSSTManagedArchive archiveExtensions] containsObject: extension]) { return TSSTScanEntryClassArchive; }
+	if ([[TSSTPage textExtensions] containsObject: extension]) { return TSSTScanEntryClassText; }
+	if ([extension isEqualToString: @"pdf"]) { return TSSTScanEntryClassPDF; }
+	return TSSTScanEntryClassIgnored;
+}
+
+/// YES when every entry a scan must read (nested archives/PDFs) can be
+/// extracted by the zip index; otherwise the scan falls back to XAD, which
+/// also handles non-zip formats and solid archives.
+static BOOL TSSTZipIndexCanScan(TSSTZipIndex *zi)
+{
+	if (!zi) { return NO; }
+	for (NSUInteger i = 0; i < zi.numberOfEntries; ++i)
+	{
+		TSSTScanEntryClass entryClass = TSSTClassifyScanEntryName([zi nameOfEntry: i]);
+		if ((entryClass == TSSTScanEntryClassArchive || entryClass == TSSTScanEntryClassPDF) && ![zi canExtractEntry: i])
+		{
+			return NO;
+		}
+	}
+	return YES;
+}
+
+static TSSTArchiveScanRecord *TSSTImageChildRecord(NSString *fileName, NSInteger index, BOOL text)
+{
+	TSSTArchiveScanRecord *child = [TSSTArchiveScanRecord new];
+	child.kind = TSSTArchiveScanRecordKindImage;
+	child.imagePath = fileName;
+	child.index = index;
+	child.text = text;
+	return child;
+}
+
+/// Writes a nested archive's bytes to a fresh temp file (named
+/// "<n>-<fileName>", n bumped until unused) and returns its path.
+static NSString *TSSTWriteNestedArchiveTempFile(NSData *fileData, NSString *fileName)
+{
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSInteger collision = 0;
+	NSString *archivePath = nil;
+	do {
+		archivePath = [NSString stringWithFormat: @"%li-%@", (long)collision, fileName];
+		archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent: archivePath];
+		++collision;
+	} while ([fileManager fileExistsAtPath: archivePath]);
+
+	[fileManager createDirectoryAtPath: [archivePath stringByDeletingLastPathComponent]
+			withIntermediateDirectories: YES
+							 attributes: nil
+								  error: NULL];
+	[fileManager createFileAtPath: archivePath contents: fileData attributes: nil];
+	return archivePath;
+}
+
+/// Extracts a nested archive to a temp file and scans it, returning its
+/// own record as an archive child.
+static TSSTArchiveScanRecord *TSSTNestedArchiveChildRecord(NSData *fileData, NSString *fileName, NSMutableArray<NSError *> *errors)
+{
+	NSString *archivePath = TSSTWriteNestedArchiveTempFile(fileData, fileName);
+	TSSTArchiveScanRecord *nestedRecord = [TSSTManagedArchive scanRecordForFileURL: [NSURL fileURLWithPath: archivePath] name: fileName password: nil errors: errors];
+	nestedRecord.kind = TSSTArchiveScanRecordKindArchive;
+	nestedRecord.path = archivePath;
+	return nestedRecord;
+}
+
+/// Writes a nested PDF's bytes to the temp directory (under its base name,
+/// "<n>-" prefixed until unused) and returns its record, PDFDocument built.
+static TSSTArchiveScanRecord *TSSTPDFChildRecord(NSData *fileData, NSString *fileName)
+{
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *baseName = fileName.lastPathComponent;
+	NSString *archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent: baseName];
+	NSInteger pdfCollision = 0;
+	while ([fileManager fileExistsAtPath: archivePath])
+	{
+		++pdfCollision;
+		baseName = [NSString stringWithFormat: @"%li-%@", (long)pdfCollision, fileName.lastPathComponent];
+		archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent: baseName];
+	}
+	[fileData writeToFile: archivePath atomically: YES];
+
+	TSSTArchiveScanRecord *child = [TSSTArchiveScanRecord new];
+	child.kind = TSSTArchiveScanRecordKindPDF;
+	child.path = archivePath;
+	child.name = fileName;
+	PDFDocument *pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: archivePath]];
+	child.builtInstance = pdfDoc;
+	child.pdfPageCount = pdfDoc.pageCount;
+	return child;
+}
 
 /*
  * setFileURL:/fileURL used to call -[NSApp presentError:] directly, once per
@@ -130,6 +342,18 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	{
 		[NSApp presentError: error];
 	}
+}
+
++ (void)batchURLErrorsForGroupName:(NSString *)groupName during:(void (^)(NSMutableArray<NSError *> *errors))during
+{
+	[self beginURLErrorBatchForGroupName: groupName];
+	NSMutableArray<NSError *> *errors = [NSMutableArray array];
+	during(errors);
+	for (NSError *error in errors)
+	{
+		[self reportURLError: error];
+	}
+	[self endURLErrorBatch];
 }
 
 #pragma mark - Testing support
@@ -335,6 +559,11 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	return self;
 }
 
+- (nullable NSString *)nameOfEntryAtIndex:(NSInteger)index
+{
+	return nil;
+}
+
 - (void)nestedFolderContents
 {
 	[TSSTManagedGroup beginURLErrorBatchForGroupName: self.name ?: self.fileURL.lastPathComponent];
@@ -463,6 +692,18 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	return extensions;
 }
 
+- (void)awakeFromInsert
+{
+	[super awakeFromInsert];
+	_zipIndexLock = [NSCondition new];
+}
+
+- (void)awakeFromFetch
+{
+	[super awakeFromFetch];
+	_zipIndexLock = [NSCondition new];
+}
+
 - (void)willTurnIntoFault
 {
 	NSError * error;
@@ -473,7 +714,7 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 			NSLog(@"%@",[error localizedDescription]);
 		}
 	}
-	
+
 	NSString * solid  = self.solidDirectory;
 	if(solid)
 	{
@@ -493,17 +734,122 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 		{
 			[aFileURL startAccessingSecurityScopedResource];
 			instance = [[XADArchive alloc] initWithFileURL: aFileURL delegate: self error:NULL];
-			
+
 			// Set the archive delegate so that password and encoding queries can have a modal pop up.
-			
+
 			if(self.password)
 			{
 				[instance setPassword: self.password];
 			}
 		}
 	}
-	
+
 	return instance;
+}
+
+/// Builds the zip index for \c fileURL, or returns nil to make callers use
+/// XADArchive (non-zips, unreadable files, unsupported zip features). In
+/// DEBUG builds SC_FORCE_XAD skips the index and SC_SIMULATE_LINK=<profile>
+/// reads through a simulated slow link, so slow-volume behaviour can be
+/// checked against a local file.
++ (nullable TSSTZipIndex *)buildZipIndexForFileURL:(NSURL *)fileURL
+{
+#if DEBUG
+	if (getenv("SC_FORCE_XAD") != NULL)
+	{
+		return nil;
+	}
+#endif
+	if (![fileURL checkResourceIsReachableAndReturnError: NULL])
+	{
+		return nil;
+	}
+#if DEBUG
+	NSString *simulatedLinkName = [[NSProcessInfo processInfo].environment[@"SC_SIMULATE_LINK"] lowercaseString];
+	if (simulatedLinkName.length > 0)
+	{
+		id<TSSTArchiveByteSource> fileSource = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
+		TSSTSimulatedLinkByteSource *linkSource = fileSource ? [TSSTSimulatedLinkByteSource linkWithProfileName: simulatedLinkName wrapping: fileSource] : nil;
+		if (linkSource)
+		{
+			linkSource.simulateTime = YES;
+			return [TSSTZipIndex indexWithByteSource: linkSource error: NULL];
+		}
+	}
+#endif
+	return [TSSTZipIndex indexWithFileURL: fileURL error: NULL];
+}
+
+/// The zip index a scan should read through: nil when the file isn't a zip,
+/// SC_FORCE_XAD is set, or the index can't extract every entry the scan
+/// needs (the caller then lists through XADArchive).
++ (nullable TSSTZipIndex *)scannableZipIndexForFileURL:(NSURL *)fileURL
+{
+	TSSTZipIndex *zi = [self buildZipIndexForFileURL: fileURL];
+	return TSSTZipIndexCanScan(zi) ? zi : nil;
+}
+
+/// Build-once gate for the lazy accessors. Returns YES to exactly one
+/// caller (the builder), which must build with NO lock held and then call
+/// TSSTFinishBuild. Every other caller waits until the build is done and
+/// gets NO.
+static BOOL TSSTBeginBuild(NSCondition *lock, BOOL *attempted, BOOL *building)
+{
+	[lock lock];
+	while (*building) { [lock wait]; }
+	BOOL shouldBuild = !*attempted;
+	if (shouldBuild) { *attempted = YES; *building = YES; }
+	[lock unlock];
+	return shouldBuild;
+}
+
+/// Publishes a build's result (under the lock) and wakes the waiters.
+static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(void))
+{
+	[lock lock];
+	publish();
+	*building = NO;
+	[lock broadcast];
+	[lock unlock];
+}
+
+/// Lazily builds (or rebuilds, e.g. after the managed object was re-fetched
+/// and the ivar reset) the fast zip index for this archive's fileURL. Returns
+/// nil for non-zips, unreadable files, or zip features this class can't
+/// fully handle -- callers should fall back to -instance / XADArchive.
+/// Thread-safe: background page reads may call this off-main while the
+/// window's main thread also reads pages. The build runs outside the lock
+/// (see TSSTBeginBuild).
+- (nullable TSSTZipIndex *)zipIndex
+{
+	if (TSSTBeginBuild(_zipIndexLock, &_zipIndexAttempted, &_zipIndexBuilding))
+	{
+		TSSTZipIndex *built = [TSSTManagedArchive buildZipIndexForFileURL: self.fileURL];
+		TSSTFinishBuild(_zipIndexLock, &_zipIndexBuilding, ^{
+			if (!self->_zipIndex) { self->_zipIndex = built; }
+		});
+	}
+	[_zipIndexLock lock];
+	TSSTZipIndex *result = _zipIndex;
+	[_zipIndexLock unlock];
+	return result;
+}
+
+- (nullable NSString *)nameOfEntryAtIndex:(NSInteger)index
+{
+	TSSTZipIndex *zi = self.zipIndex;
+	if (zi && index >= 0 && (NSUInteger)index < zi.numberOfEntries)
+	{
+		return [zi nameOfEntry: (NSUInteger)index];
+	}
+	return [(XADArchive *)self.instance nameOfEntry: index];
+}
+
+- (void)didTurnIntoFault
+{
+	[super didTurnIntoFault];
+	_zipIndex = nil;
+	_zipIndexAttempted = NO;
 }
 
 
@@ -511,6 +857,17 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 {
 	NSString * solidDirectory = self.solidDirectory;
 	NSData * imageData;
+	// Zip archives are never solid, so if we have a fast zip index for this
+	// archive we can read straight from it -- pread() is safe for
+	// concurrent callers, so no groupLock is needed on this path.
+	TSSTZipIndex *zi = solidDirectory ? nil : self.zipIndex;
+	if (zi && index >= 0 && (NSUInteger)index < zi.numberOfEntries && [zi canExtractEntry: (NSUInteger)index])
+	{
+		NSError *err;
+		imageData = [zi contentsOfEntry: (NSUInteger)index error: &err];
+		callback(imageData, err);
+		return;
+	}
 	if(!solidDirectory)
 	{
 		[groupLock lock];
@@ -558,100 +915,172 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	return parentGroup;
 }
 
-- (void)nestedArchiveContents
+/// Background-safe: builds the backend and scans entries for the archive at
+/// \c fileURL, returning a value-only record tree. Never touches an
+/// \c NSManagedObject / the MOC, so it can run on any queue. Recurses into
+/// nested archives/PDFs (writing their bytes to temp files exactly as
+/// before) and returns their own fully-built records as children.
++ (nullable TSSTArchiveScanRecord *)scanRecordForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password errors:(NSMutableArray<NSError *> *)errors
 {
-	[TSSTManagedGroup beginURLErrorBatchForGroupName: self.name ?: self.fileURL.lastPathComponent];
-	XADArchive * imageArchive = self.instance;
-	
-	NSFileManager * fileManager = [NSFileManager defaultManager];
-	NSData * fileData;
-	NSInteger collision = 0;
-	NSString * archivePath = nil;
-	const NSInteger archivedFilesCount = [imageArchive numberOfEntries];
-	NSError * error;
-	if([imageArchive isSolid])
+	// Try the fast zip-index path first: it only needs one pread() of the
+	// central directory instead of XADArchive walking every local header
+	// (slow on high-latency volumes like SMB).
+	TSSTZipIndex *zi = [self scannableZipIndexForFileURL: fileURL];
+	return [self scanRecordForFileURL: fileURL name: name password: password zipIndex: zi errors: errors];
+}
+
+/// The scan proper. \c zi is an already-built index that can extract
+/// everything the scan needs, or nil to list through XADArchive (non-zips,
+/// solid archives, zips the index can't fully read).
++ (nullable TSSTArchiveScanRecord *)scanRecordForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password zipIndex:(nullable TSSTZipIndex *)zi errors:(NSMutableArray<NSError *> *)errors
+{
+	TSSTArchiveScanRecord *record = [TSSTArchiveScanRecord new];
+	record.name = name ?: fileURL.lastPathComponent;
+
+	const BOOL zipIndexUsable = (zi != nil);
+	XADArchive *imageArchive = nil;
+	TSSTScanArchiveDelegate *passwordDelegate = nil;
+	if (!zipIndexUsable)
 	{
+		passwordDelegate = [TSSTScanArchiveDelegate new];
+		passwordDelegate.path = fileURL.path;
+		passwordDelegate.password = password;
+		[fileURL startAccessingSecurityScopedResource];
+		imageArchive = [[XADArchive alloc] initWithFileURL: fileURL delegate: passwordDelegate error: NULL];
+		if (imageArchive && passwordDelegate.password)
+		{
+			[imageArchive setPassword: passwordDelegate.password];
+		}
+	}
+
+	record.builtInstance = zipIndexUsable ? zi : imageArchive;
+	record.password = passwordDelegate.password;
+	record.backendDescription = zipIndexUsable ? @"zip-index" : @"XAD";
+
+	const NSInteger archivedFilesCount = zipIndexUsable ? (NSInteger)zi.numberOfEntries : [imageArchive numberOfEntries];
+	if (!zipIndexUsable && [imageArchive isSolid])
+	{
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSInteger collision = 0;
+		NSString *archivePath = nil;
+		NSError *error = nil;
 		do {
 			archivePath = [NSString stringWithFormat: @"SC-images-%li", (long)collision];
 			archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent: archivePath];
 			++collision;
 		} while (![fileManager createDirectoryAtPath: archivePath withIntermediateDirectories: YES attributes: nil error: &error]);
-		self.solidDirectory = archivePath;
+		record.solidDirectory = archivePath;
 	}
-	
+
+	NSMutableArray<TSSTArchiveScanRecord *> *children = [NSMutableArray arrayWithCapacity: archivedFilesCount];
+
 	for (NSInteger counter = 0; counter < archivedFilesCount; ++counter)
 	{
-		NSString *fileName = [imageArchive nameOfEntry: counter];
-		TSSTManagedGroup *nestedDescription = nil;
-		
-		if(!([fileName isEqualToString: @""] || [[[fileName lastPathComponent] substringToIndex: 1] isEqualToString: @"."]))
+		NSString *fileName = zipIndexUsable ? [zi nameOfEntry: (NSUInteger)counter] : [imageArchive nameOfEntry: counter];
+		TSSTArchiveScanRecord *child = nil;
+
+		switch (TSSTClassifyScanEntryName(fileName))
 		{
-			NSString *extension = [[fileName pathExtension] lowercaseString];
-			if([[TSSTPage imageExtensions] containsObject: extension])
+			case TSSTScanEntryClassImage:
+				child = TSSTImageChildRecord(fileName, counter, NO);
+				break;
+			case TSSTScanEntryClassText:
+				child = TSSTImageChildRecord(fileName, counter, YES);
+				break;
+			case TSSTScanEntryClassArchive:
 			{
+				NSData *fileData = zipIndexUsable ? [zi contentsOfEntry: (NSUInteger)counter error: NULL] : [imageArchive contentsOfEntry: counter];
+				child = TSSTNestedArchiveChildRecord(fileData, fileName, errors);
+				break;
+			}
+			case TSSTScanEntryClassPDF:
+			{
+				NSData *fileData = zipIndexUsable ? [zi contentsOfEntry: (NSUInteger)counter error: NULL] : [imageArchive contentsOfEntry: counter];
+				child = TSSTPDFChildRecord(fileData, fileName);
+				break;
+			}
+			case TSSTScanEntryClassIgnored:
+				break;
+		}
+		if (child) { [children addObject: child]; }
+	}
+
+	record.children = children;
+	return record;
+}
+
+/// Main-thread only: walks a record produced by
+/// +scanRecordForFileURL:name:password:errors: and inserts the corresponding
+/// Core Data entities, reusing the already-built backend (no re-parsing).
+- (void)applyScanRecord:(id)recordObject
+{
+	TSSTArchiveScanRecord *record = (TSSTArchiveScanRecord *)recordObject;
+	if (!record)
+	{
+		return;
+	}
+
+	if ([record.builtInstance isKindOfClass: [TSSTZipIndex class]])
+	{
+		_zipIndex = record.builtInstance;
+		_zipIndexAttempted = YES;
+	}
+	else if (record.builtInstance)
+	{
+		instance = record.builtInstance;
+	}
+
+	if (record.password)
+	{
+		self.password = record.password;
+	}
+	if (record.solidDirectory)
+	{
+		self.solidDirectory = record.solidDirectory;
+	}
+
+	for (TSSTArchiveScanRecord *child in record.children)
+	{
+		TSSTManagedGroup *nestedDescription = nil;
+		switch (child.kind)
+		{
+			case TSSTArchiveScanRecordKindImage:
 				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
-				[nestedDescription setValue: fileName forKey: @"imagePath"];
-				[nestedDescription setValue: @(counter) forKey: @"index"];
-			}
-			else if([[TSSTManagedArchive archiveExtensions] containsObject: extension])
-			{
-				fileData = [imageArchive contentsOfEntry: counter];
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
-				nestedDescription.name = fileName;
-				nestedDescription.nested = YES;
-				
-				collision = 0;
-				do {
-					archivePath = [NSString stringWithFormat: @"%li-%@", (long)collision, fileName];
-					archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent: archivePath];
-					++collision;
-				} while ([fileManager fileExistsAtPath: archivePath]);
-				
-				[[NSFileManager defaultManager] createDirectoryAtPath: [archivePath stringByDeletingLastPathComponent]
-										  withIntermediateDirectories: YES
-														   attributes: nil
-																error: NULL];
-				[[NSFileManager defaultManager] createFileAtPath: archivePath contents: fileData attributes: nil];
-				
-				nestedDescription.path = archivePath;
-				[(TSSTManagedArchive *)nestedDescription nestedArchiveContents];
-			}
-			else if([[TSSTPage textExtensions] containsObject: extension])
-			{
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
-				[nestedDescription setValue: fileName forKey: @"imagePath"];
-				[nestedDescription setValue: @(counter) forKey: @"index"];
-				[nestedDescription setValue: @YES forKey: @"text"];
-			}
-			else if([extension isEqualToString: @"pdf"])
-			{
-				NSString *fullFileName = fileName;
-				fileName = [fileName lastPathComponent];
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"PDF" inManagedObjectContext: [self managedObjectContext]];
-				archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent: fileName];
-				NSInteger collision = 0;
-				while([fileManager fileExistsAtPath: archivePath])
+				[nestedDescription setValue: child.imagePath forKey: @"imagePath"];
+				[nestedDescription setValue: @(child.index) forKey: @"index"];
+				if (child.text)
 				{
-					++collision;
-					fileName = [NSString stringWithFormat: @"%li-%@", (long)collision, fileName];
-					archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent: fileName];
+					[nestedDescription setValue: @YES forKey: @"text"];
 				}
-				fileData = [imageArchive contentsOfEntry: counter];
-				[fileData writeToFile: archivePath atomically: YES];
-				
-				nestedDescription.path = archivePath;
+				break;
+			case TSSTArchiveScanRecordKindArchive:
+				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
+				nestedDescription.name = child.name;
 				nestedDescription.nested = YES;
-				nestedDescription.name = fullFileName;
-				[(TSSTManagedPDF *)nestedDescription pdfContents];
-			}
-			
-			if(nestedDescription)
-			{
-				nestedDescription.group = self;
-			}
+				nestedDescription.path = child.path;
+				[(TSSTManagedArchive *)nestedDescription applyScanRecord: child];
+				break;
+			case TSSTArchiveScanRecordKindPDF:
+				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"PDF" inManagedObjectContext: [self managedObjectContext]];
+				nestedDescription.path = child.path;
+				nestedDescription.nested = YES;
+				nestedDescription.name = child.name;
+				[(TSSTManagedPDF *)nestedDescription applyPDFScanRecord: child];
+				break;
+		}
+
+		if (nestedDescription)
+		{
+			nestedDescription.group = self;
 		}
 	}
-	[TSSTManagedGroup endURLErrorBatch];
+}
+
+- (void)nestedArchiveContents
+{
+	[TSSTManagedGroup batchURLErrorsForGroupName: self.name ?: self.fileURL.lastPathComponent during: ^(NSMutableArray<NSError *> *errors) {
+		[self applyScanRecord: [TSSTManagedArchive scanRecordForFileURL: self.fileURL name: self.name password: self.password errors: errors]];
+	}];
 }
 
 
@@ -735,9 +1164,16 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 - (void)pdfContents
 {
 	PDFDocument * rep = [self instance];
+	[self insertImagesForPageCount: rep.pageCount];
+}
+
+/// Main-thread only: shared by -pdfContents (top-level/synchronous PDFs) and
+/// -applyPDFScanRecord: (PDFs found nested inside a background-scanned
+/// archive) -- inserts one Image entity per page.
+- (void)insertImagesForPageCount:(NSInteger)imageCount
+{
 	TSSTPage * imageDescription;
 	NSMutableSet<TSSTPage*> * pageSet = [NSMutableSet set];
-	NSInteger imageCount = [rep pageCount];
 	for (NSInteger pageNumber = 0; pageNumber < imageCount; ++pageNumber)
 	{
 		imageDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
@@ -746,6 +1182,20 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 		[pageSet addObject: imageDescription];
 	}
 	self.images = pageSet;
+}
+
+/// Main-thread only: applies a TSSTArchiveScanRecord (kind PDF) built by
+/// +[TSSTManagedArchive scanRecordForFileURL:...] for a PDF found nested
+/// inside an archive during a background scan. Reuses the already-built
+/// PDFDocument instead of re-parsing it.
+- (void)applyPDFScanRecord:(id)recordObject
+{
+	TSSTArchiveScanRecord *record = (TSSTArchiveScanRecord *)recordObject;
+	if (record.builtInstance)
+	{
+		instance = record.builtInstance;
+	}
+	[self insertImagesForPageCount: record.pdfPageCount];
 }
 
 @end

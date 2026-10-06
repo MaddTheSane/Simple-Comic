@@ -63,6 +63,13 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	
 	PageSelectionMode pageSelectionInProgress;
 	CGFloat savedZoom;
+
+	/** "Loading..." overlay shown over pageScrollView while a background
+	    archive scan hasn't produced any pages yet. Built in code, not the
+	    xib, and lazily added/removed. */
+	NSView *loadingOverlayView;
+	NSProgressIndicator *loadingSpinner;
+	NSTextField *loadingLabel;
 }
 
 @synthesize pageTurn, pageSortDescriptor;
@@ -158,6 +165,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[session addObserver: self forKeyPath: TSSTPageScaleOptions options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTTwoPageSpread options: 0 context: nil];
 	[session addObserver: self forKeyPath: @"loupe" options: 0 context: nil];
+	[session addObserver: self forKeyPath: @"loading" options: 0 context: nil];
 	
 	[session bind: @"selection" toObject: pageController withKeyPath: @"selectionIndex" options: nil];
 	
@@ -183,8 +191,69 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[jumpField setDelegate: self];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleMouseDragged:) name:TSSTMouseDragNotification object:nil];
-	
+
+	[self updateLoadingOverlay];
 	[self restoreSession];
+}
+
+
+#pragma mark - Loading overlay
+
+
+/**
+ Shows/hides a centered "Loading..." label + indeterminate spinner over
+ pageScrollView, depending on whether the session is still being scanned
+ in the background and has no pages yet.
+ */
+- (void)updateLoadingOverlay
+{
+	BOOL shouldShow = session.isLoading && [[pageController arrangedObjects] count] == 0;
+
+	if (!shouldShow)
+	{
+		[loadingSpinner stopAnimation: nil];
+		[loadingOverlayView removeFromSuperview];
+		loadingOverlayView = nil;
+		loadingSpinner = nil;
+		loadingLabel = nil;
+		return;
+	}
+
+	if (loadingOverlayView)
+	{
+		return;
+	}
+
+	NSView *container = pageScrollView.superview ?: pageScrollView;
+
+	loadingOverlayView = [[NSView alloc] initWithFrame: pageScrollView.frame];
+	loadingOverlayView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+	loadingOverlayView.translatesAutoresizingMaskIntoConstraints = YES;
+
+	loadingSpinner = [[NSProgressIndicator alloc] initWithFrame: NSMakeRect(0, 0, 32, 32)];
+	loadingSpinner.style = NSProgressIndicatorStyleSpinning;
+	loadingSpinner.indeterminate = YES;
+	[loadingSpinner startAnimation: nil];
+
+	loadingLabel = [[NSTextField alloc] initWithFrame: NSMakeRect(0, 0, 240, 20)];
+	loadingLabel.editable = NO;
+	loadingLabel.bordered = NO;
+	loadingLabel.drawsBackground = NO;
+	loadingLabel.alignment = NSTextAlignmentCenter;
+	loadingLabel.stringValue = NSLocalizedString(@"Loading…", @"loading overlay message shown while a background archive scan is in progress");
+
+	[loadingOverlayView addSubview: loadingSpinner];
+	[loadingOverlayView addSubview: loadingLabel];
+
+	NSRect bounds = loadingOverlayView.bounds;
+	loadingSpinner.frameOrigin = NSMakePoint(NSMidX(bounds) - NSWidth(loadingSpinner.frame) / 2.0,
+											  NSMidY(bounds) - NSHeight(loadingSpinner.frame) / 2.0 + 16);
+	loadingLabel.frameOrigin = NSMakePoint(NSMidX(bounds) - NSWidth(loadingLabel.frame) / 2.0,
+											NSMidY(bounds) - NSHeight(loadingLabel.frame) / 2.0 - 16);
+	loadingSpinner.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+	loadingLabel.autoresizingMask = NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin;
+
+	[container addSubview: loadingOverlayView positioned: NSWindowAbove relativeTo: pageScrollView];
 }
 
 
@@ -203,6 +272,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults removeObserver: self forKeyPath: TSSTUnifiedTitlebar];
 	[pageController removeObserver: self forKeyPath: @"selectionIndex"];
 	[pageController removeObserver: self forKeyPath: @"arrangedObjects.@count"];
+	[session removeObserver: self forKeyPath: @"loading"];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	
 	[progressBar removeObserver: self forKeyPath: @"currentValue"];
@@ -223,11 +293,33 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
 	if([[pageController arrangedObjects] count] <= 0)
 	{
+		if (session.isLoading)
+		{
+			// A background archive scan hasn't produced any
+			// pages yet -- keep the window open showing the loading
+			// overlay instead of closing it out from under the scan.
+			return;
+		}
+		if ([keyPath isEqualToString: @"loading"] && !session.lastOpenHadErrors)
+		{
+			NSAlert * alert = [[NSAlert alloc] init];
+			alert.alertStyle = NSAlertStyleWarning;
+			NSString * sessionName = [session.groups.anyObject valueForKey: @"name"] ?: [[self window] title] ?: @"";
+			alert.messageText = [NSString stringWithFormat: NSLocalizedString(@"No pages could be found in “%@”.", @"empty session alert"), sessionName];
+			[alert runModal];
+		}
 		[self close];
 //		[[NSNotificationCenter defaultCenter] postNotificationName: TSSTSessionEndNotification object: self];
 		return;
 	}
-	
+	else if ([keyPath isEqualToString: @"loading"])
+	{
+		// Pages already exist and the scan just finished -- nothing to do
+		// here beyond hiding the loading overlay, handled in -updateLoadingOverlay.
+		[self updateLoadingOverlay];
+		return;
+	}
+
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 	
 	if([keyPath isEqualToString: TSSTScrollersVisible])
@@ -243,7 +335,27 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	else if([keyPath isEqualToString: @"arrangedObjects.@count"])
 	{
-		[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
+		[self updateLoadingOverlay];
+
+		// NSArrayController doesn't reliably select index 0 (or restore
+		// session.selection) when content first arrives into a previously
+		// empty controller -- pin it explicitly.
+		NSUInteger pageCount = [[pageController arrangedObjects] count];
+		NSUInteger selectionIndex = [pageController selectionIndex];
+		if (pageCount > 0 && (selectionIndex == NSNotFound || selectionIndex >= pageCount))
+		{
+			NSUInteger restoredSelection = (NSUInteger)session.selection;
+			[pageController setSelectionIndex: restoredSelection < pageCount ? restoredSelection : 0];
+		}
+
+		/* Thumbnails are only generated while the exposé is open (see
+		 -togglePageExpose:); doing it eagerly here read every page of the
+		 archive right after opening, competing with the visible page on
+		 slow volumes. */
+		if([exposeBezel isVisible])
+		{
+			[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
+		}
 		[self changeViewImages];
 	}
 	else if([keyPath isEqualToString: TSSTPageOrder])
@@ -925,7 +1037,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			if([(TSSTManagedArchive *)selectedGroup quicklookCompatible])
 			{
 				NSInteger coverIndex = [selectedPage.index integerValue];
-				NSString * coverName = [(XADArchive *)[selectedGroup instance] nameOfEntry: coverIndex];
+				NSString * coverName = [(TSSTManagedArchive *)selectedGroup nameOfEntryAtIndex: coverIndex];
 				[UKXattrMetadataStore setString: coverName
 										 forKey: SCQuickLookCoverName
 										 atPath: archivePath
@@ -1148,7 +1260,18 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 - (void)changeViewImages
 {
 	NSUInteger count = [[pageController arrangedObjects] count];
+	if (count == 0)
+	{
+		// Nothing to show yet -- e.g. a session still being scanned in the
+		// background with 0 pages so far. The loading
+		// overlay covers the page view in this state.
+		return;
+	}
 	NSUInteger index = [pageController selectionIndex];
+	if (index == NSNotFound || index >= count)
+	{
+		index = 0;
+	}
 	TSSTPage * pageOne = [pageController arrangedObjects][index];
 	TSSTPage * pageTwo = (index + 1) < count ? [pageController arrangedObjects][(index + 1)] : nil;
 	NSString * titleString = pageOne.name;
@@ -1699,6 +1822,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)prepareToEnd
 {
+	[(TSSTThumbnailView *)exposeView cancelThumbnailProcessing];
 	[[self window] setAcceptsMouseMovedEvents: NO];
 	[mouseMovedTimer invalidate];
 	mouseMovedTimer = nil;

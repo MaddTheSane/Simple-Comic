@@ -23,6 +23,7 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 #import "TSSTManagedGroup.h"
 #import <XADMaster/XADArchive.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
+#import <ImageIO/ImageIO.h>
 
 static NSDictionary * TSSTInfoPageAttributes = nil;
 static NSSize monospaceCharacterSize;
@@ -142,16 +143,38 @@ static NSSize monospaceCharacterSize;
 - (void)setOwnSizeInfoWithData:(NSData *)imageData
 {
 	CGFloat aspect;
-	NSSize imageSize;
-	// Try NSBitmapImageRep first.
-	NSImageRep * pageRep = [NSBitmapImageRep imageRepWithData: imageData];
-	if (!pageRep) {
-		// If it failed, try iterating through each registered NSImageRep subclass.
-		Class imgRepClass = [NSImageRep imageRepClassForData:imageData];
-		pageRep = [imgRepClass imageRepWithData: imageData];
+	NSSize imageSize = NSZeroSize;
+
+	// Try reading pixel dimensions from the image header only, via ImageIO. This avoids
+	// decoding the full image (expensive for formats like JPEG XL) just to get its size.
+	NSDictionary * sourceOptions = @{(id)kCGImageSourceShouldCache: @NO};
+	CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, (__bridge CFDictionaryRef)sourceOptions);
+	if (source) {
+		CFDictionaryRef properties = CGImageSourceCopyPropertiesAtIndex(source, 0, (__bridge CFDictionaryRef)sourceOptions);
+		if (properties) {
+			NSDictionary * props = (__bridge NSDictionary *)properties;
+			NSNumber * pixelWidth = props[(id)kCGImagePropertyPixelWidth];
+			NSNumber * pixelHeight = props[(id)kCGImagePropertyPixelHeight];
+			if (pixelWidth && pixelHeight) {
+				imageSize = NSMakeSize(pixelWidth.doubleValue, pixelHeight.doubleValue);
+			}
+			CFRelease(properties);
+		}
+		CFRelease(source);
 	}
-	imageSize = NSMakeSize([pageRep pixelsWide], [pageRep pixelsHigh]);
-	
+
+	if (NSEqualSizes(NSZeroSize, imageSize)) {
+		// Fall back to decoding the image if ImageIO couldn't provide header dimensions
+		// (e.g. WebP handled by the vendored decoder, or other custom NSImageRep types).
+		NSImageRep * pageRep = [NSBitmapImageRep imageRepWithData: imageData];
+		if (!pageRep) {
+			// If it failed, try iterating through each registered NSImageRep subclass.
+			Class imgRepClass = [NSImageRep imageRepClassForData:imageData];
+			pageRep = [imgRepClass imageRepWithData: imageData];
+		}
+		imageSize = NSMakeSize([pageRep pixelsWide], [pageRep pixelsHigh]);
+	}
+
 	if(!NSEqualSizes(NSZeroSize, imageSize))
 	{
 		aspect = imageSize.width / imageSize.height;
