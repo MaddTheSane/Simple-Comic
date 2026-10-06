@@ -879,7 +879,8 @@ typedef struct {
 		loupePower = MIN(loupePower, 6);
 		[defaultsController setDouble: loupePower forKey: TSSTLoupePower];
 	}
-	else if(scaling == 1)
+	// Two-finger swipe paging at 100% scale is opt-in (Preferences > swipe).
+	else if(scaling == 1 && [defaultsController boolForKey: TSSTEnableSwipe])
 	{
 		CGFloat deltaX = [theEvent deltaX];
 		if (deltaX != 0.0)
