@@ -48,6 +48,12 @@ extern NSString *const TSSTPageScaleOptions;
 extern NSString *const TSSTTwoPageSpread;
 extern NSString *const TSSTStatusbarVisible;
 extern NSString *const TSSTBackgroundColor;
+extern NSString *const TSSTBackgroundMode;
+/*! Values of TSSTBackgroundMode; match the order of the Settings pop-up. */
+typedef NS_ENUM(NSInteger, TSSTBackgroundModeValue) {
+	TSSTBackgroundModeSolid = 0,
+	TSSTBackgroundModeBlurredEdges = 1,
+};
 extern NSString *const TSSTConstrainScale;
 extern NSString *const TSSTWindowAutoResize;
 extern NSString *const TSSTSessionRestore;

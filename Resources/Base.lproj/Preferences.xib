@@ -17,10 +17,10 @@
         <window title="Settings" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="246" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="140" y="154" width="320" height="447"/>
+            <rect key="contentRect" x="140" y="154" width="320" height="487"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1512" height="948"/>
             <view key="contentView" id="247">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="459"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="499"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="213">
@@ -78,6 +78,30 @@
                             <binding destination="42" name="value" keyPath="values.constrainScale" id="45"/>
                         </connections>
                     </button>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Bgm-txt">
+                        <rect key="frame" x="36" y="286" width="90" height="16"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Background style" id="Bgm-txt-cel">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <popUpButton toolTip="Choose how the empty area around the page is filled" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bgm-pop">
+                        <rect key="frame" x="130" y="278" width="163" height="25"/>
+                        <popUpButtonCell key="cell" type="push" title="Solid color" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Bgm-item-solid" id="Bgm-pop-cell">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" title="OtherViews" id="Bgm-menu">
+                                <items>
+                                    <menuItem title="Solid color" state="on" id="Bgm-item-solid"/>
+                                    <menuItem title="Blurred page edges" id="Bgm-item-blur"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <binding destination="42" name="selectedIndex" keyPath="values.pageBackgroundMode" id="Bgm-bind"/>
+                        </connections>
+                    </popUpButton>
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="237">
                         <rect key="frame" x="36" y="246" width="111" height="16"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Background color" id="239">
@@ -208,7 +232,12 @@
                     <constraint firstItem="238" firstAttribute="centerY" secondItem="237" secondAttribute="centerY" id="cX7-DQ-z3L"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="237" secondAttribute="trailing" constant="20" symbolic="YES" id="dOF-wx-d9y"/>
                     <constraint firstItem="i5o-fF-WGx" firstAttribute="trailing" secondItem="213" secondAttribute="trailing" id="fPt-as-PE0"/>
-                    <constraint firstItem="237" firstAttribute="top" secondItem="247" secondAttribute="top" constant="20" symbolic="YES" id="fSs-MM-C78"/>
+                    <constraint firstItem="Bgm-txt" firstAttribute="top" secondItem="247" secondAttribute="top" constant="20" symbolic="YES" id="fSs-MM-C78"/>
+                    <constraint firstItem="Bgm-txt" firstAttribute="leading" secondItem="237" secondAttribute="leading" id="Bgm-c1"/>
+                    <constraint firstItem="Bgm-pop" firstAttribute="leading" secondItem="Bgm-txt" secondAttribute="trailing" constant="8" id="Bgm-c2"/>
+                    <constraint firstItem="Bgm-pop" firstAttribute="centerY" secondItem="Bgm-txt" secondAttribute="centerY" id="Bgm-c3"/>
+                    <constraint firstAttribute="trailing" secondItem="Bgm-pop" secondAttribute="trailing" constant="20" symbolic="YES" id="Bgm-c4"/>
+                    <constraint firstItem="237" firstAttribute="top" secondItem="Bgm-txt" secondAttribute="bottom" constant="20" id="Bgm-c5"/>
                     <constraint firstItem="152" firstAttribute="leading" secondItem="36" secondAttribute="leading" id="gli-if-d4s"/>
                     <constraint firstItem="213" firstAttribute="leading" secondItem="243" secondAttribute="leading" id="jPG-FM-wd2"/>
                     <constraint firstItem="243" firstAttribute="leading" secondItem="36" secondAttribute="leading" constant="18" id="kHr-Ef-3fh"/>

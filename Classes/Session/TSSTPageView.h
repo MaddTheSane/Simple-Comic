@@ -75,6 +75,22 @@ typedef NS_ENUM(NSInteger, DTPageScaling) {
     Calls `correctViewPoint` */
 - (void)setFirstPage:(nullable NSImage *)first secondPageImage:(nullable NSImage *)second;
 
+/*!	Stable per-page identities (e.g. NSManagedObjectID) for the current
+	page(s), set alongside -setFirstPage:secondPageImage:. Used only for the
+	"blurred page edges" background mode, to look up pre-warmed blur sources
+	in TSSTEdgeBlurRenderer -- never compared against or dereferenced by this
+	class beyond -isEqual:. */
+@property (nonatomic, strong, nullable) id firstPageKey;
+@property (nonatomic, strong, nullable) id secondPageKey;
+
+/*!	Called (at most once per distinct page-key pair) from -drawRect: when
+	the "blurred page edges" background can't be shown yet because a source
+	isn't cached for the current page(s). The solid color shows in the
+	meantime; the receiver is expected to prepare the missing source(s) and
+	call -setNeedsDisplay: once ready. No animation either way -- this is
+	a plain swap, not a crossfade. */
+@property (nonatomic, copy, nullable) void (^requestMissingBackgroundSources)(void);
+
 
 /*!  Finds the size of the pages that are to be renedered.
     This includes minor scaling to equalize the height of facing pages. */
