@@ -17,10 +17,10 @@
         <window title="Settings" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="246" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="140" y="154" width="320" height="270"/>
+            <rect key="contentRect" x="140" y="154" width="320" height="339"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1512" height="948"/>
             <view key="contentView" id="247">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="282"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="213">
@@ -117,6 +117,24 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <button toolTip="Applies only when Two-Page Spread is enabled" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lfp-01-btn">
+                        <rect key="frame" x="20" y="69" width="200" height="16"/>
+                        <buttonCell key="cell" type="check" title="Show first page alone" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Lfp-02-cel">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="42" name="value" keyPath="values.lonelyFirstPage" id="Lfp-05-bnd"/>
+                        </connections>
+                    </button>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Lfp-03-txt">
+                        <rect key="frame" x="36" y="36" width="266" height="28"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="The first page is not paired with a second page in Two-Page Spread mode." id="Lfp-04-cel">
+                            <font key="font" metaFont="menu" size="11"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="36" secondAttribute="trailing" constant="20" symbolic="YES" id="13n-Ap-zdv"/>
@@ -139,7 +157,6 @@
                     <constraint firstItem="237" firstAttribute="top" secondItem="247" secondAttribute="top" constant="20" symbolic="YES" id="fSs-MM-C78"/>
                     <constraint firstItem="152" firstAttribute="leading" secondItem="36" secondAttribute="leading" id="gli-if-d4s"/>
                     <constraint firstItem="213" firstAttribute="leading" secondItem="243" secondAttribute="leading" id="jPG-FM-wd2"/>
-                    <constraint firstAttribute="bottom" secondItem="216" secondAttribute="bottom" constant="20" id="k4g-Zj-Xpp"/>
                     <constraint firstItem="243" firstAttribute="leading" secondItem="36" secondAttribute="leading" constant="18" id="kHr-Ef-3fh"/>
                     <constraint firstItem="i5o-fF-WGx" firstAttribute="top" secondItem="152" secondAttribute="bottom" constant="5" id="kIe-FY-jxv"/>
                     <constraint firstItem="252" firstAttribute="top" secondItem="i5o-fF-WGx" secondAttribute="bottom" constant="20" id="kJu-24-y0d"/>
@@ -148,6 +165,13 @@
                     <constraint firstItem="252" firstAttribute="leading" secondItem="152" secondAttribute="leading" id="mwB-eN-iu5"/>
                     <constraint firstItem="243" firstAttribute="top" secondItem="237" secondAttribute="bottom" constant="5" id="qhn-fd-RAf"/>
                     <constraint firstAttribute="trailing" secondItem="243" secondAttribute="trailing" constant="20" symbolic="YES" id="zUS-01-GFW"/>
+                    <constraint firstItem="Lfp-01-btn" firstAttribute="top" secondItem="216" secondAttribute="bottom" constant="20" id="Lfp-c1"/>
+                    <constraint firstItem="Lfp-01-btn" firstAttribute="leading" secondItem="152" secondAttribute="leading" id="Lfp-c2"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Lfp-01-btn" secondAttribute="trailing" constant="20" symbolic="YES" id="Lfp-c3"/>
+                    <constraint firstItem="Lfp-03-txt" firstAttribute="top" secondItem="Lfp-01-btn" secondAttribute="bottom" constant="5" id="Lfp-c4"/>
+                    <constraint firstItem="Lfp-03-txt" firstAttribute="leading" secondItem="243" secondAttribute="leading" id="Lfp-c5"/>
+                    <constraint firstItem="Lfp-03-txt" firstAttribute="trailing" secondItem="243" secondAttribute="trailing" id="Lfp-c6"/>
+                    <constraint firstAttribute="bottom" secondItem="Lfp-03-txt" secondAttribute="bottom" constant="20" id="Lfp-c7"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="143" y="162"/>
