@@ -535,6 +535,13 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	as a string.  */
 - (NSString *)applicationSupportFolder
 {
+#if DEBUG
+	// Test runs point this at a scratch directory so they neither restore
+	// the developer's real sessions (which can reference TCC-protected
+	// folders like ~/Desktop) nor write into the real store.
+	NSString * overrideFolder = NSProcessInfo.processInfo.environment[@"SC_STORE_DIR"];
+	if (overrideFolder.length > 0) { return overrideFolder; }
+#endif
 	NSArray * paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString * basePath = paths.firstObject ?: NSTemporaryDirectory();
 	return [basePath stringByAppendingPathComponent: @"Simple Comic"];
