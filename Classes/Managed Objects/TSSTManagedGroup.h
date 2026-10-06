@@ -80,8 +80,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) BOOL quicklookCompatible;
 
 /**
- Background-safe scan of the archive at \c fileURL. Opens the archive
- (XADArchive) itself and returns an opaque scan record
+ Name of an entry by index, preferring the fast zip index (when this
+ archive is a zip and one has been built) over -instance. Safe to call
+ whichever backend is in use.
+ */
+- (nullable NSString *)nameOfEntryAtIndex:(NSInteger)index;
+
+/**
+ Background-safe scan of the archive at \c fileURL. Builds the backend
+ (TSSTZipIndex or XADArchive) itself and returns an opaque scan record
  (a \c TSSTArchiveScanRecord, see TSSTManagedGroup.m) describing every
  entry, without touching any \c NSManagedObject / MOC. Safe to call from
  any thread. \c password may be nil; if the archive needs one and none is
@@ -93,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Applies a scan record produced by \c +scanRecordForFileURL:name:password:errors:
  to this (already-inserted) managed object: inserts the child entities,
- reuses the record's already-opened archive (no re-parsing), and sets
+ reuses the record's already-built backend (no re-parsing), and sets
  password / solidDirectory as needed. Must be called on the MOC's queue.
  */
 - (void)applyScanRecord:(id)record;

@@ -1025,7 +1025,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			if([(TSSTManagedArchive *)selectedGroup quicklookCompatible])
 			{
 				NSInteger coverIndex = [selectedPage.index integerValue];
-				NSString * coverName = [(XADArchive *)[selectedGroup instance] nameOfEntry: coverIndex];
+				NSString * coverName = [(TSSTManagedArchive *)selectedGroup nameOfEntryAtIndex: coverIndex];
 				[UKXattrMetadataStore setString: coverName
 										 forKey: SCQuickLookCoverName
 										 atPath: archivePath
