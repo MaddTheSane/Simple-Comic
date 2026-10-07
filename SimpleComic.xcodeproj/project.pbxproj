@@ -96,7 +96,11 @@
 		6323E4DB2861400B007F240B /* OCRFind.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D72861400B007F240B /* OCRFind.m */; };
 		6323E4DC2861400B007F240B /* OCRFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D82861400B007F240B /* OCRFindViewController.m */; };
 		63A57A152872683F00D0A88B /* OCRFindViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63A57A172872683F00D0A88B /* OCRFindViewController.xib */; };
+		63AA00FB28610012007F240B /* TSSTPreviewPageSelectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */; };
+		63AA00F928610013007F240B /* cb7zoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA00F828610013007F240B /* cb7zoo */; };
+		63AA00F628610014007F240B /* TSSTCb7FixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */; };
 		63AA000128610001007F240B /* TSSTImageUtilitiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */; };
+		63AA00FE28610010007F240B /* TSSTUTIDeclarationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */; };
 		63BA27152874BEF100E540C0 /* SimpleComic.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 63BA27052874BEF100E540C0 /* SimpleComic.sdef */; };
 		63E5A9072870D1C200A9FFD5 /* OCRRangeEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5A9062870D1C200A9FFD5 /* OCRRangeEnumerator.m */; };
 		77C8280E06725ACE000B614F /* SimpleComicAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C8280C06725ACE000B614F /* SimpleComicAppDelegate.m */; };
@@ -433,6 +437,7 @@
 		55E21B1123FBCCF900D53932 /* No Sign.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "No Sign.xcconfig"; path = "Classes/No Sign.xcconfig"; sourceTree = SOURCE_ROOT; };
 		55ED4ADA2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSecureUnarchiveFromDataTransformer.swift; sourceTree = "<group>"; };
 		55EE6BAF2945CA5B00C1AAE7 /* QuickComic Preview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "QuickComic Preview.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AA00FC28610011007F240B /* TSSTPreviewPageSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSTPreviewPageSelection.h; sourceTree = "<group>"; };
 		55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewProvider.swift; sourceTree = "<group>"; };
 		55EE6BB92945CA5B00C1AAE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		55EE6BBA2945CA5B00C1AAE7 /* QuickComic_Preview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickComic_Preview.entitlements; sourceTree = "<group>"; };
@@ -460,7 +465,11 @@
 		6323E4DA2861400B007F240B /* OCRFind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRFind.h; sourceTree = "<group>"; };
 		638E5C3C2832138400BFDAA4 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		63A57A162872683F00D0A88B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OCRFindViewController.xib; sourceTree = "<group>"; };
+		63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPreviewPageSelectionTests.m; sourceTree = "<group>"; };
+		63AA00F828610013007F240B /* cb7zoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fixtures/cb7zoo; sourceTree = "<group>"; };
+		63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCb7FixtureTests.m; sourceTree = "<group>"; };
 		63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTImageUtilitiesTests.m; sourceTree = "<group>"; };
+		63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTUTIDeclarationTests.m; sourceTree = "<group>"; };
 		63BA27052874BEF100E540C0 /* SimpleComic.sdef */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SimpleComic.sdef; sourceTree = SOURCE_ROOT; };
 		63BF686A28590BF6005962F4 /* OCR Unit Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OCR Unit Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E5A8F62870D1C200A9FFD5 /* OCRRangeEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRRangeEnumerator.h; sourceTree = "<group>"; };
@@ -795,6 +804,7 @@
 		55EE6BB12945CA5B00C1AAE7 /* QuickComic Preview */ = {
 			isa = PBXGroup;
 			children = (
+				63AA00FC28610011007F240B /* TSSTPreviewPageSelection.h */,
 				55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */,
 				55EE6BB92945CA5B00C1AAE7 /* Info.plist */,
 				55EE6BBA2945CA5B00C1AAE7 /* QuickComic_Preview.entitlements */,
@@ -832,6 +842,10 @@
 		63BF687328590C61005962F4 /* OCR Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
+				63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */,
+				63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */,
+				63AA00F828610013007F240B /* cb7zoo */,
+				63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */,
 				63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */,
 				6323E4C228613F83007F240B /* OCR_NSStringTests.m */,
 			);
@@ -940,6 +954,7 @@
 			buildPhases = (
 				63BF686628590BF6005962F4 /* Sources */,
 				63BF686728590BF6005962F4 /* Frameworks */,
+				63AA00F728610013007F240B /* Resources */,
 			);
 			buildRules = (
 			);
@@ -1214,6 +1229,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		63AA00F728610013007F240B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63AA00F928610013007F240B /* cb7zoo in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1259,6 +1282,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63AA00FE28610010007F240B /* TSSTUTIDeclarationTests.m in Sources */,
+				63AA00FB28610012007F240B /* TSSTPreviewPageSelectionTests.m in Sources */,
+				63AA00F628610014007F240B /* TSSTCb7FixtureTests.m in Sources */,
 				63AA000128610001007F240B /* TSSTImageUtilitiesTests.m in Sources */,
 				6323E4D228613F83007F240B /* OCR_NSStringTests.m in Sources */,
 			);

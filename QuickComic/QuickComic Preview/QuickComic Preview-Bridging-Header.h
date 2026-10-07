@@ -3,3 +3,4 @@
 //
 
 #import "TSSTSortDescriptor.h"
+#import "TSSTPreviewPageSelection.h"

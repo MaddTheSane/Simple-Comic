@@ -48,17 +48,11 @@ class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 		
 		let reply = QLPreviewReply(forPDFWithPageSize: pdfSize) { replyToUpdate in
 			let document = PDFDocument()
-			for (index1, list) in fList.enumerated().filter({ (val, _) in
-				// Only load so many pages.
-				if val >= 25 {
-					return true
-					// and the last page, as suggested by a user.
-				} else if val == fList.count - 1 {
-					return true
-				}
-				
-				return false
-			}) {
+			// Only load so many pages, plus the last one. Pages are appended: the old code
+			// inserted at the entry's offset in the archive, which is past the end of the
+			// (still short) document and made PDFDocument throw, crashing the extension.
+			for offset in TSSTPreviewPageOffsets(UInt(fList.count), 25) {
+				let list = fList[offset.intValue]
 				guard let index = list["index"] as? Int,
 					  let fileData = try? archive.contents(ofEntry: index),
 					  let image = NSImage(data: fileData),
@@ -66,10 +60,10 @@ class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 					let badPage = PDFPage()
 					badPage.setBounds(NSRect(origin: .zero, size: pdfSize), for: .mediaBox)
 					//TODO: tell the user that generating the page failed?
-					document.insert(badPage, at: index1)
+					document.insert(badPage, at: document.pageCount)
 					continue
 				}
-				document.insert(page, at: index1)
+				document.insert(page, at: document.pageCount)
 			}
 			
 			return document
