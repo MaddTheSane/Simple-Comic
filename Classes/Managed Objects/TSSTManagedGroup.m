@@ -681,6 +681,33 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 @end
 
 
+/// The real thing: a modal open panel asking the user to pick the folder.
+@interface TSSTOpenPanelFolderAccessProvider : NSObject <TSSTFolderAccessProvider>
+@end
+
+@implementation TSSTOpenPanelFolderAccessProvider
+- (nullable NSURL *)folderAccessGrantForFolderURL:(NSURL *)folderURL message:(NSString *)message
+{
+#if DEBUG
+	// Never put a modal panel in front of a test run: decline instead.
+	if (NSClassFromString(@"XCTestCase") != Nil) { return nil; }
+#endif
+	NSOpenPanel *panel = [NSOpenPanel openPanel];
+	panel.canChooseDirectories = YES;
+	panel.canChooseFiles = NO;
+	panel.allowsMultipleSelection = NO;
+	panel.directoryURL = folderURL;
+	panel.prompt = NSLocalizedString(@"Grant Access", @"folder access panel button");
+	panel.message = message;
+	return [panel runModal] == NSModalResponseOK ? panel.URL : nil;
+}
+@end
+
+@interface TSSTManagedArchive ()
++ (void)runOnMainThreadSynchronously:(void (^)(void))block;
++ (nullable NSArray<id<TSSTArchiveByteSource>> *)openVolumeSourcesForURLs:(NSArray<NSURL *> *)volumeURLs accessingFolder:(nullable NSURL *)folder failedURL:(NSURL * _Nullable * _Nonnull)failedURL error:(NSError **)error;
+@end
+
 @implementation TSSTManagedArchive
 
 + (NSArray *)archiveExtensions
@@ -813,6 +840,165 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 	else { dispatch_sync(dispatch_get_main_queue(), block); }
 }
 
+#pragma mark - Folder access (sandbox)
+
+static NSString * const TSSTFolderAccessBookmarksKey = @"TSSTFolderAccessBookmarks";
+static id<TSSTFolderAccessProvider> sFolderAccessProvider = nil;
+static NSUserDefaults *sFolderBookmarkDefaults = nil;
+static NSMutableDictionary<NSString *, NSURL *> *sGrantedFolders = nil;   // this session's grants
+static NSMutableSet<NSString *> *sDeclinedFolders = nil;                  // this session's cancels
+static NSObject *sFolderAccessLock = nil;
+
++ (void)initialize
+{
+	if (self == [TSSTManagedArchive class])
+	{
+		sFolderAccessLock = [NSObject new];
+		sGrantedFolders = [NSMutableDictionary dictionary];
+		sDeclinedFolders = [NSMutableSet set];
+	}
+}
+
++ (nullable id<TSSTFolderAccessProvider>)folderAccessProvider { @synchronized (sFolderAccessLock) { return sFolderAccessProvider; } }
++ (void)setFolderAccessProvider:(nullable id<TSSTFolderAccessProvider>)provider { @synchronized (sFolderAccessLock) { sFolderAccessProvider = provider; } }
++ (void)setFolderBookmarkDefaults:(nullable NSUserDefaults *)defaults { @synchronized (sFolderAccessLock) { sFolderBookmarkDefaults = defaults; } }
++ (void)resetFolderAccessSessionState
+{
+	@synchronized (sFolderAccessLock) { [sGrantedFolders removeAllObjects]; [sDeclinedFolders removeAllObjects]; }
+}
+
++ (NSUserDefaults *)folderBookmarkDefaults { @synchronized (sFolderAccessLock) { return sFolderBookmarkDefaults ?: [NSUserDefaults standardUserDefaults]; } }
+
++ (BOOL)storeAccessBookmarkForFolderURL:(NSURL *)folderURL
+{
+	NSData *bookmark = [folderURL bookmarkDataWithOptions: NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys: nil relativeToURL: nil error: NULL];
+	if (!bookmark) { return NO; }
+	NSUserDefaults *defaults = [self folderBookmarkDefaults];
+	NSMutableDictionary *all = [([defaults dictionaryForKey: TSSTFolderAccessBookmarksKey] ?: @{}) mutableCopy];
+	all[folderURL.URLByStandardizingPath.path] = bookmark;
+	[defaults setObject: all forKey: TSSTFolderAccessBookmarksKey];
+	return YES;
+}
+
++ (nullable NSURL *)resolvedAccessBookmarkForFolderURL:(NSURL *)folderURL
+{
+	NSString *key = folderURL.URLByStandardizingPath.path;
+	NSData *bookmark = [[self folderBookmarkDefaults] dictionaryForKey: TSSTFolderAccessBookmarksKey][key];
+	if (![bookmark isKindOfClass: [NSData class]]) { return nil; }
+	BOOL stale = NO;
+	NSURL *resolved = [NSURL URLByResolvingBookmarkData: bookmark options: NSURLBookmarkResolutionWithSecurityScope relativeToURL: nil bookmarkDataIsStale: &stale error: NULL];
+	if (resolved && stale)
+	{
+		BOOL started = [resolved startAccessingSecurityScopedResource];
+		[self storeAccessBookmarkForFolderURL: resolved];
+		if (started) { [resolved stopAccessingSecurityScopedResource]; }
+	}
+	return resolved;
+}
+
+/// A sibling the sandbox refuses: the file is there but open() fails with a
+/// permission error (as opposed to being genuinely absent).
+static BOOL TSSTFileIsPermissionBlocked(NSURL *url)
+{
+	if (![[NSFileManager defaultManager] fileExistsAtPath: url.path]) { return NO; }
+	int fd = open(url.path.fileSystemRepresentation, O_RDONLY);
+	if (fd >= 0) { close(fd); return NO; }
+	return errno == EPERM || errno == EACCES;
+}
+
+/// Asks (once per folder per session) for access to \c folderURL through the
+/// provider, always on the main thread and holding no lock while it runs.
+/// Returns the granted URL, or nil when declined (remembered until relaunch).
++ (nullable NSURL *)requestAccessToFolderURL:(NSURL *)folderURL archiveName:(NSString *)archiveName
+{
+	NSString *key = folderURL.URLByStandardizingPath.path;
+	__block NSURL *granted = nil;
+	[self runOnMainThreadSynchronously: ^{
+		@synchronized (sFolderAccessLock)
+		{
+			// Concurrent opens queue up on the main thread: later ones reuse the first answer.
+			if ([sDeclinedFolders containsObject: key]) { return; }
+			granted = sGrantedFolders[key];
+		}
+		if (granted) { return; }
+		NSString *message = [NSString stringWithFormat: NSLocalizedString(@"Simple Comic needs access to this folder to read the other volumes of the multi-part archive “%@”.", @"folder access panel message"), archiveName];
+		id<TSSTFolderAccessProvider> provider = [self folderAccessProvider] ?: [TSSTOpenPanelFolderAccessProvider new];
+		granted = [provider folderAccessGrantForFolderURL: folderURL message: message];
+		@synchronized (sFolderAccessLock)
+		{
+			if (granted) { sGrantedFolders[key] = granted; } else { [sDeclinedFolders addObject: key]; }
+		}
+		if (granted)
+		{
+			BOOL started = [granted startAccessingSecurityScopedResource];
+			[self storeAccessBookmarkForFolderURL: granted];
+			if (started) { [granted stopAccessingSecurityScopedResource]; }
+		}
+	}];
+	return granted;
+}
+
+/// Opens every volume, with \c folder (when given) accessed for the duration
+/// (the open file descriptors outlive the scope). On failure sets
+/// \c failedURL to the first volume that could not be opened.
++ (nullable NSArray<id<TSSTArchiveByteSource>> *)openVolumeSourcesForURLs:(NSArray<NSURL *> *)volumeURLs accessingFolder:(nullable NSURL *)folder failedURL:(NSURL * _Nullable * _Nonnull)failedURL error:(NSError **)error
+{
+	BOOL started = [folder startAccessingSecurityScopedResource];
+	NSMutableArray<id<TSSTArchiveByteSource>> *sources = [NSMutableArray arrayWithCapacity: volumeURLs.count];
+	NSArray<id<TSSTArchiveByteSource>> *result = sources;
+	for (NSURL *url in volumeURLs)
+	{
+		NSError *openError = nil;
+		id<TSSTArchiveByteSource> volumeSource = [TSSTFileByteSource sourceWithFileURL: url error: &openError];
+		if (!volumeSource)
+		{
+			*failedURL = url;
+			if (error)
+			{
+				NSMutableDictionary *info = [NSMutableDictionary dictionaryWithObject: [NSString stringWithFormat: NSLocalizedString(@"A volume of this multi-volume archive could not be opened: “%@”. Keep all of its parts together in one folder.", @"missing RAR volume"), url.lastPathComponent] forKey: NSLocalizedDescriptionKey];
+				info[NSFilePathErrorKey] = url.path;
+				if (openError) { info[NSUnderlyingErrorKey] = openError; }
+				*error = [NSError errorWithDomain: TSSTXADArchiveSourceErrorDomain code: TSSTXADArchiveSourceErrorMissingVolume userInfo: info];
+			}
+			result = nil;
+			break;
+		}
+		[sources addObject: volumeSource];
+	}
+	if (started) { [folder stopAccessingSecurityScopedResource]; }
+	return result;
+}
+
+/// Opens every volume of a multi-volume set. A sandboxed app is granted
+/// only the file the user picked, so a sibling may fail to open until its
+/// folder is accessed. In order: the folder as-is (harmless when the URL
+/// isn't security-scoped), a stored bookmark grant, and -- when a volume
+/// exists but is permission-blocked -- one request to the folder access
+/// provider (an open panel by default; remembered per folder). Returns nil
+/// with a TSSTXADArchiveSourceErrorMissingVolume error naming the first
+/// volume that still can't be opened.
++ (nullable NSArray<id<TSSTArchiveByteSource>> *)openVolumeSourcesForURLs:(NSArray<NSURL *> *)volumeURLs error:(NSError **)error
+{
+	NSURL *folder = [volumeURLs.firstObject URLByDeletingLastPathComponent];
+	NSURL *failedURL = nil;
+	NSArray<id<TSSTArchiveByteSource>> *result = [self openVolumeSourcesForURLs: volumeURLs accessingFolder: folder failedURL: &failedURL error: error];
+	if (result || !failedURL || !TSSTFileIsPermissionBlocked(failedURL)) { return result; }
+
+	NSURL *bookmarked = [self resolvedAccessBookmarkForFolderURL: folder];
+	if (bookmarked)
+	{
+		result = [self openVolumeSourcesForURLs: volumeURLs accessingFolder: bookmarked failedURL: &failedURL error: error];
+		if (result || !failedURL || !TSSTFileIsPermissionBlocked(failedURL)) { return result; }
+	}
+
+	NSURL *granted = [self requestAccessToFolderURL: folder archiveName: volumeURLs.firstObject.lastPathComponent];
+	if (granted)
+	{
+		result = [self openVolumeSourcesForURLs: volumeURLs accessingFolder: granted failedURL: &failedURL error: error];
+	}
+	return result;
+}
+
 /// The byte-source stack every backend (zip index, XAD source) reads
 /// through: file -> [simulated slow link, DEBUG SC_SIMULATE_LINK=<profile>,
 /// so slow-volume behaviour can be checked against a local file] ->
@@ -871,6 +1057,9 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 }
 
 /// Builds a streaming TSSTXADArchiveSource over the same byte-source stack.
+/// Returns nil (with TSSTXADArchiveSourceErrorMissingVolume) when a volume
+/// of a multi-volume set can't be opened, so callers can fall back to the
+/// XADArchive path and tell the user what is missing.
 + (nullable TSSTXADArchiveSource *)buildXADSourceForFileURL:(NSURL *)fileURL
 														 name:(NSString *)name
 													 password:(nullable NSString *)password
@@ -879,11 +1068,25 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 														error:(NSError **)error
 {
 	if (cachingSourceOut) { *cachingSourceOut = nil; }
-	id<TSSTArchiveByteSource> fileSource = [TSSTFileByteSource sourceWithFileURL: fileURL error: error];
-	if (!fileSource) { return nil; }
+	// A multi-volume RAR set reads as one concatenated byte space, so the
+	// link simulation, cache and streamer treat it like a single file.
+	NSArray<NSURL *> *volumeURLs = [TSSTXADArchiveSource volumeURLsForFileURL: fileURL];
+	NSArray<id<TSSTArchiveByteSource>> *fileSources;
+	if (volumeURLs)
+	{
+		fileSources = [self openVolumeSourcesForURLs: volumeURLs error: error];
+	}
+	else
+	{
+		id<TSSTArchiveByteSource> single = [TSSTFileByteSource sourceWithFileURL: fileURL error: error];
+		fileSources = single ? @[single] : nil;
+	}
+	if (!fileSources) { return nil; }
+	TSSTVolumeSetByteSource *volumeSet = volumeURLs ? [[TSSTVolumeSetByteSource alloc] initWithVolumeSources: fileSources] : nil;
+	id<TSSTArchiveByteSource> fileSource = volumeSet ?: fileSources.firstObject;
 
 	id<TSSTArchiveByteSource> source = [self byteSourceStackOverFile: fileSource fileURL: fileURL cachingSource: cachingSourceOut];
-	TSSTXADArchiveSource *xadSource = [[TSSTXADArchiveSource alloc] initWithByteSource: source name: name path: fileURL.path password: password passwordProvider: passwordProvider error: error];
+	TSSTXADArchiveSource *xadSource = [[TSSTXADArchiveSource alloc] initWithByteSource: source volumeLengths: volumeSet.volumeLengths name: name path: fileURL.path password: password passwordProvider: passwordProvider error: error];
 	if (!xadSource && cachingSourceOut && *cachingSourceOut)
 	{
 		[*cachingSourceOut invalidate];
@@ -1516,6 +1719,17 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 																			error: &buildError];
 	if (!source)
 	{
+		if ([buildError.domain isEqualToString: TSSTXADArchiveSourceErrorDomain] && buildError.code == TSSTXADArchiveSourceErrorMissingVolume)
+		{
+			// A sibling volume can't be read (typically sandbox access):
+			// list what XADArchive can from the file itself, and tell the
+			// user what is missing.
+			NSMutableArray<NSError *> *errors = [NSMutableArray arrayWithObject: buildError];
+			TSSTArchiveScanRecord *record = [TSSTManagedArchive scanRecordForFileURL: fileURL name: name password: password zipIndex: nil cachingSource: nil errors: errors];
+			record.scanErrors = errors;
+			perBatch(record, record.children, YES, nil);
+			return;
+		}
 		perBatch(nil, @[], YES, buildError ?: [NSError errorWithDomain: TSSTXADArchiveSourceErrorDomain code: TSSTXADArchiveSourceErrorCannotOpen userInfo: nil]);
 		return;
 	}
