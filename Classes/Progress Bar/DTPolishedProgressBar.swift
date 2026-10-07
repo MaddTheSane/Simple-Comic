@@ -37,19 +37,19 @@ private var barBackgroundColor: NSColor {
 	}
 }
 private var barProgressColor: NSColor {
-	if #available(OSX 10.14, *) {
+	if #available(OSX 10.15, *) {
+		// The stock selected-control colour is nearly white-on-white in
+		// light mode, so darken it there; dark mode is unchanged.
+		return NSColor(name: nil) { appearance in
+			let base = NSColor.selectedControlColor
+			guard appearance.bestMatch(from: [.darkAqua, .aqua]) == .aqua else { return base }
+			return base.blended(withFraction: 0.4, of: .black) ?? base
+		}
+	} else if #available(OSX 10.14, *) {
 		return NSColor.selectedControlColor
 	} else {
 		return NSColor(deviceRed: 0.44, green: 0.44, blue: 0.44, alpha: 1)
 	}
-}
-/// Colour for the "buffered" band,
-/// visually between the empty bar and the filled/progress bar, the way a
-/// video player's buffered range sits between its track and its played
-/// portion. Derived from the other two so it stays consistent with them
-/// in both light and dark mode instead of being a fixed color.
-private var barBufferedColor: NSColor {
-	return barBackgroundColor.blended(withFraction: 0.45, of: barProgressColor) ?? barBackgroundColor
 }
 private var borderColor: NSColor {
 	if #available(OSX 10.14, *) {
@@ -135,10 +135,10 @@ textStyle: Dictionary of string attributes.
 	}
 
 	/// Page positions (0-based, in the arranged order) whose bytes are
-	/// already cached by a background archive streamer -- drawn as a
-	/// "buffered" band between the empty and filled portions of the bar,
-	/// like a video player's buffered range. Empty (the default) when no
-	/// archive in the session streams, which hides the band entirely.
+	/// already cached by a background archive streamer -- drawn in the
+	/// progress colour, the rest of the bar being empty track. Empty (the
+	/// default) when no archive in the session streams, in which case every
+	/// page counts as loaded.
 	@objc dynamic var bufferedIndexes: IndexSet = IndexSet() {
 		didSet {
 			needsDisplay = true
@@ -202,21 +202,21 @@ textStyle: Dictionary of string attributes.
 		var fillRect = barRect
 		fillRect.fill()
 
-		// Draw the buffered band under the progress fill drawn below. Empty bufferedIndexes (local files,
-		// nothing streaming) draws nothing.
-		if !bufferedIndexes.isEmpty {
-			barBufferedColor.set()
-			for run in DTPolishedProgressBar.bufferedFractionalRuns(indexes: bufferedIndexes, total: maxValue) {
-				var segment = barRect
-				if leftToRight {
-					segment.origin.x = round(bounds2.width * run.start)
-					segment.size.width = round(bounds2.width * run.end) - segment.origin.x
-				} else {
-					segment.origin.x = round(bounds2.width * (1 - run.end))
-					segment.size.width = round(bounds2.width * (1 - run.start)) - segment.origin.x
-				}
-				segment.fill()
+		// The bar shows what is loaded: buffered pages in the progress
+		// colour, the rest as empty track. Position is the marker alone.
+		// With nothing streaming (local files) every page counts as loaded.
+		barProgressColor.set()
+		let loaded = bufferedIndexes.isEmpty ? IndexSet(integersIn: 0..<max(maxValue, 0)) : bufferedIndexes
+		for run in DTPolishedProgressBar.bufferedFractionalRuns(indexes: loaded, total: maxValue) {
+			var segment = barRect
+			if leftToRight {
+				segment.origin.x = round(bounds2.width * run.start)
+				segment.size.width = round(bounds2.width * run.end) - segment.origin.x
+			} else {
+				segment.origin.x = round(bounds2.width * (1 - run.end))
+				segment.size.width = round(bounds2.width * (1 - run.start)) - segment.origin.x
 			}
+			segment.fill()
 		}
 
 		// Determine label positions and progress rect size+position
@@ -239,10 +239,6 @@ textStyle: Dictionary of string attributes.
 		
 		let leftSize = leftString.size(withAttributes: numberStyle)
 		let rightSize = rightString.size(withAttributes: numberStyle)
-		
-		// Draw progress
-		barProgressColor.set()
-		fillRect.fill()
 		
 		// Draw indicator
 		if #available(OSX 10.14, *) {

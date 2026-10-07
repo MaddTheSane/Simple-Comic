@@ -29,6 +29,7 @@
 		A30798F539FE46CDBD08C86D /* TSSTByteSourceHandleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 551113E49626444D9D30867C /* TSSTByteSourceHandleTests.m */; };
 		522A1C3A1B3441A6AE423B4B /* TSSTXADArchiveSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08B50E4BEF6348EBB37D1A1D /* TSSTXADArchiveSourceTests.m */; };
 		7952091545F3A69EAB2D2126 /* TSSTTestFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = C04C3370B422BB014E5B6929 /* TSSTTestFixtures.m */; };
+		C0FFEE0000000000000000A1 /* DTPolishedProgressBarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0FFEE0000000000000000A2 /* DTPolishedProgressBarTests.m */; };
 		9691EFED4D4F4560E6D91128 /* TSSTFileSetByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D12D30B6E317162571303B9D /* TSSTFileSetByteSource.m */; };
 		01D2C7276C9F5F72951B57D0 /* TSSTFolderStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 39777B2912D5130554FC2AA9 /* TSSTFolderStreamingTests.m */; };
 		2E5BE968B74F8DE7888C9FBF /* TSSTPublicDomainStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00221E0ED7F9F78D78157C57 /* TSSTPublicDomainStreamingTests.m */; };
@@ -407,6 +408,7 @@
 		08B50E4BEF6348EBB37D1A1D /* TSSTXADArchiveSourceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTXADArchiveSourceTests.m; sourceTree = "<group>"; };
 		C04C3370B422BB014E5B6929 /* TSSTTestFixtures.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSSTTestFixtures.m; sourceTree = "<group>"; };
 		C08E646FC0F6D044C3A59744 /* TSSTTestFixtures.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSSTTestFixtures.h; sourceTree = "<group>"; };
+		C0FFEE0000000000000000A2 /* DTPolishedProgressBarTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTPolishedProgressBarTests.m; sourceTree = "<group>"; };
 		1BC67467BE69F0A4F0C66860 /* TSSTFileSetByteSource.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSSTFileSetByteSource.h; sourceTree = "<group>"; };
 		D12D30B6E317162571303B9D /* TSSTFileSetByteSource.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSSTFileSetByteSource.m; sourceTree = "<group>"; };
 		39777B2912D5130554FC2AA9 /* TSSTFolderStreamingTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSSTFolderStreamingTests.m; sourceTree = "<group>"; };
@@ -927,6 +929,7 @@
 				08B50E4BEF6348EBB37D1A1D /* TSSTXADArchiveSourceTests.m */,
 				C08E646FC0F6D044C3A59744 /* TSSTTestFixtures.h */,
 				C04C3370B422BB014E5B6929 /* TSSTTestFixtures.m */,
+				C0FFEE0000000000000000A2 /* DTPolishedProgressBarTests.m */,
 				00221E0ED7F9F78D78157C57 /* TSSTPublicDomainStreamingTests.m */,
 				39777B2912D5130554FC2AA9 /* TSSTFolderStreamingTests.m */,
 				1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */,
@@ -1370,6 +1373,7 @@
 				A30798F539FE46CDBD08C86D /* TSSTByteSourceHandleTests.m in Sources */,
 				522A1C3A1B3441A6AE423B4B /* TSSTXADArchiveSourceTests.m in Sources */,
 				7952091545F3A69EAB2D2126 /* TSSTTestFixtures.m in Sources */,
+				C0FFEE0000000000000000A1 /* DTPolishedProgressBarTests.m in Sources */,
 				2E5BE968B74F8DE7888C9FBF /* TSSTPublicDomainStreamingTests.m in Sources */,
 				01D2C7276C9F5F72951B57D0 /* TSSTFolderStreamingTests.m in Sources */,
 				1A2B3C4D50014A1AA1000008 /* TSSTArchiveStreamingTests.m in Sources */,

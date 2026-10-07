@@ -41,6 +41,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)pixelSizeFromImageData:(NSData *)imageData size:(NSSize *)outSize;
 @property (readonly, copy) NSImage *thumbnail;
 - (nullable NSData *)prepThumbnail;
+/// Thread-safe (ImageIO header downscale, no Core Data writes) thumbnail
+/// encoding of raw image bytes, max 256px. nil if undecodable.
++ (nullable NSData *)thumbnailDataFromImageData:(nullable NSData *)imageData;
+/// Off-main-safe render of this page's thumbnail from its (local) bytes.
+/// Never touches managed attributes; the caller stores the result on main.
+- (nullable NSData *)renderThumbnailDataOffMain;
 @property (readonly, copy, nullable) NSData *pageData;
 @property (readonly, copy) NSImage *textPage;
 @property (readonly, copy, nullable) NSImage *pageImage;

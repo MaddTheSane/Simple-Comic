@@ -216,6 +216,36 @@ static NSSize monospaceCharacterSize;
 	return thumbnail;
 }
 
++ (NSData *)thumbnailDataFromImageData:(NSData *)imageData
+{
+	if (!imageData) { return nil; }
+	CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
+	if (!source) { return nil; }
+	NSDictionary * options = @{ (id)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
+								(id)kCGImageSourceCreateThumbnailWithTransform: @YES,
+								(id)kCGImageSourceThumbnailMaxPixelSize: @256 };
+	CGImageRef image = CGImageSourceCreateThumbnailAtIndex(source, 0, (__bridge CFDictionaryRef)options);
+	CFRelease(source);
+	if (!image) { return nil; }
+	NSMutableData * output = [NSMutableData data];
+	CGImageDestinationRef destination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)output, (__bridge CFStringRef)UTTypePNG.identifier, 1, NULL);
+	if (destination)
+	{
+		CGImageDestinationAddImage(destination, image, NULL);
+		if (!CGImageDestinationFinalize(destination)) { output = nil; }
+		CFRelease(destination);
+	}
+	else { output = nil; }
+	CGImageRelease(image);
+	return output;
+}
+
+- (NSData *)renderThumbnailDataOffMain
+{
+	if (self.text) { return nil; }
+	return [TSSTPage thumbnailDataFromImageData: [self pageData]];
+}
+
 - (NSData *)prepThumbnail
 {
 	[thumbLock lock];
