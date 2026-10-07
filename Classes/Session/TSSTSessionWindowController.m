@@ -105,6 +105,12 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	/** Coalesces TSSTArchiveCacheProgressNotification bursts into at most
 	    one -refreshBufferedIndexes call per ~250ms. */
 	BOOL bufferedIndexesRefreshScheduled;
+
+	/** Page (and its arranged index) the progress-bar hover panel is on;
+	    off-main thumbnail renders only update the panel if still this page. */
+	TSSTPage * infoPanelPage;
+	NSInteger infoPanelPageIndex;
+	NSMutableSet<NSManagedObjectID *> * infoPanelThumbnailsInFlight;
 }
 
 @synthesize pageTurn, pageSortDescriptor;
@@ -259,6 +265,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		}
 		strongSelf->bufferedIndexesRefreshScheduled = NO;
 		[strongSelf refreshBufferedIndexes];
+		[strongSelf upgradeInfoPanelPlaceholderIfPossible];
 	});
 }
 
@@ -646,23 +653,139 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
+/// YES when -[TSSTPage thumbnail] can be produced without a network read:
+/// the thumbnail is already stored, or the page is text / not in a
+/// streaming archive / its bytes are already cached.
+- (BOOL)thumbnailIsAvailableWithoutNetwork:(TSSTPage *)page
+{
+	if (page.thumbnailData || page.text)
+	{
+		return YES;
+	}
+	TSSTManagedGroup * group = page.group;
+	if (![group isKindOfClass: [TSSTManagedGroup class]] || page.index == nil)
+	{
+		return YES;
+	}
+	return [group isEntryIndexCached: page.index.integerValue];
+}
+
+/// Subtle "still loading" stand-in: page name/number over a gray card.
+- (NSImage *)infoPanelPlaceholderForPage:(TSSTPage *)page index:(NSInteger)index
+{
+	NSString * label = [NSString stringWithFormat: @"%ld", (long)index + 1];
+	NSString * name = page.name.length ? page.name : @"";
+	NSSize size = NSMakeSize(96, 128);
+	return [NSImage imageWithSize: size flipped: NO drawingHandler: ^BOOL(NSRect rect) {
+		[[NSColor colorWithWhite: 0.5 alpha: 0.25] setFill];
+		NSRectFillUsingOperation(rect, NSCompositingOperationSourceOver);
+		NSMutableParagraphStyle * style = [NSMutableParagraphStyle new];
+		style.alignment = NSTextAlignmentCenter;
+		style.lineBreakMode = NSLineBreakByTruncatingMiddle;
+		NSDictionary * big = @{ NSFontAttributeName: [NSFont systemFontOfSize: 28 weight: NSFontWeightLight],
+								NSForegroundColorAttributeName: NSColor.secondaryLabelColor, NSParagraphStyleAttributeName: style };
+		NSDictionary * small = @{ NSFontAttributeName: [NSFont systemFontOfSize: 10],
+								  NSForegroundColorAttributeName: NSColor.tertiaryLabelColor, NSParagraphStyleAttributeName: style };
+		[label drawInRect: NSMakeRect(0, 62, size.width, 36) withAttributes: big];
+		[name drawInRect: NSMakeRect(4, 40, size.width - 8, 14) withAttributes: small];
+		[@"Loading\u2026" drawInRect: NSMakeRect(4, 24, size.width - 8, 14) withAttributes: small];
+		return YES;
+	}];
+}
+
+- (void)setInfoPanelThumbnail:(nullable NSImage *)thumb
+{
+	NSSize thumbSize = thumb ? sizeConstrainedByDimension([thumb size], 128) : NSMakeSize(96, 128);
+	[infoPicture setFrameSize: thumbSize];
+	[infoPicture setImage: thumb];
+}
+
+/// Renders (once per page) the thumbnail of a page whose bytes are local,
+/// off-main and unconditionally -- a sweep that has already moved on must
+/// still leave the thumbnail stored so the next hover is instant. The
+/// managed attribute is written on main; the panel is only updated if the
+/// hover is still on this page.
+- (void)renderThumbnailForPage:(TSSTPage *)page index:(NSInteger)index
+{
+	if (!infoPanelThumbnailsInFlight)
+	{
+		infoPanelThumbnailsInFlight = [NSMutableSet set];
+	}
+	NSManagedObjectID * key = page.objectID;
+	if ([infoPanelThumbnailsInFlight containsObject: key])
+	{
+		return;
+	}
+	[infoPanelThumbnailsInFlight addObject: key];
+	__weak TSSTSessionWindowController * weakSelf = self;
+	__block NSData * data = nil;
+	[[TSSTPageDecodeCache sharedCache] runOnDecodeQueueWhileCurrent: ^BOOL{ return YES; } work: ^{
+		data = [page renderThumbnailDataOffMain];
+	} completion: ^(BOOL ran) {
+		TSSTSessionWindowController * strongSelf = weakSelf;
+		if (!strongSelf) { return; }
+		[strongSelf->infoPanelThumbnailsInFlight removeObject: key];
+		if (!data) { return; }
+		if (!page.thumbnailData) { page.thumbnailData = data; }
+		if (strongSelf->infoPanelPage == page)
+		{
+			[strongSelf setInfoPanelThumbnail: [[NSImage alloc] initWithData: page.thumbnailData]];
+		}
+	}];
+}
+
+/// Upgrades a placeholder to the real thumbnail once the hovered page's
+/// bytes have arrived (called on streamer progress). Never fetches.
+- (void)upgradeInfoPanelPlaceholderIfPossible
+{
+	TSSTPage * page = infoPanelPage;
+	if (!page || page.thumbnailData || ![self thumbnailIsAvailableWithoutNetwork: page])
+	{
+		return;
+	}
+	[self renderThumbnailForPage: page index: infoPanelPageIndex];
+}
+
+/// Fills the info panel's picture for page `index` without blocking the
+/// main thread or steering the streamer: a stored thumbnail is shown
+/// directly; otherwise a placeholder, plus an off-main render as soon as
+/// the bytes are local (immediately, or on a later streamer progress tick).
+- (void)loadInfoPanelThumbnailForPageIndex:(NSInteger)index
+{
+	NSArray * pages = [pageController arrangedObjects];
+	if (index < 0 || (NSUInteger)index >= pages.count)
+	{
+		return; // stale/out-of-range hover (e.g. archive still scanning)
+	}
+	TSSTPage * page = pages[index];
+	infoPanelPage = page;
+	infoPanelPageIndex = index;
+	NSImage * thumb = page.thumbnailData ? [[NSImage alloc] initWithData: page.thumbnailData] : nil;
+	if (!thumb)
+	{
+		if (page.text)
+		{
+			thumb = page.thumbnail; // text pages render on main, as before
+		}
+		else if ([self thumbnailIsAvailableWithoutNetwork: page])
+		{
+			[self renderThumbnailForPage: page index: index];
+		}
+	}
+	[self setInfoPanelThumbnail: thumb ?: [self infoPanelPlaceholderForPage: page index: index]];
+}
+
 - (void)infoPanelSetupAtPoint:(NSPoint)point
 {
 	NSPoint cursorPoint;
-	NSInteger index;
 	DTPolishedProgressBar * bar = progressBar;
 	
 	[[infoWindow contentView] setBordered: NO];
 	point.y = (NSMaxY([bar frame]) - 6);
 	
 	cursorPoint = [bar convertPoint: point fromView: nil];
-	index = [bar indexForPoint: cursorPoint];
-	
-	NSImage * thumb = [self imageForPageAtIndex: index];
-	NSSize thumbSize = sizeConstrainedByDimension([thumb size], 128);
-	
-	[infoPicture setFrameSize: thumbSize];
-	[infoPicture setImage: thumb];
+	[self loadInfoPanelThumbnailForPageIndex: [bar indexForPoint: cursorPoint]];
+	NSSize thumbSize = infoPicture.frame.size;
 	
 	cursorPoint = [[bar window] convertRectToScreen: (NSRect){point, NSZeroSize}].origin;
 	
