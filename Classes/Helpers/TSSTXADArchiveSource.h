@@ -48,6 +48,8 @@ typedef NS_ENUM(NSInteger, TSSTXADArchiveSourceError)
 	TSSTXADArchiveSourceErrorPasswordRequired,
 	TSSTXADArchiveSourceErrorEntryNotFound,
 	TSSTXADArchiveSourceErrorExtraction,
+	/// A volume of a multi-volume set could not be opened (see +[TSSTManagedArchive openVolumeSourcesForURLs:error:]).
+	TSSTXADArchiveSourceErrorMissingVolume,
 };
 
 /// Called on the parsing thread as entries are discovered: roughly every
@@ -62,7 +64,33 @@ typedef void (^TSSTXADArchiveSourceBatchHandler)(NSArray<TSSTXADArchiveEntry *> 
 /// same way. Return nil to indicate no password is available.
 typedef NSString * _Nullable (^TSSTXADArchiveSourcePasswordProvider)(NSString *archivePath, NSString * _Nullable knownPassword);
 
+/// The volumes of a multi-volume RAR set laid end to end as one byte space
+/// (volume i starts at the sum of the earlier lengths), which is also how
+/// XADMultiHandle numbers offsets, so every entry span the parser reports
+/// is a real range of this source and the shared cache / streamer / link
+/// simulation treat the whole set like a single file.
+@interface TSSTVolumeSetByteSource : NSObject <TSSTArchiveByteSource>
+- (instancetype)initWithVolumeSources:(NSArray<id<TSSTArchiveByteSource>> *)volumes;
+@property (nonatomic, readonly) NSArray<NSNumber *> *volumeLengths;
+@end
+
 @interface TSSTXADArchiveSource : NSObject
+
+/// The volume files of the multi-volume RAR set that \c fileURL belongs to
+/// (in reading order), or nil when it is a single archive or the set can't
+/// be found. Uses XADMaster's own volume detection and naming rules.
++ (nullable NSArray<NSURL *> *)volumeURLsForFileURL:(NSURL *)fileURL;
+
+/// As below, for a multi-volume set: \c source is the concatenated byte
+/// space (see TSSTVolumeSetByteSource) and \c volumeLengths splits it back
+/// into volumes for the parser.
+- (nullable instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source
+								volumeLengths:(nullable NSArray<NSNumber *> *)volumeLengths
+										name:(NSString *)name
+										path:(NSString *)path
+									password:(nullable NSString *)password
+								   passwordProvider:(nullable TSSTXADArchiveSourcePasswordProvider)passwordProvider
+									   error:(NSError **)error;
 
 /// Builds a parser over the given byte source. name is used for format
 /// sniffing by extension/heuristics the same way XADArchive uses it.

@@ -35,6 +35,25 @@ static NSString * const k7zzPath = @"/opt/homebrew/bin/7zz";
 - (BOOL)archiveParsingShouldStop:(XADArchiveParser *)parser { return NO; }
 @end
 
+@interface TSSTManagedArchive (MultiVolumeTesting)
++ (nullable NSArray<id<TSSTArchiveByteSource>> *)openVolumeSourcesForURLs:(NSArray<NSURL *> *)volumeURLs error:(NSError **)error;
+@end
+
+/// Test double for the folder-access seam.
+@interface TSSTTestFolderAccessProvider : NSObject <TSSTFolderAccessProvider>
+@property (nonatomic, copy) NSURL * (^onRequest)(NSURL *folder);
+@property (nonatomic, strong) NSMutableArray<NSURL *> *folders;
+@property (nonatomic, strong) NSMutableArray<NSString *> *messages;
+@end
+@implementation TSSTTestFolderAccessProvider
+- (instancetype)init { if ((self = [super init])) { _folders = [NSMutableArray array]; _messages = [NSMutableArray array]; } return self; }
+- (NSURL *)folderAccessGrantForFolderURL:(NSURL *)folderURL message:(NSString *)message
+{
+	[self.folders addObject: folderURL]; [self.messages addObject: message];
+	return self.onRequest ? self.onRequest(folderURL) : nil;
+}
+@end
+
 @interface TSSTXADArchiveSourceTests : XCTestCase
 @property (nonatomic, copy) NSString *tempDir;
 @end
@@ -655,6 +674,181 @@ static NSString * const k7zzPath = @"/opt/homebrew/bin/7zz";
 	}
 }
 
+#pragma mark - Multi-volume RAR
+
+/// Splits a file's bytes into `parts` files (uneven sizes) in the temp dir.
+- (NSArray<NSURL *> *)splitFile:(NSURL *)url intoParts:(NSUInteger)parts
+{
+	NSData *whole = [NSData dataWithContentsOfURL: url];
+	NSMutableArray<NSURL *> *urls = [NSMutableArray array];
+	NSUInteger chunk = whole.length / parts + 1, position = 0;
+	for (NSUInteger i = 0; i < parts; ++i) {
+		NSUInteger length = i + 1 == parts ? whole.length - position : MIN(i == 0 ? chunk / 3 : chunk, whole.length - position);
+		NSURL *part = [NSURL fileURLWithPath: [self.tempDir stringByAppendingPathComponent: [NSString stringWithFormat: @"part%lu.bin", (unsigned long)i]]];
+		[[whole subdataWithRange: NSMakeRange(position, length)] writeToURL: part atomically: NO];
+		position += length;
+		[urls addObject: part];
+	}
+	return urls;
+}
+
+- (void)testVolumeSetByteSourceReadsLikeTheConcatenatedFile
+{
+	TSSTRequireFixture(rar, @"jessie-james-rar5.cbr");
+	NSData *whole = [NSData dataWithContentsOfURL: rar];
+	NSArray<NSURL *> *urls = [self splitFile: rar intoParts: 3];
+	NSMutableArray<id<TSSTArchiveByteSource>> *sources = [NSMutableArray array];
+	for (NSURL *url in urls) { [sources addObject: [TSSTFileByteSource sourceWithFileURL: url error: NULL]]; }
+
+	TSSTVolumeSetByteSource *set = [[TSSTVolumeSetByteSource alloc] initWithVolumeSources: sources];
+	XCTAssertEqual(set.length, (uint64_t)whole.length);
+	XCTAssertEqual(set.volumeLengths.count, (NSUInteger)3);
+
+	// Reads that straddle one and both volume boundaries, and EOF.
+	uint64_t first = set.volumeLengths[0].unsignedLongLongValue;
+	uint64_t second = set.volumeLengths[1].unsignedLongLongValue;
+	NSArray<NSValue *> *ranges = @[[NSValue valueWithRange: NSMakeRange(0, 100)],
+								   [NSValue valueWithRange: NSMakeRange((NSUInteger)first - 10, 20)],
+								   [NSValue valueWithRange: NSMakeRange((NSUInteger)first - 10, (NSUInteger)second + 20)],
+								   [NSValue valueWithRange: NSMakeRange(whole.length - 50, 500)]];
+	for (NSValue *value in ranges) {
+		NSRange range = value.rangeValue;
+		NSError *error = nil;
+		NSData *read = [set readAtOffset: range.location length: range.length error: &error];
+		NSRange expected = NSMakeRange(range.location, MIN(range.length, whole.length - range.location));
+		XCTAssertEqualObjects(read, [whole subdataWithRange: expected], @"range %@ %@", NSStringFromRange(range), error);
+	}
+	XCTAssertEqual([set readAtOffset: whole.length length: 10 error: NULL].length, (NSUInteger)0, @"exactly EOF reads empty");
+	NSError *error = nil;
+	XCTAssertNil([set readAtOffset: whole.length + 1 length: 10 error: &error]);
+	XCTAssertNotNil(error);
+}
+
+- (void)testSingleVolumeArchivesReportNoVolumeSet
+{
+	for (NSString *name in @[@"jessie-james-rar4.cbr", @"jessie-james-rar5.cbr"]) {
+		TSSTRequireFixture(url, name);
+		XCTAssertNil([TSSTXADArchiveSource volumeURLsForFileURL: url], @"%@", url.lastPathComponent);
+	}
+}
+
+/// The rarzoo multi-volume sets (Fixtures/rarzoo): every volume's entries must
+/// be listed and extractable through the streaming backend, on a simulated
+/// link, exactly as they are through XADArchive.
+- (void)testMultiVolumeRARListsAndExtractsEveryVolume
+{
+	for (NSString *first in @[@"jj-rar5-vol.part1.rar", @"jj-rar4-vol.rar"]) {
+		TSSTRequireFixture(url, first);
+		NSArray<NSURL *> *volumes = [TSSTXADArchiveSource volumeURLsForFileURL: url];
+		XCTAssertGreaterThan(volumes.count, (NSUInteger)1, @"%@ volumes not found", first);
+		if (volumes.count < 2) continue;
+
+		NSMutableArray<id<TSSTArchiveByteSource>> *sources = [NSMutableArray array];
+		for (NSURL *volume in volumes) { [sources addObject: [TSSTFileByteSource sourceWithFileURL: volume error: NULL]]; }
+		TSSTVolumeSetByteSource *set = [[TSSTVolumeSetByteSource alloc] initWithVolumeSources: sources];
+		TSSTSimulatedLinkByteSource *link = [TSSTSimulatedLinkByteSource smbWifiLinkWrapping: set];
+		link.simulateTime = NO;
+		TSSTCachingByteSource *cache = [[TSSTCachingByteSource alloc] initWithUpstream: link];
+		NSError *error = nil;
+		TSSTXADArchiveSource *source = [[TSSTXADArchiveSource alloc] initWithByteSource: cache volumeLengths: set.volumeLengths name: url.path path: url.path password: nil passwordProvider: nil error: &error];
+		XCTAssertNotNil(source, @"%@", error);
+		NSMutableArray<TSSTXADArchiveEntry *> *entries = [NSMutableArray array];
+		XCTAssertTrue([source parseWithEntryBatchHandler: ^(NSArray<TSSTXADArchiveEntry *> *batch, BOOL isFinal, NSError *parseError) { [entries addObjectsFromArray: batch]; }]);
+
+		XADArchive *reference = [[XADArchive alloc] initWithFileURL: url delegate: nil error: NULL];
+		XCTAssertEqual(entries.count, (NSUInteger)reference.numberOfEntries, @"%@", first);
+		XCTAssertGreaterThan(entries.count, (NSUInteger)3, @"%@ lists only the first volume's entries", first);
+		for (TSSTXADArchiveEntry *entry in entries) {
+			if (entry.isDirectory) continue;
+			NSData *data = [source dataForEntry: entry.index error: &error];
+			XCTAssertEqual(data.length, (NSUInteger)entry.size, @"%@ %@ %@", first, entry.name, error);
+			if (entry.hasSpanRange) { XCTAssertLessThanOrEqual(NSMaxRange(entry.spanRange), (NSUInteger)set.length); }
+		}
+		[cache invalidate];
+	}
+}
+
+/// A volume the sandbox (or the user) took away must not fail the whole
+/// archive with an anonymous error: the volume opener names the missing part.
+- (void)testOpeningVolumesReportsTheMissingOne
+{
+	TSSTRequireFixture(rar, @"jessie-james-rar5.cbr");
+	NSArray<NSURL *> *urls = [self splitFile: rar intoParts: 3];
+
+	NSError *error = nil;
+	NSArray<id<TSSTArchiveByteSource>> *sources = [TSSTManagedArchive openVolumeSourcesForURLs: urls error: &error];
+	XCTAssertEqual(sources.count, (NSUInteger)3, @"%@", error);
+
+	[[NSFileManager defaultManager] removeItemAtURL: urls[1] error: NULL];
+	sources = [TSSTManagedArchive openVolumeSourcesForURLs: urls error: &error];
+	XCTAssertNil(sources);
+	XCTAssertEqualObjects(error.domain, TSSTXADArchiveSourceErrorDomain);
+	XCTAssertEqual(error.code, TSSTXADArchiveSourceErrorMissingVolume);
+	XCTAssertEqualObjects(error.userInfo[NSFilePathErrorKey], urls[1].path);
+	XCTAssertTrue([error.localizedDescription containsString: urls[1].lastPathComponent], @"%@", error.localizedDescription);
+}
+
+/// End to end through the progressive scan: a multi-volume RAR (rarzoo) with a part made unreadable still opens -- listed from the
+/// file itself through XADArchive -- and reports the missing volume through
+/// the scan's error list instead of failing outright; the intact set streams.
+- (void)testProgressiveScanFallsBackWhenAVolumeIsMissing
+{
+	TSSTRequireFixture(first, @"jj-rar5-vol.part1.rar");
+	NSArray<NSURL *> *volumes = [TSSTXADArchiveSource volumeURLsForFileURL: first];
+	XCTAssertGreaterThan(volumes.count, (NSUInteger)2);
+
+	NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles: @[[NSBundle mainBundle]]];
+	NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: model];
+	XCTAssertNotNil([coordinator addPersistentStoreWithType: NSInMemoryStoreType configuration: nil URL: nil options: nil error: NULL]);
+	NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType: NSMainQueueConcurrencyType];
+	moc.persistentStoreCoordinator = coordinator;
+
+	for (NSNumber *removeFlag in @[@NO, @YES]) {
+		const BOOL removeAVolume = removeFlag.boolValue;
+		NSString *dir = [self.tempDir stringByAppendingPathComponent: removeAVolume ? @"gap" : @"whole"];
+		[[NSFileManager defaultManager] createDirectoryAtPath: dir withIntermediateDirectories: YES attributes: nil error: NULL];
+		for (NSURL *volume in volumes) {
+			[[NSFileManager defaultManager] copyItemAtURL: volume toURL: [NSURL fileURLWithPath: [dir stringByAppendingPathComponent: volume.lastPathComponent]] error: NULL];
+		}
+		if (removeAVolume) {
+			// Present but unreadable, like a sibling the sandbox won't open
+			// (a deleted one just shortens the set the parser discovers).
+			[[NSFileManager defaultManager] setAttributes: @{NSFilePosixPermissions: @0} ofItemAtPath: [dir stringByAppendingPathComponent: volumes[2].lastPathComponent] error: NULL];
+		}
+		NSURL *url = [NSURL fileURLWithPath: [dir stringByAppendingPathComponent: first.lastPathComponent]];
+		__block TSSTManagedArchive *archive = nil;
+		[moc performBlockAndWait: ^{
+			archive = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: moc];
+			archive.fileURL = url;
+			archive.name = url.lastPathComponent;
+		}];
+
+		__block id header = nil;
+		__block NSError *finalError = nil;
+		__block NSUInteger finalCalls = 0;
+		XCTestExpectation *finished = [self expectationWithDescription: @"scan finished"];
+		[archive scanArchiveProgressivelyForFileURL: url name: url.lastPathComponent password: nil perBatch: ^(id recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError *error) {
+			if (recordSoFar) { header = recordSoFar; }
+			if (isFinal) { finalError = error; finalCalls++; [finished fulfill]; }
+		}];
+		[self waitForExpectations: @[finished] timeout: 60];
+
+		XCTAssertEqual(finalCalls, (NSUInteger)1);
+		XCTAssertNil(finalError);
+		XCTAssertNotNil(header);
+		NSArray<NSError *> *scanErrors = [header valueForKey: @"scanErrors"];
+		if (removeAVolume) {
+			XCTAssertEqualObjects([header valueForKey: @"backendDescription"], @"XAD");
+			XCTAssertEqual(scanErrors.count, (NSUInteger)1);
+			XCTAssertEqual(scanErrors.firstObject.code, TSSTXADArchiveSourceErrorMissingVolume);
+		} else {
+			XCTAssertEqualObjects([header valueForKey: @"backendDescription"], @"XAD-progressive");
+			XCTAssertEqual(scanErrors.count, (NSUInteger)0);
+		}
+		[moc performBlockAndWait: ^{ [moc deleteObject: archive]; }];
+	}
+}
+
 /// Encrypted RAR (rarzoo) on a
 /// simulated Wi-Fi link: with no password available the parse must finish
 /// (no hang, no prompt loop) and report what it can -- names for
@@ -695,6 +889,170 @@ static NSString * const k7zzPath = @"/opt/homebrew/bin/7zz";
 			}
 		}
 	}
+}
+
+
+#pragma mark - Folder access
+
+/// Copies the rarzoo split volumes into a fresh folder; returns the first volume.
+- (NSURL *)copyVolumeSetOf:(NSURL *)first toFolderNamed:(NSString *)name volumes:(NSArray<NSURL *> **)outVolumes
+{
+	NSString *dir = [self.tempDir stringByAppendingPathComponent: name];
+	[[NSFileManager defaultManager] createDirectoryAtPath: dir withIntermediateDirectories: YES attributes: nil error: NULL];
+	NSMutableArray *copies = [NSMutableArray array];
+	for (NSURL *volume in [TSSTXADArchiveSource volumeURLsForFileURL: first]) {
+		NSURL *copy = [NSURL fileURLWithPath: [dir stringByAppendingPathComponent: volume.lastPathComponent]];
+		[[NSFileManager defaultManager] copyItemAtURL: volume toURL: copy error: NULL];
+		[copies addObject: copy];
+	}
+	if (outVolumes) { *outVolumes = copies; }
+	return copies.firstObject;
+}
+
+- (void)setFolderAccessProvider:(TSSTTestFolderAccessProvider *)provider
+{
+	[TSSTManagedArchive resetFolderAccessSessionState];
+	[TSSTManagedArchive setFolderAccessProvider: provider];
+	NSString *suite = [@"SCFolderAccessTests-" stringByAppendingString: [[NSUUID UUID] UUIDString]];
+	[TSSTManagedArchive setFolderBookmarkDefaults: [[NSUserDefaults alloc] initWithSuiteName: suite]];
+	[self addTeardownBlock: ^{
+		[TSSTManagedArchive setFolderAccessProvider: nil];
+		[TSSTManagedArchive setFolderBookmarkDefaults: nil];
+		[TSSTManagedArchive resetFolderAccessSessionState];
+		[[NSUserDefaults standardUserDefaults] removePersistentDomainForName: suite];
+	}];
+}
+
+- (void)testReadableSiblingsNeverAskForFolderAccess
+{
+	TSSTRequireFixture(fixtureFirst, @"jj-rar5-vol.part1.rar");
+	NSArray<NSURL *> *volumes = nil;
+	[self copyVolumeSetOf: fixtureFirst toFolderNamed: @"fa-readable" volumes: &volumes];
+	TSSTTestFolderAccessProvider *provider = [TSSTTestFolderAccessProvider new];
+	[self setFolderAccessProvider: provider];
+	NSError *error = nil;
+	XCTAssertEqual([TSSTManagedArchive openVolumeSourcesForURLs: volumes error: &error].count, volumes.count, @"%@", error);
+	XCTAssertEqual(provider.folders.count, (NSUInteger)0);
+}
+
+- (void)testUnreadableSiblingsAskOnceThenOpenAndListEveryPage
+{
+	TSSTRequireFixture(fixtureFirst, @"jj-rar5-vol.part1.rar");
+	NSArray<NSURL *> *volumes = nil;
+	NSURL *first = [self copyVolumeSetOf: fixtureFirst toFolderNamed: @"fa-grant" volumes: &volumes];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	for (NSURL *v in [volumes subarrayWithRange: NSMakeRange(1, volumes.count - 1)]) {
+		[fm setAttributes: @{NSFilePosixPermissions: @0} ofItemAtPath: v.path error: NULL];
+	}
+	TSSTTestFolderAccessProvider *provider = [TSSTTestFolderAccessProvider new];
+	provider.onRequest = ^NSURL *(NSURL *folder) {
+		for (NSURL *v in volumes) { [fm setAttributes: @{NSFilePosixPermissions: @0644} ofItemAtPath: v.path error: NULL]; }
+		return folder;
+	};
+	[self setFolderAccessProvider: provider];
+
+	NSError *error = nil;
+	NSArray *sources = [TSSTManagedArchive openVolumeSourcesForURLs: volumes error: &error];
+	XCTAssertEqual(sources.count, volumes.count, @"%@", error);
+	XCTAssertEqual(provider.folders.count, (NSUInteger)1);
+	XCTAssertEqualObjects(provider.folders.firstObject.URLByStandardizingPath.path, first.URLByDeletingLastPathComponent.URLByStandardizingPath.path);
+	XCTAssertTrue([provider.messages.firstObject containsString: first.lastPathComponent], @"%@", provider.messages.firstObject);
+
+}
+
+/// Progressive scan of the (unreadable, then granted) set lists exactly what
+/// the pristine set lists, through the streaming backend, with no errors.
+- (void)testProgressiveScanAfterFolderGrantListsEveryPage
+{
+	TSSTRequireFixture(fixtureFirst, @"jj-rar5-vol.part1.rar");
+	NSArray<NSURL *> *pristineVolumes = nil, *volumes = nil;
+	NSURL *pristine = [self copyVolumeSetOf: fixtureFirst toFolderNamed: @"fa-scan-ok" volumes: &pristineVolumes];
+	NSURL *first = [self copyVolumeSetOf: fixtureFirst toFolderNamed: @"fa-scan-grant" volumes: &volumes];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	for (NSURL *v in [volumes subarrayWithRange: NSMakeRange(1, volumes.count - 1)]) {
+		[fm setAttributes: @{NSFilePosixPermissions: @0} ofItemAtPath: v.path error: NULL];
+	}
+	TSSTTestFolderAccessProvider *provider = [TSSTTestFolderAccessProvider new];
+	provider.onRequest = ^NSURL *(NSURL *folder) {
+		for (NSURL *v in volumes) { [fm setAttributes: @{NSFilePosixPermissions: @0644} ofItemAtPath: v.path error: NULL]; }
+		return folder;
+	};
+	[self setFolderAccessProvider: provider];
+
+	NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles: @[[NSBundle mainBundle]]];
+	NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: model];
+	XCTAssertNotNil([coordinator addPersistentStoreWithType: NSInMemoryStoreType configuration: nil URL: nil options: nil error: NULL]);
+	NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType: NSMainQueueConcurrencyType];
+	moc.persistentStoreCoordinator = coordinator;
+
+	NSUInteger counts[2] = {0, 0};
+	int slot = 0;
+	for (NSURL *url in @[pristine, first]) {
+		__block TSSTManagedArchive *archive = nil;
+		[moc performBlockAndWait: ^{
+			archive = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: moc];
+			archive.fileURL = url;
+			archive.name = url.lastPathComponent;
+		}];
+		__block id header = nil;
+		__block NSUInteger children = 0;
+		XCTestExpectation *finished = [self expectationWithDescription: @"scan finished"];
+		[archive scanArchiveProgressivelyForFileURL: url name: url.lastPathComponent password: nil perBatch: ^(id recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError *error) {
+			if (recordSoFar) { header = recordSoFar; }
+			children += newChildren.count;
+			if (isFinal) { [finished fulfill]; }
+		}];
+		[self waitForExpectations: @[finished] timeout: 60];
+		XCTAssertEqualObjects([header valueForKey: @"backendDescription"], @"XAD-progressive");
+		XCTAssertEqual([[header valueForKey: @"scanErrors"] count], (NSUInteger)0);
+		counts[slot++] = children;
+		[moc performBlockAndWait: ^{ [moc deleteObject: archive]; }];
+	}
+	XCTAssertGreaterThan(counts[0], (NSUInteger)1);
+	XCTAssertEqual(counts[0], counts[1]);
+	XCTAssertEqual(provider.folders.count, (NSUInteger)1);
+}
+
+- (void)testDecliningFolderAccessFallsBackAndDoesNotAskAgain
+{
+	TSSTRequireFixture(fixtureFirst, @"jj-rar5-vol.part1.rar");
+	NSArray<NSURL *> *volumes = nil;
+	[self copyVolumeSetOf: fixtureFirst toFolderNamed: @"fa-decline" volumes: &volumes];
+	[[NSFileManager defaultManager] setAttributes: @{NSFilePosixPermissions: @0} ofItemAtPath: volumes[2].path error: NULL];
+	TSSTTestFolderAccessProvider *provider = [TSSTTestFolderAccessProvider new];
+	[self setFolderAccessProvider: provider];
+	for (int i = 0; i < 2; ++i) {
+		NSError *error = nil;
+		XCTAssertNil([TSSTManagedArchive openVolumeSourcesForURLs: volumes error: &error]);
+		XCTAssertEqual(error.code, TSSTXADArchiveSourceErrorMissingVolume);
+		XCTAssertEqualObjects(error.userInfo[NSFilePathErrorKey], volumes[2].path);
+	}
+	XCTAssertEqual(provider.folders.count, (NSUInteger)1);
+}
+
+- (void)testAbsentSiblingNeverAsksForFolderAccess
+{
+	TSSTRequireFixture(fixtureFirst, @"jj-rar5-vol.part1.rar");
+	NSArray<NSURL *> *volumes = nil;
+	[self copyVolumeSetOf: fixtureFirst toFolderNamed: @"fa-absent" volumes: &volumes];
+	TSSTTestFolderAccessProvider *provider = [TSSTTestFolderAccessProvider new];
+	[self setFolderAccessProvider: provider];
+	[[NSFileManager defaultManager] removeItemAtURL: volumes[1] error: NULL];
+	NSError *error = nil;
+	XCTAssertNil([TSSTManagedArchive openVolumeSourcesForURLs: volumes error: &error]);
+	XCTAssertEqual(provider.folders.count, (NSUInteger)0);
+}
+
+- (void)testFolderAccessBookmarkRoundTrip
+{
+	[self setFolderAccessProvider: nil];
+	NSURL *folder = [NSURL fileURLWithPath: [self.tempDir stringByAppendingPathComponent: @"bm"] isDirectory: YES];
+	[[NSFileManager defaultManager] createDirectoryAtURL: folder withIntermediateDirectories: YES attributes: nil error: NULL];
+	XCTAssertNil([TSSTManagedArchive resolvedAccessBookmarkForFolderURL: folder]);
+	XCTAssertTrue([TSSTManagedArchive storeAccessBookmarkForFolderURL: folder]);
+	NSURL *resolved = [TSSTManagedArchive resolvedAccessBookmarkForFolderURL: folder];
+	XCTAssertEqualObjects(resolved.URLByResolvingSymlinksInPath.path, folder.URLByResolvingSymlinksInPath.path);
+	XCTAssertNil([TSSTManagedArchive resolvedAccessBookmarkForFolderURL: [folder URLByAppendingPathComponent: @"other"]]);
 }
 
 @end

@@ -24,6 +24,13 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Asks the user for access to a folder the sandbox hides (see
+/// +[TSSTManagedArchive openVolumeSourcesForURLs:error:]). Called on the main
+/// thread. Return the granted (security-scoped) folder URL, or nil if declined.
+@protocol TSSTFolderAccessProvider <NSObject>
+- (nullable NSURL *)folderAccessGrantForFolderURL:(NSURL *)folderURL message:(NSString *)message;
+@end
+
 @interface TSSTManagedGroup : NSManagedObject
 {
     id instance;
@@ -118,7 +125,9 @@ NS_ASSUME_NONNULL_BEGIN
 
  \c fileURL, \c name and \c password are plain values captured by the
  caller on the main thread: the scan runs off-main and never reads the
- managed object's attributes.
+ managed object's attributes. A multi-volume RAR set with an unreadable
+ volume is listed through XADArchive from the file itself, and a
+ missing-volume error is delivered in the final record's scanErrors.
 
  On the first call, the caller must apply the returned record's header
  (backend/password/streamer) via -applyScanRecordHeader: on the MOC's
@@ -182,6 +191,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// can tell "nothing to wait for" apart from "nothing to show progress for".
 @property (nonatomic, readonly) BOOL isStreamingArchive;
 
+
+#pragma mark Folder access (sandbox)
+
+/// nil (the default) uses the open panel.
++ (nullable id<TSSTFolderAccessProvider>)folderAccessProvider;
++ (void)setFolderAccessProvider:(nullable id<TSSTFolderAccessProvider>)provider;
++ (void)setFolderBookmarkDefaults:(nullable NSUserDefaults *)defaults;
++ (void)resetFolderAccessSessionState;
++ (BOOL)storeAccessBookmarkForFolderURL:(NSURL *)folderURL;
++ (nullable NSURL *)resolvedAccessBookmarkForFolderURL:(NSURL *)folderURL;
 @end
 
 /// Posted (object = the TSSTManagedArchive) as the streamer's cache fills
