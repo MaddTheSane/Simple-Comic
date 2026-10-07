@@ -16,6 +16,8 @@
 #import "TSSTPage+CoreDataProperties.h"
 #import "TSSTZipIndex.h"
 #import "TSSTArchiveByteSource.h"
+#import "TSSTCachingByteSource.h"
+#import "TSSTArchiveStreamer.h"
 
 @interface TSSTManagedArchive () <XADArchiveDelegate>
 {
@@ -30,6 +32,14 @@
 	BOOL _zipIndexAttempted;
 	BOOL _zipIndexBuilding;
 	NSCondition *_zipIndexLock;
+
+	// Set only when the zip index was built on a caching byte source (slow
+	// volume, or SC_SIMULATE_LINK). nil on local volumes.
+	TSSTCachingByteSource *_cachingSource;
+	TSSTArchiveStreamer *_streamer;
+	// Reading-order span index for each zip entry index, built alongside
+	// the streamer's spans; used by -noteReadingEntryIndex:/-prioritizeEntryIndex:.
+	NSDictionary<NSNumber *, NSNumber *> *_entryIndexToSpanIndex;
 }
 -(void)archiveNeedsPassword:(XADArchive *)archive;
 
@@ -64,6 +74,7 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 @property (nonatomic, copy, nullable) NSString *password;
 @property (nonatomic, copy, nullable) NSString *solidDirectory;
 @property (nonatomic, strong, nullable) id builtInstance; // TSSTZipIndex or XADArchive, pre-built, ready to reuse
+@property (nonatomic, strong, nullable) TSSTCachingByteSource *builtCachingSource; // set only when builtInstance's zip index reads through a cache
 @property (nonatomic, copy, nullable) NSArray<TSSTArchiveScanRecord *> *children;
 @property (nonatomic, copy, nullable) NSString *backendDescription; // "zip-index" / "XAD", for logging
 
@@ -269,6 +280,7 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 {
 	return NSThread.currentThread.threadDictionary[kURLErrorBatchThreadKey];
 }
+NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgressNotification";
 
 @implementation TSSTManagedGroup
 
@@ -707,6 +719,9 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 - (void)willTurnIntoFault
 {
 	NSError * error;
+	[_streamer cancel];
+	[_cachingSource invalidate];
+
 	if(self.nested)
 	{
 		if(![[NSFileManager defaultManager] removeItemAtPath: self.path error: &error])
@@ -723,6 +738,70 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 			NSLog(@"%@",[error localizedDescription]);
 		}
 	}
+}
+
+/// YES when the given file is worth caching/streaming: a non-local
+/// volume (e.g. SMB), or DEBUG SC_SIMULATE_LINK is set (so the app can be
+/// exercised against the caching path using a local file).
++ (BOOL)shouldUseCacheForFileURL:(NSURL *)fileURL
+{
+#if DEBUG
+	if ([[NSProcessInfo processInfo].environment[@"SC_SIMULATE_LINK"] length] > 0)
+	{
+		return YES;
+	}
+#endif
+	NSNumber *isLocal = nil;
+	NSError *error = nil;
+	if ([fileURL getResourceValue: &isLocal forKey: NSURLVolumeIsLocalKey error: &error] && isLocal)
+	{
+		return !isLocal.boolValue;
+	}
+	return NO;
+}
+
+/// Builds the zip index (and, when applicable, the caching byte source it
+/// reads through) for \c fileURL, or returns nil to make callers use
+/// XADArchive (non-zips, unreadable files, unsupported zip features).
+/// Shared by the lazy -zipIndex accessor and the background scan so both
+/// apply the same policy: file -> [simulated link ->] [caching source ->]
+/// zip index. DEBUG builds: SC_FORCE_XAD skips the index, and
+/// SC_SIMULATE_LINK=<profile> reads through a simulated slow link so
+/// slow-volume behaviour can be checked against a local file.
++ (nullable TSSTZipIndex *)buildZipIndexForFileURL:(NSURL *)fileURL cachingSource:(TSSTCachingByteSource * _Nullable * _Nullable)cachingSourceOut
+{
+	if (cachingSourceOut) { *cachingSourceOut = nil; }
+#if DEBUG
+	if (getenv("SC_FORCE_XAD") != NULL) { return nil; }
+#endif
+	if (![fileURL checkResourceIsReachableAndReturnError: NULL]) { return nil; }
+
+	id<TSSTArchiveByteSource> source = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
+	if (!source) { return nil; }
+#if DEBUG
+	NSString *simulatedLinkName = [[NSProcessInfo processInfo].environment[@"SC_SIMULATE_LINK"] lowercaseString];
+	TSSTSimulatedLinkByteSource *linkSource = simulatedLinkName.length > 0 ? [TSSTSimulatedLinkByteSource linkWithProfileName: simulatedLinkName wrapping: source] : nil;
+	if (linkSource)
+	{
+		linkSource.simulateTime = YES;
+		source = linkSource;
+	}
+#endif
+
+	if ([self shouldUseCacheForFileURL: fileURL])
+	{
+		TSSTCachingByteSource *cachingSource = [[TSSTCachingByteSource alloc] initWithUpstream: source];
+		if (cachingSourceOut) { *cachingSourceOut = cachingSource; }
+		source = cachingSource;
+	}
+	TSSTZipIndex *index = [TSSTZipIndex indexWithByteSource: source error: NULL];
+	if (!index && cachingSourceOut && *cachingSourceOut)
+	{
+		// Not a zip we can read: a half-built cache is invalidated, never leaked.
+		[*cachingSourceOut invalidate];
+		*cachingSourceOut = nil;
+	}
+	return index;
 }
 
 - (id)instance
@@ -747,46 +826,33 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	return instance;
 }
 
-/// Builds the zip index for \c fileURL, or returns nil to make callers use
-/// XADArchive (non-zips, unreadable files, unsupported zip features). In
-/// DEBUG builds SC_FORCE_XAD skips the index and SC_SIMULATE_LINK=<profile>
-/// reads through a simulated slow link, so slow-volume behaviour can be
-/// checked against a local file.
-+ (nullable TSSTZipIndex *)buildZipIndexForFileURL:(NSURL *)fileURL
+/// The zip index a scan should read through (with the cache it reads
+/// through, if any): nil when the file isn't a zip, SC_FORCE_XAD is set, or
+/// the index can't extract every entry the scan needs. The caller then lists
+/// through XADArchive, and any cache built for the discarded index is
+/// invalidated here.
++ (nullable TSSTZipIndex *)scannableZipIndexForFileURL:(NSURL *)fileURL cachingSource:(TSSTCachingByteSource * _Nullable * _Nonnull)cachingSourceOut
 {
-#if DEBUG
-	if (getenv("SC_FORCE_XAD") != NULL)
+	TSSTZipIndex *zi = [self buildZipIndexForFileURL: fileURL cachingSource: cachingSourceOut];
+	if (!TSSTZipIndexCanScan(zi))
 	{
+		[*cachingSourceOut invalidate];
+		*cachingSourceOut = nil;
 		return nil;
 	}
-#endif
-	if (![fileURL checkResourceIsReachableAndReturnError: NULL])
-	{
-		return nil;
-	}
-#if DEBUG
-	NSString *simulatedLinkName = [[NSProcessInfo processInfo].environment[@"SC_SIMULATE_LINK"] lowercaseString];
-	if (simulatedLinkName.length > 0)
-	{
-		id<TSSTArchiveByteSource> fileSource = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
-		TSSTSimulatedLinkByteSource *linkSource = fileSource ? [TSSTSimulatedLinkByteSource linkWithProfileName: simulatedLinkName wrapping: fileSource] : nil;
-		if (linkSource)
-		{
-			linkSource.simulateTime = YES;
-			return [TSSTZipIndex indexWithByteSource: linkSource error: NULL];
-		}
-	}
-#endif
-	return [TSSTZipIndex indexWithFileURL: fileURL error: NULL];
+	return zi;
 }
 
-/// The zip index a scan should read through: nil when the file isn't a zip,
-/// SC_FORCE_XAD is set, or the index can't extract every entry the scan
-/// needs (the caller then lists through XADArchive).
-+ (nullable TSSTZipIndex *)scannableZipIndexForFileURL:(NSURL *)fileURL
+/// Makes \c cachingSource this archive's cache, shutting down (streamer and
+/// temp directory) any different one it replaces.
+- (void)adoptCachingSource:(nullable TSSTCachingByteSource *)cachingSource
 {
-	TSSTZipIndex *zi = [self buildZipIndexForFileURL: fileURL];
-	return TSSTZipIndexCanScan(zi) ? zi : nil;
+	if (_cachingSource && _cachingSource != cachingSource)
+	{
+		[_streamer cancel];
+		[_cachingSource invalidate];
+	}
+	_cachingSource = cachingSource;
 }
 
 /// Build-once gate for the lazy accessors. Returns YES to exactly one
@@ -824,9 +890,18 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 {
 	if (TSSTBeginBuild(_zipIndexLock, &_zipIndexAttempted, &_zipIndexBuilding))
 	{
-		TSSTZipIndex *built = [TSSTManagedArchive buildZipIndexForFileURL: self.fileURL];
+		TSSTCachingByteSource *cachingSource = nil;
+		TSSTZipIndex *built = [TSSTManagedArchive buildZipIndexForFileURL: self.fileURL cachingSource: &cachingSource];
 		TSSTFinishBuild(_zipIndexLock, &_zipIndexBuilding, ^{
-			if (!self->_zipIndex) { self->_zipIndex = built; }
+			if (built && !self->_zipIndex)
+			{
+				self->_zipIndex = built;
+				[self adoptCachingSource: cachingSource];
+			}
+			else
+			{
+				[cachingSource invalidate];
+			}
 		});
 	}
 	[_zipIndexLock lock];
@@ -845,9 +920,110 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	return [(XADArchive *)self.instance nameOfEntry: index];
 }
 
+/// Starts a background prefetcher over \c zi's extractable entries, in
+/// the same order pages are displayed in (TSSTSortDescriptor's
+/// comparison on imagePath). Only called when a caching byte source was
+/// built for this archive (see +buildZipIndexForFileURL:cachingSource:).
+- (void)startStreamerForZipIndex:(TSSTZipIndex *)zi
+{
+	NSMutableArray<NSNumber *> *extractable = [NSMutableArray array];
+	for (NSUInteger i = 0; i < zi.numberOfEntries; ++i)
+	{
+		if ([zi canExtractEntry: i]) { [extractable addObject: @(i)]; }
+	}
+
+	const NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+	NSArray<NSNumber *> *sorted = [extractable sortedArrayUsingComparator: ^NSComparisonResult(NSNumber *a, NSNumber *b) {
+		NSString *nameA = [zi nameOfEntry: a.unsignedIntegerValue];
+		NSString *nameB = [zi nameOfEntry: b.unsignedIntegerValue];
+		return [nameA compare: nameB options: comparisonOptions];
+	}];
+
+	NSArray<NSValue *> *spans = [TSSTArchiveStreamer spansForZipIndex: zi entryIndices: sorted];
+	NSMutableDictionary<NSNumber *, NSNumber *> *map = [NSMutableDictionary dictionaryWithCapacity: sorted.count];
+	for (NSUInteger i = 0; i < sorted.count; ++i)
+	{
+		map[sorted[i]] = @(i);
+	}
+	[self startStreamerWithSpans: spans entryIndexMap: map];
+}
+
+/// The one place a streamer is built. \c map takes an entry index to its
+/// span index (see -noteReadingEntryIndex:). Replaces any running streamer.
+- (void)startStreamerWithSpans:(NSArray<NSValue *> *)spans entryIndexMap:(nullable NSDictionary<NSNumber *, NSNumber *> *)map
+{
+	[_streamer cancel];
+	_entryIndexToSpanIndex = map;
+	_streamer = [[TSSTArchiveStreamer alloc] initWithCachingByteSource: _cachingSource spans: spans];
+	// Lets the timeline bar redraw as spans land in the cache.
+	__weak typeof(self) weakSelf = self;
+	_streamer.progressHandler = ^(NSIndexSet *cachedSpanIndexes, double cachedFraction, double throughputBytesPerSecond, BOOL isComplete) {
+		TSSTManagedArchive *strongSelf = weakSelf;
+		if (strongSelf)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName: TSSTArchiveCacheProgressNotification object: strongSelf];
+		}
+	};
+	[_streamer start];
+}
+
+#if DEBUG
+- (nullable TSSTArchiveStreamer *)streamer
+{
+	return _streamer;
+}
+#endif
+
+/// Retargets the streamer at the page the reader is on. Called only from
+/// the session's display path (-changeViewImages), never from the byte-read
+/// path: hover thumbnails, pre-decoding and the exposé all read pages the
+/// reader is not on, and each such read would drag the streamer's target
+/// away from the reader's own neighbourhood.
+- (void)noteReadingEntryIndex:(NSInteger)entryIndex
+{
+	NSNumber *spanIndex = _entryIndexToSpanIndex[@(entryIndex)];
+	if (spanIndex) { _streamer.currentSpanIndex = spanIndex.unsignedIntegerValue; }
+}
+
+- (void)prioritizeEntryIndex:(NSInteger)entryIndex
+{
+	NSNumber *spanIndex = _entryIndexToSpanIndex[@(entryIndex)];
+	if (spanIndex) { [_streamer prioritizeSpanIndex: spanIndex.unsignedIntegerValue]; }
+}
+
+- (BOOL)isStreamingArchive
+{
+	return _cachingSource != nil;
+}
+
+- (BOOL)isEntryIndexCached:(NSInteger)entryIndex
+{
+	if (!_cachingSource || !_streamer)
+	{
+		// No streaming cache -- local file, reads are already fast.
+		return YES;
+	}
+	NSNumber *spanIndex = _entryIndexToSpanIndex[@(entryIndex)];
+	if (!spanIndex)
+	{
+		// Not a span we know about (out of range, or non-zip fallback):
+		// treat conservatively as not-cached.
+		return NO;
+	}
+	NSArray<NSValue *> *spans = _streamer.spans;
+	NSUInteger idx = spanIndex.unsignedIntegerValue;
+	if (idx >= spans.count) { return NO; }
+	NSRange span = spans[idx].rangeValue;
+	return [_cachingSource isRangeCachedAtOffset: span.location length: span.length];
+}
+
 - (void)didTurnIntoFault
 {
 	[super didTurnIntoFault];
+	[_streamer cancel];
+	[_cachingSource invalidate];
+	_streamer = nil;
+	_cachingSource = nil;
 	_zipIndex = nil;
 	_zipIndexAttempted = NO;
 }
@@ -925,14 +1101,15 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	// Try the fast zip-index path first: it only needs one pread() of the
 	// central directory instead of XADArchive walking every local header
 	// (slow on high-latency volumes like SMB).
-	TSSTZipIndex *zi = [self scannableZipIndexForFileURL: fileURL];
-	return [self scanRecordForFileURL: fileURL name: name password: password zipIndex: zi errors: errors];
+	TSSTCachingByteSource *cachingSource = nil;
+	TSSTZipIndex *zi = [self scannableZipIndexForFileURL: fileURL cachingSource: &cachingSource];
+	return [self scanRecordForFileURL: fileURL name: name password: password zipIndex: zi cachingSource: cachingSource errors: errors];
 }
 
-/// The scan proper. \c zi is an already-built index that can extract
-/// everything the scan needs, or nil to list through XADArchive (non-zips,
-/// solid archives, zips the index can't fully read).
-+ (nullable TSSTArchiveScanRecord *)scanRecordForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password zipIndex:(nullable TSSTZipIndex *)zi errors:(NSMutableArray<NSError *> *)errors
+/// The scan proper. \c zi (with its cache, if any) is an already-built index
+/// that can extract everything the scan needs, or nil to list through
+/// XADArchive (non-zips, solid archives, zips the index can't fully read).
++ (nullable TSSTArchiveScanRecord *)scanRecordForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password zipIndex:(nullable TSSTZipIndex *)zi cachingSource:(nullable TSSTCachingByteSource *)cachingSource errors:(NSMutableArray<NSError *> *)errors
 {
 	TSSTArchiveScanRecord *record = [TSSTArchiveScanRecord new];
 	record.name = name ?: fileURL.lastPathComponent;
@@ -954,6 +1131,7 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	}
 
 	record.builtInstance = zipIndexUsable ? zi : imageArchive;
+	record.builtCachingSource = zipIndexUsable ? cachingSource : nil;
 	record.password = passwordDelegate.password;
 	record.backendDescription = zipIndexUsable ? @"zip-index" : @"XAD";
 
@@ -1024,6 +1202,11 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	{
 		_zipIndex = record.builtInstance;
 		_zipIndexAttempted = YES;
+		[self adoptCachingSource: record.builtCachingSource];
+		if (_cachingSource)
+		{
+			[self startStreamerForZipIndex: _zipIndex];
+		}
 	}
 	else if (record.builtInstance)
 	{

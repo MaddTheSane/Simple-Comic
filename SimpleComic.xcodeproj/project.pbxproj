@@ -17,9 +17,13 @@
 		AF59CE63585048A4A89A7538 /* TSSTEdgeBlurRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6A921C6A11486D91716385 /* TSSTEdgeBlurRenderer.m */; };
 		C461C4C073134889AD743053 /* TSSTZipIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 638E896DFA17428A8E6C0284 /* TSSTZipIndex.m */; };
 		C07F89BE81094190A3C99F4F /* TSSTArchiveByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = E10F9CC2A5604DBBA14B21C3 /* TSSTArchiveByteSource.m */; };
+		1A2B3C4D50014A1AA1000003 /* TSSTCachingByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000002 /* TSSTCachingByteSource.m */; };
+		1A2B3C4D50014A1AA1000012 /* TSSTPageDecodeCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000011 /* TSSTPageDecodeCache.m */; };
+		1A2B3C4D50014A1AA1000006 /* TSSTArchiveStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000005 /* TSSTArchiveStreamer.m */; };
 		151667F519E44A51937BBA13 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 559EF3DF1BDD38F400FAAA0A /* libz.tbd */; };
 		3B54D043193749CA876D1B74 /* TSSTZipIndexTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A350175E1F4C94AF2AB2A5 /* TSSTZipIndexTests.m */; };
 		708DE06789374E0BAE939FCD /* TSSTArchiveByteSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C69F05BC2544412492D8FCCB /* TSSTArchiveByteSourceTests.m */; };
+		1A2B3C4D50014A1AA1000008 /* TSSTArchiveStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */; };
 		285FE3300F945E2300CD8F96 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 285FE32F0F945E2300CD8F96 /* Carbon.framework */; };
 		286236020AADDB6200B83E77 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286236010AADDB6200B83E77 /* QuartzCore.framework */; };
 		286AEDB70C4161C20031E3D9 /* TSSTSortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 286AEDB60C4161C20031E3D9 /* TSSTSortDescriptor.m */; };
@@ -381,8 +385,12 @@
 		B6DBB6E5D3AB4B0FB3FD4960 /* TSSTEdgeBlurRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTEdgeBlurRenderer.h; sourceTree = "<group>"; };
 		FC64F6B973A047348F90EB8C /* TSSTZipIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTZipIndex.h; sourceTree = "<group>"; };
 		6220035510734CD884768BFB /* TSSTArchiveByteSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTArchiveByteSource.h; sourceTree = "<group>"; };
+		1A2B3C4D50014A1AA1000001 /* TSSTCachingByteSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTCachingByteSource.h; sourceTree = "<group>"; };
+		1A2B3C4D50014A1AA1000010 /* TSSTPageDecodeCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTPageDecodeCache.h; sourceTree = "<group>"; };
+		1A2B3C4D50014A1AA1000004 /* TSSTArchiveStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTArchiveStreamer.h; sourceTree = "<group>"; };
 		34A350175E1F4C94AF2AB2A5 /* TSSTZipIndexTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTZipIndexTests.m; sourceTree = "<group>"; };
 		C69F05BC2544412492D8FCCB /* TSSTArchiveByteSourceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveByteSourceTests.m; sourceTree = "<group>"; };
+		1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveStreamingTests.m; sourceTree = "<group>"; };
 		28B34A721013779B006C551C /* NSWindow+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSWindow+Extensions.swift"; sourceTree = "<group>"; };
 		28BD08E50C9836E600BD7EAF /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		28C1D55F0DF1FE37003392B4 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
@@ -501,6 +509,9 @@
 		3E6A921C6A11486D91716385 /* TSSTEdgeBlurRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTEdgeBlurRenderer.m; sourceTree = "<group>"; };
 		638E896DFA17428A8E6C0284 /* TSSTZipIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTZipIndex.m; sourceTree = "<group>"; };
 		E10F9CC2A5604DBBA14B21C3 /* TSSTArchiveByteSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveByteSource.m; sourceTree = "<group>"; };
+		1A2B3C4D50014A1AA1000002 /* TSSTCachingByteSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCachingByteSource.m; sourceTree = "<group>"; };
+		1A2B3C4D50014A1AA1000011 /* TSSTPageDecodeCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPageDecodeCache.m; sourceTree = "<group>"; };
+		1A2B3C4D50014A1AA1000005 /* TSSTArchiveStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveStreamer.m; sourceTree = "<group>"; };
 		FA9FB53408AADA270085AA55 /* TSSTCustomValueTransformers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCustomValueTransformers.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -614,6 +625,12 @@
 				638E896DFA17428A8E6C0284 /* TSSTZipIndex.m */,
 				6220035510734CD884768BFB /* TSSTArchiveByteSource.h */,
 				E10F9CC2A5604DBBA14B21C3 /* TSSTArchiveByteSource.m */,
+				1A2B3C4D50014A1AA1000001 /* TSSTCachingByteSource.h */,
+				1A2B3C4D50014A1AA1000002 /* TSSTCachingByteSource.m */,
+				1A2B3C4D50014A1AA1000010 /* TSSTPageDecodeCache.h */,
+				1A2B3C4D50014A1AA1000011 /* TSSTPageDecodeCache.m */,
+				1A2B3C4D50014A1AA1000004 /* TSSTArchiveStreamer.h */,
+				1A2B3C4D50014A1AA1000005 /* TSSTArchiveStreamer.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -875,6 +892,7 @@
 				63AA000F28610007007F240B /* TSSTBackgroundModeLayoutTests.m */,
 				34A350175E1F4C94AF2AB2A5 /* TSSTZipIndexTests.m */,
 				C69F05BC2544412492D8FCCB /* TSSTArchiveByteSourceTests.m */,
+				1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */,
 			);
 			path = "OCR Unit Tests";
 			sourceTree = "<group>";
@@ -1312,6 +1330,7 @@
 				63AA000E28610007007F240B /* TSSTBackgroundModeLayoutTests.m in Sources */,
 				3B54D043193749CA876D1B74 /* TSSTZipIndexTests.m in Sources */,
 				708DE06789374E0BAE939FCD /* TSSTArchiveByteSourceTests.m in Sources */,
+				1A2B3C4D50014A1AA1000008 /* TSSTArchiveStreamingTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1343,6 +1362,9 @@
 				AF59CE63585048A4A89A7538 /* TSSTEdgeBlurRenderer.m in Sources */,
 				C461C4C073134889AD743053 /* TSSTZipIndex.m in Sources */,
 				C07F89BE81094190A3C99F4F /* TSSTArchiveByteSource.m in Sources */,
+				1A2B3C4D50014A1AA1000003 /* TSSTCachingByteSource.m in Sources */,
+				1A2B3C4D50014A1AA1000012 /* TSSTPageDecodeCache.m in Sources */,
+				1A2B3C4D50014A1AA1000006 /* TSSTArchiveStreamer.m in Sources */,
 				281954EA0C1201E6001F5E95 /* TSSTManagedGroup.m in Sources */,
 				5590EB3924A1FD0900DA060E /* ManagedSmartFolder+CoreDataClass.m in Sources */,
 				286AEDB70C4161C20031E3D9 /* TSSTSortDescriptor.m in Sources */,

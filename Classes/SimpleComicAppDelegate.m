@@ -283,6 +283,31 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	return YES;
 }
 
+/// Removes SimpleComic-cache-* directories (see TSSTCachingByteSource) and
+/// SC-images-* solid-archive extraction directories (see
+/// TSSTManagedArchive's scan) left behind by a previous run that crashed or
+/// was force-quit before -invalidate/-willTurnIntoFault could run. Only
+/// sweeps directories older than a day, so a directory in active use by
+/// another running instance is never touched.
+- (void)sweepStaleArchiveCacheDirectories
+{
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *tempDir = NSTemporaryDirectory();
+	NSArray<NSString *> *contents = [fileManager contentsOfDirectoryAtPath: tempDir error: NULL];
+	NSDate *cutoff = [NSDate dateWithTimeIntervalSinceNow: -24 * 60 * 60];
+	for (NSString *name in contents)
+	{
+		if (![name hasPrefix: @"SimpleComic-cache-"] && ![name hasPrefix: @"SC-images-"]) { continue; }
+		NSString *path = [tempDir stringByAppendingPathComponent: name];
+		NSDictionary *attrs = [fileManager attributesOfItemAtPath: path error: NULL];
+		NSDate *modified = attrs[NSFileModificationDate];
+		if (!modified || [modified compare: cutoff] == NSOrderedAscending)
+		{
+			[fileManager removeItemAtPath: path error: NULL];
+		}
+	}
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
@@ -295,6 +320,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	}
 	sessions = [NSMutableArray new];
 	archiveScanQueue = dispatch_queue_create("com.dancingtortoise.simplecomic.archive-scan", DISPATCH_QUEUE_SERIAL);
+	[self sweepStaleArchiveCacheDirectories];
 	@try {
 		[self sessionRelaunch];
 	} @catch(NSException *e) {

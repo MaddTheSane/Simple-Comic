@@ -10,7 +10,7 @@
   Only handles the common cases: single-disk zips, deflate/store,
   optional Zip64 fields. Anything else (multi-disk archives, unusual
   compression methods for entries we need to read) causes either
-  +indexWithFileURL:error: to return nil (caller should fall back to
+  +indexWithByteSource:error: to return nil (caller should fall back to
   XADArchive) or -canExtractEntry: to return NO for that entry.
 */
 
@@ -43,15 +43,18 @@ typedef NS_ENUM(NSInteger, TSSTZipIndexError)
  */
 @interface TSSTZipIndex : NSObject
 
-/// Returns nil (with *error left informative but not necessarily set)
-/// when the file isn't a zip this class can fully parse -- callers
-/// should fall back to XADArchive in that case.
+#if DEBUG
+/// Test convenience: indexes a local file directly. The app always goes
+/// through -indexWithByteSource:error: (see +[TSSTManagedArchive
+/// buildZipIndexForFileURL:cachingSource:]).
 + (nullable instancetype)indexWithFileURL:(NSURL *)url error:(NSError * _Nullable * _Nullable)error;
+#endif
 
-/// Same construction, but reading through an arbitrary byte source
-/// instead of opening a file directly. Lets callers substitute a
-/// counting/simulated-link source (for tests, or to model a slow link
-/// against a local file for UX evaluation).
+/// Returns nil (with *error left informative but not necessarily set)
+/// when the source isn't a zip this class can fully parse -- callers
+/// should fall back to XADArchive in that case. Reading through a byte
+/// source lets callers substitute a caching/counting/simulated-link
+/// source (tests, or modelling a slow link against a local file).
 + (nullable instancetype)indexWithByteSource:(id<TSSTArchiveByteSource>)source error:(NSError * _Nullable * _Nullable)error;
 
 @property (nonatomic, readonly) NSUInteger numberOfEntries;
