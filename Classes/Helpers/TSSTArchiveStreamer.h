@@ -26,6 +26,19 @@ NS_ASSUME_NONNULL_BEGIN
 /// TSSTZipIndex. Each span is clamped to the archive length.
 + (NSArray<NSValue *> *)spansForZipIndex:(TSSTZipIndex *)zipIndex entryIndices:(NSArray<NSNumber *> *)entryIndices;
 
+/// As above, also returning entry index -> span index.
++ (NSArray<NSValue *> *)spansForZipIndex:(TSSTZipIndex *)zipIndex entryIndices:(NSArray<NSNumber *> *)entryIndices spanIndexMap:(NSDictionary<NSNumber *, NSNumber *> * _Nullable * _Nullable)outMap;
+
+/// Generic span builder shared by every backend. Walks \c entryIndices in
+/// reading order; \c rangeProvider yields each entry's byte range in the
+/// archive (NO: the entry has no known range and stays unmapped). Entries
+/// with an identical range share one span (a solid folder), so the result
+/// has one span per distinct range. \c outMap receives entry index -> span
+/// index for the mapped entries.
++ (NSArray<NSValue *> *)spansForEntryIndices:(NSArray<NSNumber *> *)entryIndices
+								rangeProvider:(BOOL (^)(NSUInteger entryIndex, NSRange *outRange))rangeProvider
+								 spanIndexMap:(NSDictionary<NSNumber *, NSNumber *> * _Nullable * _Nullable)outMap;
+
 @property (nonatomic, readonly) NSArray<NSValue *> *spans;
 @property (atomic) NSUInteger currentSpanIndex;
 

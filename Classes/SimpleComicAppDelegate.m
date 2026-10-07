@@ -684,6 +684,47 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	__block NSUInteger pendingScanCount = 0;
 
 	[[self managedObjectContext] performBlockAndWait:^{
+		// The one landing path for every async scan result, run on the MOC's
+		// queue. A scan whose window closed mid-flight (deleting the session
+		// and, by cascade, the group) is dropped, still balancing the pending
+		// count on the final call. Otherwise `apply` inserts the scanned
+		// entities and appends any errors it found, the session's pages are
+		// refreshed, the errors are shown, and on the final call `onFinal`
+		// runs and loading is cleared. Loading is cleared after the errors are
+		// shown so the window controller's "no pages found" alert can tell
+		// whether one was already shown.
+		void (^landScanResult)(TSSTManagedGroup *, BOOL, void (^)(NSMutableArray<NSError *> *), void (^)(void)) =
+		^(TSSTManagedGroup *group, BOOL isFinal, void (^apply)(NSMutableArray<NSError *> *), void (^onFinal)(void)) {
+			if (group.managedObjectContext == nil || group.isDeleted ||
+				session.managedObjectContext == nil || session.isDeleted)
+			{
+				if (isFinal) { pendingScanCount--; }
+				return;
+			}
+			__block BOOL hadErrors = NO;
+			[TSSTManagedGroup batchURLErrorsForGroupName: group.name during: ^(NSMutableArray<NSError *> *errors) {
+				apply(errors);
+
+				NSMutableSet<TSSTPage *> *updatedPages = [session.images mutableCopy] ?: [NSMutableSet set];
+				[updatedPages unionSet: group.nestedImages];
+				session.images = updatedPages;
+				hadErrors = errors.count > 0;
+			}];
+			if (hadErrors)
+			{
+				session.lastOpenHadErrors = YES;
+			}
+			if (isFinal)
+			{
+				if (onFinal) { onFinal(); }
+				pendingScanCount--;
+				if (pendingScanCount == 0)
+				{
+					session.loading = NO;
+				}
+			}
+		};
+
 		NSFileManager * fileManager = [NSFileManager defaultManager];
 		BOOL isDirectory;
 		NSMutableSet<TSSTPage *> * pageSet = [session.images mutableCopy];
@@ -719,45 +760,35 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 					NSManagedObjectContext *moc = [self managedObjectContext];
 
 					dispatch_async(archiveScanQueue, ^{
-						NSMutableArray<NSError *> *scanErrors = [NSMutableArray array];
-						id record = [TSSTManagedArchive scanRecordForFileURL: scanURL name: scanName password: scanPassword errors: scanErrors];
-						// Async, not performBlockAndWait: the main thread must
-						// never block on this queue (the password prompt
-						// above may itself dispatch_sync back to main).
-						[moc performBlock:^{
-							// The window may have been closed (deleting the
-							// session and, by cascade, this archive) while the
-							// scan was running. Drop the result, but still
-							// balance the pending count.
-							if (archive.managedObjectContext == nil || archive.isDeleted ||
-								session.managedObjectContext == nil || session.isDeleted)
-							{
-								pendingScanCount--;
-								return;
-							}
-
-							[TSSTManagedGroup batchURLErrorsForGroupName: scanName during: ^(NSMutableArray<NSError *> *errors) {
-								[archive applyScanRecord: record];
-								[errors addObjectsFromArray: scanErrors];
+						// Progressive: for RAR/7z (or SC_FORCE_XAD) this calls
+						// back many times as entries are found, so pages can
+						// appear while a slow header walk is still running.
+						// Zips take the single-batch path (one call).
+						__block id headerRecord = nil;
+						[archive scanArchiveProgressivelyForFileURL: scanURL name: scanName password: scanPassword perBatch: ^(id _Nullable recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError * _Nullable batchError) {
+							// Async, not performBlockAndWait: the main thread
+							// must never block on this queue (the password
+							// prompt may itself dispatch_sync back to main).
+							[moc performBlock: ^{
+								landScanResult(archive, isFinal, ^(NSMutableArray<NSError *> *errors) {
+									if (recordSoFar)
+									{
+										headerRecord = recordSoFar;
+										[archive applyScanRecordHeader: recordSoFar];
+									}
+									[archive insertChildRecords: newChildren];
+									if (batchError) { [errors addObject: batchError]; }
+									if (isFinal && [headerRecord respondsToSelector: @selector(scanErrors)])
+									{
+										[errors addObjectsFromArray: [headerRecord valueForKey: @"scanErrors"]];
+									}
+								}, ^{
+									if ([headerRecord respondsToSelector: @selector(xadAllEntriesForStreamer)])
+									{
+										[archive startXADStreamerWithAllEntries: [headerRecord valueForKey: @"xadAllEntriesForStreamer"]];
+									}
+								});
 							}];
-
-							NSMutableSet<TSSTPage *> *updatedPages = [session.images mutableCopy] ?: [NSMutableSet set];
-							[updatedPages unionSet: archive.nestedImages];
-							session.images = updatedPages;
-
-							if (scanErrors.count > 0)
-							{
-								session.lastOpenHadErrors = YES;
-							}
-
-							pendingScanCount--;
-							if (pendingScanCount == 0)
-							{
-								// After the errors above, so the window
-								// controller's "no pages found" alert can tell
-								// whether one was already shown.
-								session.loading = NO;
-							}
 						}];
 					});
 				}

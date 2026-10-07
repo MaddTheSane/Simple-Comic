@@ -18,6 +18,7 @@
 #import "TSSTArchiveByteSource.h"
 #import "TSSTCachingByteSource.h"
 #import "TSSTArchiveStreamer.h"
+#import "TSSTXADArchiveSource.h"
 
 @interface TSSTManagedArchive () <XADArchiveDelegate>
 {
@@ -37,9 +38,22 @@
 	// volume, or SC_SIMULATE_LINK). nil on local volumes.
 	TSSTCachingByteSource *_cachingSource;
 	TSSTArchiveStreamer *_streamer;
-	// Reading-order span index for each zip entry index, built alongside
-	// the streamer's spans; used by -noteReadingEntryIndex:/-prioritizeEntryIndex:.
+	// Reading-order span index for each zip/XAD entry index, built
+	// alongside the streamer's spans; used by
+	// -noteReadingEntryIndex:/-prioritizeEntryIndex:.
 	NSDictionary<NSNumber *, NSNumber *> *_entryIndexToSpanIndex;
+
+	// Streaming RAR/7z backend (TSSTXADArchiveSource), built lazily like
+	// _zipIndex -- not persisted, rebuilt from fileURL if the managed
+	// object is re-fetched (session restore).
+	TSSTXADArchiveSource *_xadSource;
+	BOOL _xadSourceAttempted;
+	BOOL _xadSourceBuilding;
+	NSCondition *_xadSourceLock;
+	// YES once we've kicked off a background parse for a lazily-rebuilt
+	// _xadSource (session restore path, where nothing progressive is
+	// listening for batches).
+	BOOL _xadSourceParseStarted;
 }
 -(void)archiveNeedsPassword:(XADArchive *)archive;
 
@@ -78,8 +92,21 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 @property (nonatomic, copy, nullable) NSArray<TSSTArchiveScanRecord *> *children;
 @property (nonatomic, copy, nullable) NSString *backendDescription; // "zip-index" / "XAD", for logging
 
+// Progressive XAD (RAR/7z) top-level scan fields:
+@property (nonatomic, strong, nullable) TSSTXADArchiveSource *builtXADSource;
+// Set only on the final progressive batch: every entry found, in the
+// order XAD reported them, used to build the streamer's reading-order
+// spans once the whole parse is done.
+@property (nonatomic, copy, nullable) NSArray<TSSTXADArchiveEntry *> *xadAllEntriesForStreamer;
+
 // PDF kind:
 @property (nonatomic) NSInteger pdfPageCount;
+
+// Set only on the final progressive batch: every non-fatal error
+// collected across the whole scan (nested-archive/PDF extraction
+// failures), to be reported individually by the caller, same as
+// +scanRecordForFileURL:...'s errors: out-array.
+@property (nonatomic, copy, nullable) NSArray<NSError *> *scanErrors;
 
 @end
 
@@ -708,12 +735,14 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 {
 	[super awakeFromInsert];
 	_zipIndexLock = [NSCondition new];
+	_xadSourceLock = [NSCondition new];
 }
 
 - (void)awakeFromFetch
 {
 	[super awakeFromFetch];
 	_zipIndexLock = [NSCondition new];
+	_xadSourceLock = [NSCondition new];
 }
 
 - (void)willTurnIntoFault
@@ -760,24 +789,39 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 	return NO;
 }
 
-/// Builds the zip index (and, when applicable, the caching byte source it
-/// reads through) for \c fileURL, or returns nil to make callers use
-/// XADArchive (non-zips, unreadable files, unsupported zip features).
-/// Shared by the lazy -zipIndex accessor and the background scan so both
-/// apply the same policy: file -> [simulated link ->] [caching source ->]
-/// zip index. DEBUG builds: SC_FORCE_XAD skips the index, and
-/// SC_SIMULATE_LINK=<profile> reads through a simulated slow link so
-/// slow-volume behaviour can be checked against a local file.
-+ (nullable TSSTZipIndex *)buildZipIndexForFileURL:(NSURL *)fileURL cachingSource:(TSSTCachingByteSource * _Nullable * _Nullable)cachingSourceOut
+/// Prompts for (or reuses) an archive's password the same way for every
+/// backend: XADArchive's delegate (-archiveNeedsPassword:), the
+/// background-scan delegate (TSSTScanArchiveDelegate), and
+/// TSSTXADArchiveSource's password provider block. Always prompts on the
+/// main thread, synchronously if called from elsewhere.
++ (nullable NSString *)promptForPasswordAtPath:(NSString *)path knownPassword:(nullable NSString *)known
+{
+	if (known) { return known; }
+	__block NSString *prompted = nil;
+	[self runOnMainThreadSynchronously: ^{
+		prompted = [(SimpleComicAppDelegate*)[NSApp delegate] passwordForArchiveWithPath: path];
+	}];
+	return prompted;
+}
+
+/// Runs \c block on the main thread and waits: inline when already there,
+/// dispatch_sync otherwise. Callers must hold no lock the main thread may
+/// wait for while the block runs (the shared deadlock rule for every prompt).
++ (void)runOnMainThreadSynchronously:(void (^)(void))block
+{
+	if ([NSThread isMainThread]) { block(); }
+	else { dispatch_sync(dispatch_get_main_queue(), block); }
+}
+
+/// The byte-source stack every backend (zip index, XAD source) reads
+/// through: file -> [simulated slow link, DEBUG SC_SIMULATE_LINK=<profile>,
+/// so slow-volume behaviour can be checked against a local file] ->
+/// [caching source, on a slow volume]. The caching source is also returned
+/// through \c cachingSourceOut (nil when reads go straight through) so the
+/// caller can keep it for the streamer.
++ (id<TSSTArchiveByteSource>)byteSourceStackOverFile:(id<TSSTArchiveByteSource>)source fileURL:(NSURL *)fileURL cachingSource:(TSSTCachingByteSource * _Nullable * _Nullable)cachingSourceOut
 {
 	if (cachingSourceOut) { *cachingSourceOut = nil; }
-#if DEBUG
-	if (getenv("SC_FORCE_XAD") != NULL) { return nil; }
-#endif
-	if (![fileURL checkResourceIsReachableAndReturnError: NULL]) { return nil; }
-
-	id<TSSTArchiveByteSource> source = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
-	if (!source) { return nil; }
 #if DEBUG
 	NSString *simulatedLinkName = [[NSProcessInfo processInfo].environment[@"SC_SIMULATE_LINK"] lowercaseString];
 	TSSTSimulatedLinkByteSource *linkSource = simulatedLinkName.length > 0 ? [TSSTSimulatedLinkByteSource linkWithProfileName: simulatedLinkName wrapping: source] : nil;
@@ -787,13 +831,35 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 		source = linkSource;
 	}
 #endif
-
 	if ([self shouldUseCacheForFileURL: fileURL])
 	{
 		TSSTCachingByteSource *cachingSource = [[TSSTCachingByteSource alloc] initWithUpstream: source];
 		if (cachingSourceOut) { *cachingSourceOut = cachingSource; }
 		source = cachingSource;
 	}
+	return source;
+}
+
+/// Builds the zip index over the shared byte-source stack, or returns nil
+/// to make callers use XADArchive (non-zips, unreadable files, unsupported
+/// zip features). Shared by the lazy -zipIndex accessor and the background
+/// scan. DEBUG builds: SC_FORCE_XAD skips the index.
++ (nullable TSSTZipIndex *)buildZipIndexForFileURL:(NSURL *)fileURL cachingSource:(TSSTCachingByteSource * _Nullable * _Nullable)cachingSourceOut
+{
+	if (cachingSourceOut) { *cachingSourceOut = nil; }
+#if DEBUG
+	if (getenv("SC_FORCE_XAD") != NULL) { return nil; }
+#endif
+	if (![fileURL checkResourceIsReachableAndReturnError: NULL]) { return nil; }
+
+	// Non-zips (RAR, 7z, ...) must not cost a wrapped source, a cache and a
+	// tail read over the network just to fail: look at the first bytes of
+	// the raw file first (a "PK" local header / end record / spanning marker).
+	id<TSSTArchiveByteSource> rawFile = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
+	NSData *magic = [rawFile readAtOffset: 0 length: 2 error: NULL];
+	if (magic.length < 2 || memcmp(magic.bytes, "PK", 2) != 0) { return nil; }
+
+	id<TSSTArchiveByteSource> source = [self byteSourceStackOverFile: rawFile fileURL: fileURL cachingSource: cachingSourceOut];
 	TSSTZipIndex *index = [TSSTZipIndex indexWithByteSource: source error: NULL];
 	if (!index && cachingSourceOut && *cachingSourceOut)
 	{
@@ -802,6 +868,28 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 		*cachingSourceOut = nil;
 	}
 	return index;
+}
+
+/// Builds a streaming TSSTXADArchiveSource over the same byte-source stack.
++ (nullable TSSTXADArchiveSource *)buildXADSourceForFileURL:(NSURL *)fileURL
+														 name:(NSString *)name
+													 password:(nullable NSString *)password
+											 passwordProvider:(TSSTXADArchiveSourcePasswordProvider)passwordProvider
+												cachingSource:(TSSTCachingByteSource * _Nullable * _Nullable)cachingSourceOut
+														error:(NSError **)error
+{
+	if (cachingSourceOut) { *cachingSourceOut = nil; }
+	id<TSSTArchiveByteSource> fileSource = [TSSTFileByteSource sourceWithFileURL: fileURL error: error];
+	if (!fileSource) { return nil; }
+
+	id<TSSTArchiveByteSource> source = [self byteSourceStackOverFile: fileSource fileURL: fileURL cachingSource: cachingSourceOut];
+	TSSTXADArchiveSource *xadSource = [[TSSTXADArchiveSource alloc] initWithByteSource: source name: name path: fileURL.path password: password passwordProvider: passwordProvider error: error];
+	if (!xadSource && cachingSourceOut && *cachingSourceOut)
+	{
+		[*cachingSourceOut invalidate];
+		*cachingSourceOut = nil;
+	}
+	return xadSource;
 }
 
 - (id)instance
@@ -858,11 +946,24 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 /// Build-once gate for the lazy accessors. Returns YES to exactly one
 /// caller (the builder), which must build with NO lock held and then call
 /// TSSTFinishBuild. Every other caller waits until the build is done and
-/// gets NO.
+/// gets NO. A main-thread waiter keeps servicing the main run loop, because
+/// the builder may be blocked in dispatch_sync(main) for a password prompt.
 static BOOL TSSTBeginBuild(NSCondition *lock, BOOL *attempted, BOOL *building)
 {
 	[lock lock];
-	while (*building) { [lock wait]; }
+	while (*building)
+	{
+		if ([NSThread isMainThread])
+		{
+			[lock unlock];
+			[[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode beforeDate: [NSDate dateWithTimeIntervalSinceNow: 0.01]];
+			[lock lock];
+		}
+		else
+		{
+			[lock wait];
+		}
+	}
 	BOOL shouldBuild = !*attempted;
 	if (shouldBuild) { *attempted = YES; *building = YES; }
 	[lock unlock];
@@ -910,12 +1011,122 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	return result;
 }
 
+/// A password-provider block bound to this managed object: reuses the
+/// password already known (\c initialPassword, captured by the caller on
+/// the right thread, or an earlier answer), otherwise prompts (main thread)
+/// and remembers the answer on self.password -- exactly like
+/// -archiveNeedsPassword:, but usable off the XADArchiveDelegate protocol
+/// since TSSTXADArchiveSource's provider is a plain block. Never reads a
+/// managed-object attribute, so it is safe to call from the scan queue.
+- (TSSTXADArchiveSourcePasswordProvider)xadPasswordProviderWithInitialPassword:(nullable NSString *)initialPassword
+{
+	__weak typeof(self) weakSelf = self;
+	NSObject *rememberedLock = [NSObject new];
+	__block NSString *remembered = initialPassword;
+	return ^NSString *(NSString *path, NSString *known) {
+		NSString *existing = known;
+		@synchronized (rememberedLock) { existing = existing ?: remembered; }
+		NSString *result = [TSSTManagedArchive promptForPasswordAtPath: path knownPassword: existing];
+		@synchronized (rememberedLock) { remembered = result; }
+		typeof(self) strongSelf = weakSelf;
+		if (strongSelf && [NSThread isMainThread])
+		{
+			strongSelf.password = result;
+		}
+		else if (strongSelf)
+		{
+			dispatch_async(dispatch_get_main_queue(), ^{ strongSelf.password = result; });
+		}
+		return result;
+	};
+}
+
+/// Lazily builds (or rebuilds, e.g. after the managed object was
+/// re-fetched and the ivar reset) the streaming XAD source for this
+/// archive's fileURL. Used both by the requestDataForPageIndex: fallback
+/// (session restore, where nothing progressive built it yet) and
+/// -nameOfEntryAtIndex:. Doesn't itself trigger a parse -- see
+/// -ensureXADSourceParseStarted.
+- (nullable TSSTXADArchiveSource *)xadSource
+{
+	if (TSSTBeginBuild(_xadSourceLock, &_xadSourceAttempted, &_xadSourceBuilding))
+	{
+		TSSTXADArchiveSource *built = nil;
+		TSSTCachingByteSource *cachingSource = nil;
+		NSURL *aFileURL = self.fileURL;
+		if ([aFileURL checkResourceIsReachableAndReturnError: NULL])
+		{
+			NSString *password = self.password;
+			built = [TSSTManagedArchive buildXADSourceForFileURL: aFileURL
+															name: self.name ?: aFileURL.lastPathComponent
+														password: password
+												passwordProvider: [self xadPasswordProviderWithInitialPassword: password]
+												   cachingSource: &cachingSource
+														   error: NULL];
+		}
+		TSSTFinishBuild(_xadSourceLock, &_xadSourceBuilding, ^{
+			if (built && !self->_xadSource)
+			{
+				self->_xadSource = built;
+				[self adoptCachingSource: cachingSource];
+			}
+			else
+			{
+				[cachingSource invalidate];
+			}
+		});
+	}
+	[_xadSourceLock lock];
+	TSSTXADArchiveSource *result = _xadSource;
+	[_xadSourceLock unlock];
+	return result;
+}
+
+/// Kicks off (once) a background parse of a lazily-rebuilt _xadSource --
+/// used only on the session-restore path, where the progressive scan
+/// never ran, so nothing would otherwise ever call -parseWithEntryBatchHandler:.
+/// -dataForEntry:/-nameOfEntryAtIndex: block correctly regardless of
+/// which thread this runs on.
+- (void)ensureXADSourceParseStarted
+{
+	[_xadSourceLock lock];
+	BOOL shouldStart = _xadSource && !_xadSourceParseStarted;
+	if (shouldStart) { _xadSourceParseStarted = YES; }
+	TSSTXADArchiveSource *source = _xadSource;
+	[_xadSourceLock unlock];
+
+	if (!shouldStart) { return; }
+
+	dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+		[source parseWithEntryBatchHandler: ^(NSArray<TSSTXADArchiveEntry *> *batch, BOOL isFinal, NSError *error) {
+			// Nothing progressive is listening on this path (session
+			// restore): the pages already exist from the previous
+			// session's Core Data, and -dataForEntry: just needs the
+			// parse to finish finding them.
+		}];
+	});
+}
+
 - (nullable NSString *)nameOfEntryAtIndex:(NSInteger)index
 {
 	TSSTZipIndex *zi = self.zipIndex;
 	if (zi && index >= 0 && (NSUInteger)index < zi.numberOfEntries)
 	{
 		return [zi nameOfEntry: (NSUInteger)index];
+	}
+	// Only try the streaming XAD backend for archives that actually use
+	// it (top-level RAR/7z, progressive or restored). Nested archives
+	// always have `instance` (an XADArchive) set by
+	// -applyScanRecordHeader: instead -- building a parser here for them
+	// would silently abandon that already-built backend.
+	if (!instance && index >= 0)
+	{
+		TSSTXADArchiveSource *xad = self.xadSource;
+		if (xad)
+		{
+			[self ensureXADSourceParseStarted];
+			return [xad nameForEntryAtIndex: (NSUInteger)index];
+		}
 	}
 	return [(XADArchive *)self.instance nameOfEntry: index];
 }
@@ -939,11 +1150,67 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 		return [nameA compare: nameB options: comparisonOptions];
 	}];
 
-	NSArray<NSValue *> *spans = [TSSTArchiveStreamer spansForZipIndex: zi entryIndices: sorted];
-	NSMutableDictionary<NSNumber *, NSNumber *> *map = [NSMutableDictionary dictionaryWithCapacity: sorted.count];
-	for (NSUInteger i = 0; i < sorted.count; ++i)
+	NSDictionary<NSNumber *, NSNumber *> *map = nil;
+	NSArray<NSValue *> *spans = [TSSTArchiveStreamer spansForZipIndex: zi entryIndices: sorted spanIndexMap: &map];
+	[self startStreamerWithSpans: spans entryIndexMap: map];
+}
+
+/// XAD counterpart to -startStreamerForZipIndex: -- builds spans directly
+/// from the already-known entry list (collected across every progressive
+/// batch) instead of re-querying a listing, since TSSTXADArchiveSource
+/// doesn't keep its own name-sorted view. Only called once the whole
+/// parse has finished, so entries/spans are complete and stable. No-op when
+/// this archive doesn't read through a caching byte source.
+- (void)startXADStreamerWithAllEntries:(NSArray<TSSTXADArchiveEntry *> *)entries
+{
+	if (!_cachingSource || entries.count == 0) { return; }
+	NSMutableArray<TSSTXADArchiveEntry *> *extractable = [NSMutableArray array];
+	for (TSSTXADArchiveEntry *entry in entries)
 	{
-		map[sorted[i]] = @(i);
+		if (!entry.isDirectory) { [extractable addObject: entry]; }
+	}
+
+	const NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+	NSArray<TSSTXADArchiveEntry *> *sorted = [extractable sortedArrayUsingComparator: ^NSComparisonResult(TSSTXADArchiveEntry *a, TSSTXADArchiveEntry *b) {
+		return [a.name compare: b.name options: comparisonOptions];
+	}];
+
+	BOOL anyHasSpan = NO;
+	for (TSSTXADArchiveEntry *entry in sorted)
+	{
+		if (entry.hasSpanRange) { anyHasSpan = YES; break; }
+	}
+
+	NSArray<NSValue *> *spans;
+	NSDictionary<NSNumber *, NSNumber *> *map = nil;
+
+	if (!anyHasSpan)
+	{
+		// No entry has a computable byte range: a single whole-file span,
+		// so the streamer fills the cache sequentially from the start
+		// instead of one span per entry.
+		NSUInteger fileLength = (NSUInteger)MIN((unsigned long long)NSUIntegerMax, _cachingSource.length);
+		spans = @[[NSValue valueWithRange: NSMakeRange(0, fileLength)]];
+		// _entryIndexToSpanIndex left empty: -isEntryIndexCached: already
+		// treats an unmapped entry as conservatively not-cached.
+	}
+	else
+	{
+		// One span per distinct range: RAR/non-solid 7z entries get their
+		// own, files of a solid 7z folder share the folder's.
+		NSMutableDictionary<NSNumber *, TSSTXADArchiveEntry *> *byIndex = [NSMutableDictionary dictionaryWithCapacity: sorted.count];
+		NSMutableArray<NSNumber *> *order = [NSMutableArray arrayWithCapacity: sorted.count];
+		for (TSSTXADArchiveEntry *entry in sorted)
+		{
+			byIndex[@(entry.index)] = entry;
+			[order addObject: @(entry.index)];
+		}
+		spans = [TSSTArchiveStreamer spansForEntryIndices: order rangeProvider: ^BOOL(NSUInteger idx, NSRange *outRange) {
+			TSSTXADArchiveEntry *entry = byIndex[@(idx)];
+			if (!entry.hasSpanRange) { return NO; }
+			*outRange = entry.spanRange;
+			return YES;
+		} spanIndexMap: &map];
 	}
 	[self startStreamerWithSpans: spans entryIndexMap: map];
 }
@@ -955,7 +1222,6 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	[_streamer cancel];
 	_entryIndexToSpanIndex = map;
 	_streamer = [[TSSTArchiveStreamer alloc] initWithCachingByteSource: _cachingSource spans: spans];
-	// Lets the timeline bar redraw as spans land in the cache.
 	__weak typeof(self) weakSelf = self;
 	_streamer.progressHandler = ^(NSIndexSet *cachedSpanIndexes, double cachedFraction, double throughputBytesPerSecond, BOOL isComplete) {
 		TSSTManagedArchive *strongSelf = weakSelf;
@@ -998,10 +1264,18 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 
 - (BOOL)isEntryIndexCached:(NSInteger)entryIndex
 {
-	if (!_cachingSource || !_streamer)
+	if (!_cachingSource)
 	{
 		// No streaming cache -- local file, reads are already fast.
 		return YES;
+	}
+	if (!_streamer)
+	{
+		// Streaming archive whose streamer hasn't started yet (a RAR/7z
+		// still being listed): nothing is known to be cached, so callers
+		// must not read on the main thread -- doing so re-extracted the
+		// displayed page synchronously on every progressive batch.
+		return NO;
 	}
 	NSNumber *spanIndex = _entryIndexToSpanIndex[@(entryIndex)];
 	if (!spanIndex)
@@ -1026,6 +1300,9 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	_cachingSource = nil;
 	_zipIndex = nil;
 	_zipIndexAttempted = NO;
+	_xadSource = nil;
+	_xadSourceAttempted = NO;
+	_xadSourceParseStarted = NO;
 }
 
 
@@ -1041,6 +1318,24 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	{
 		NSError *err;
 		imageData = [zi contentsOfEntry: (NSUInteger)index error: &err];
+		callback(imageData, err);
+		return;
+	}
+	// RAR/7z (or a zip forced onto this path via SC_FORCE_XAD): the
+	// streaming XAD backend, when this archive has one -- built by the
+	// progressive scan, or lazily rebuilt here after session restore.
+	// -dataForEntry: is thread-safe and blocks appropriately whether the
+	// parse is still running (progressive open) or already finished
+	// (restore, or a later re-read). Gated on `instance == nil`: nested
+	// archives always have `instance` (an XADArchive) set by
+	// -applyScanRecordHeader: instead, and must keep using it rather
+	// than silently getting a second, independent parser here.
+	TSSTXADArchiveSource *xadSource = (solidDirectory || instance) ? nil : self.xadSource;
+	if (xadSource && index >= 0)
+	{
+		[self ensureXADSourceParseStarted];
+		NSError *err;
+		imageData = [xadSource dataForEntry: (NSUInteger)index error: &err];
 		callback(imageData, err);
 		return;
 	}
@@ -1187,10 +1482,128 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	return record;
 }
 
+/// Progressive counterpart of +scanRecordForFileURL:...: for RAR/7z (or a
+/// zip under SC_FORCE_XAD) the listing is delivered in batches as entries
+/// are found. Takes the file's URL, name and password as plain values (the
+/// caller captures them on the main thread): this runs on the scan queue
+/// and must not read managed-object attributes.
+- (void)scanArchiveProgressivelyForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password perBatch:(void (^)(id _Nullable recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError * _Nullable error))perBatch
+{
+	// Build the zip index once; a scannable one goes straight to the
+	// single-shot scan, which reuses it (and its cache).
+	TSSTCachingByteSource *zipCachingSource = nil;
+	TSSTZipIndex *zi = [TSSTManagedArchive scannableZipIndexForFileURL: fileURL cachingSource: &zipCachingSource];
+	if (zi)
+	{
+		// The zip index is already fast and fully synchronous (one
+		// pread() of the central directory) -- no need for progressive
+		// batching.
+		NSMutableArray<NSError *> *errors = [NSMutableArray array];
+		TSSTArchiveScanRecord *record = [TSSTManagedArchive scanRecordForFileURL: fileURL name: name password: password zipIndex: zi cachingSource: zipCachingSource errors: errors];
+		record.scanErrors = errors;
+		perBatch(record, record.children, YES, nil);
+		return;
+	}
+
+	// RAR/7z (or SC_FORCE_XAD): progressive listing on TSSTXADArchiveSource.
+	NSError *buildError = nil;
+	TSSTCachingByteSource *xadCachingSource = nil;
+	TSSTXADArchiveSource *source = [TSSTManagedArchive buildXADSourceForFileURL: fileURL
+																			 name: name ?: fileURL.lastPathComponent
+																		 password: password
+																 passwordProvider: [self xadPasswordProviderWithInitialPassword: password]
+																	cachingSource: &xadCachingSource
+																			error: &buildError];
+	if (!source)
+	{
+		perBatch(nil, @[], YES, buildError ?: [NSError errorWithDomain: TSSTXADArchiveSourceErrorDomain code: TSSTXADArchiveSourceErrorCannotOpen userInfo: nil]);
+		return;
+	}
+
+	TSSTArchiveScanRecord *record = [TSSTArchiveScanRecord new];
+	record.name = name ?: fileURL.lastPathComponent;
+	record.builtXADSource = source;
+	record.builtCachingSource = xadCachingSource;
+	record.backendDescription = @"XAD-progressive";
+
+	NSMutableArray<NSError *> *scanErrors = [NSMutableArray array];
+	NSMutableArray<TSSTXADArchiveEntry *> *pendingDataEntries = [NSMutableArray array]; // archive/pdf entries, resolved after the parse finishes
+	NSMutableArray<TSSTXADArchiveEntry *> *allEntries = [NSMutableArray array];
+	__block BOOL headerDelivered = NO;
+
+	[source parseWithEntryBatchHandler: ^(NSArray<TSSTXADArchiveEntry *> *batch, BOOL isFinal, NSError *parseError) {
+		NSMutableArray<TSSTArchiveScanRecord *> *children = [NSMutableArray arrayWithCapacity: batch.count];
+		[allEntries addObjectsFromArray: batch];
+
+		for (TSSTXADArchiveEntry *entry in batch)
+		{
+			if (entry.isDirectory) { continue; }
+			switch (TSSTClassifyScanEntryName(entry.name))
+			{
+				case TSSTScanEntryClassImage:
+					[children addObject: TSSTImageChildRecord(entry.name, (NSInteger)entry.index, NO)];
+					break;
+				case TSSTScanEntryClassText:
+					[children addObject: TSSTImageChildRecord(entry.name, (NSInteger)entry.index, YES)];
+					break;
+				case TSSTScanEntryClassArchive:
+				case TSSTScanEntryClassPDF:
+					// Needs entry bytes -- extracting here (still mid-parse,
+					// on the parse thread) would deadlock against
+					// TSSTXADArchiveSource's own request queue. Defer to
+					// after the parse finishes, when direct extraction is
+					// safe; see below.
+					[pendingDataEntries addObject: entry];
+					break;
+				case TSSTScanEntryClassIgnored:
+					break;
+			}
+		}
+
+		if (isFinal)
+		{
+			for (TSSTXADArchiveEntry *entry in pendingDataEntries)
+			{
+				NSError *dataError = nil;
+				NSData *fileData = [source dataForEntry: entry.index error: &dataError];
+				if (!fileData)
+				{
+					if (dataError) { [scanErrors addObject: dataError]; }
+					continue;
+				}
+				if (TSSTClassifyScanEntryName(entry.name) == TSSTScanEntryClassArchive)
+				{
+					[children addObject: TSSTNestedArchiveChildRecord(fileData, entry.name, scanErrors)];
+				}
+				else
+				{
+					[children addObject: TSSTPDFChildRecord(fileData, entry.name)];
+				}
+			}
+			record.xadAllEntriesForStreamer = [allEntries copy];
+			record.scanErrors = scanErrors; // reported individually by the caller, not folded into a single fatal error
+		}
+
+		perBatch(headerDelivered ? nil : record, children, isFinal, isFinal ? parseError : nil);
+		headerDelivered = YES;
+	}];
+}
+
 /// Main-thread only: walks a record produced by
 /// +scanRecordForFileURL:name:password:errors: and inserts the corresponding
 /// Core Data entities, reusing the already-built backend (no re-parsing).
 - (void)applyScanRecord:(id)recordObject
+{
+	TSSTArchiveScanRecord *record = (TSSTArchiveScanRecord *)recordObject;
+	if (!record)
+	{
+		return;
+	}
+	[self applyScanRecordHeader: record];
+	[self insertChildRecords: record.children];
+}
+
+- (void)applyScanRecordHeader:(id)recordObject
 {
 	TSSTArchiveScanRecord *record = (TSSTArchiveScanRecord *)recordObject;
 	if (!record)
@@ -1208,6 +1621,17 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 			[self startStreamerForZipIndex: _zipIndex];
 		}
 	}
+	else if (record.builtXADSource)
+	{
+		_xadSource = record.builtXADSource;
+		_xadSourceAttempted = YES;
+		_zipIndexAttempted = YES; // not a zip: never build a second source for it
+		_xadSourceParseStarted = YES; // -scanArchiveProgressivelyForFileURL:name:password:perBatch: is already driving the parse
+		[self adoptCachingSource: record.builtCachingSource];
+		// The streamer starts once the whole parse finishes (see
+		// -scanArchiveProgressivelyForFileURL:name:password:perBatch:'s final-batch handling),
+		// since it needs every entry's span up front, in reading order.
+	}
 	else if (record.builtInstance)
 	{
 		instance = record.builtInstance;
@@ -1221,8 +1645,15 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	{
 		self.solidDirectory = record.solidDirectory;
 	}
+}
 
-	for (TSSTArchiveScanRecord *child in record.children)
+/// Main-thread only: inserts the Core Data entities for newChildren (a
+/// subset of some record's children, or the whole list for the
+/// single-batch zip path) and returns the newly created image pages.
+- (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<id> *)newChildren
+{
+	NSMutableSet<TSSTPage *> *newImages = [NSMutableSet set];
+	for (TSSTArchiveScanRecord *child in newChildren)
 	{
 		TSSTManagedGroup *nestedDescription = nil;
 		switch (child.kind)
@@ -1235,6 +1666,7 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 				{
 					[nestedDescription setValue: @YES forKey: @"text"];
 				}
+				[newImages addObject: (TSSTPage *)nestedDescription];
 				break;
 			case TSSTArchiveScanRecordKindArchive:
 				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
@@ -1257,6 +1689,7 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 			nestedDescription.group = self;
 		}
 	}
+	return newImages;
 }
 
 - (void)nestedArchiveContents
