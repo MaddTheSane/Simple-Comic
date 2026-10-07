@@ -19,6 +19,30 @@
 #import "TSSTCachingByteSource.h"
 #import "TSSTArchiveStreamer.h"
 #import "TSSTXADArchiveSource.h"
+#import "TSSTFileSetByteSource.h"
+#import <sys/stat.h>
+
+/// Streaming state shared by every backend (zip index, XAD source, folder
+/// file set): a caching byte source, the streamer that fills it in reading
+/// order, and the entry index -> span index map behind
+/// -noteReadingEntryIndex:/-isEntryIndexCached:. A folder's subfolders route
+/// to the topmost group that owns one (see -streamingOwner).
+@interface TSSTManagedGroup ()
+{
+	@protected
+	// Set only when reads go through a caching byte source (slow volume, or
+	// SC_SIMULATE_LINK). nil on local volumes.
+	TSSTCachingByteSource *_cachingSource;
+	TSSTArchiveStreamer *_streamer;
+	NSDictionary<NSNumber *, NSNumber *> *_entryIndexToSpanIndex;
+	// Folder backend (TSSTFileSetByteSource): nil for archives and for
+	// folders that read straight from disk.
+	TSSTFileSetByteSource *_fileSet;
+}
+- (void)startStreamerWithSpans:(NSArray<NSValue *> *)spans entryIndexMap:(nullable NSDictionary<NSNumber *, NSNumber *> *)map;
+- (nullable TSSTManagedGroup *)streamingOwner;
+- (void)tearDownStreaming;
+@end
 
 @interface TSSTManagedArchive () <XADArchiveDelegate>
 {
@@ -33,15 +57,6 @@
 	BOOL _zipIndexAttempted;
 	BOOL _zipIndexBuilding;
 	NSCondition *_zipIndexLock;
-
-	// Set only when the zip index was built on a caching byte source (slow
-	// volume, or SC_SIMULATE_LINK). nil on local volumes.
-	TSSTCachingByteSource *_cachingSource;
-	TSSTArchiveStreamer *_streamer;
-	// Reading-order span index for each zip/XAD entry index, built
-	// alongside the streamer's spans; used by
-	// -noteReadingEntryIndex:/-prioritizeEntryIndex:.
-	NSDictionary<NSNumber *, NSNumber *> *_entryIndexToSpanIndex;
 
 	// Streaming RAR/7z backend (TSSTXADArchiveSource), built lazily like
 	// _zipIndex -- not persisted, rebuilt from fileURL if the managed
@@ -66,6 +81,7 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 	TSSTArchiveScanRecordKindImage,
 	TSSTArchiveScanRecordKindArchive,
 	TSSTArchiveScanRecordKindPDF,
+	TSSTArchiveScanRecordKindFolder,
 };
 
 /*
@@ -80,8 +96,10 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 @property (nonatomic, copy, nullable) NSString *name;      // entry name / archive name
 @property (nonatomic, copy, nullable) NSString *imagePath; // image/text kind: entry name used as imagePath
 @property (nonatomic, copy, nullable) NSString *path;      // archive/pdf kind: temp file path
-@property (nonatomic) NSInteger index;
+@property (nonatomic) NSInteger index;     // archive entry index / folder file index; -1 when the page has none
 @property (nonatomic) BOOL text;
+@property (nonatomic, strong, nullable) NSURL *url; // folder children: the real file/folder URL
+@property (nonatomic) BOOL isUserFile;              // archive/pdf kind: path is the user's own file (folder child), never deleted with the group
 
 // Archive/self-describing fields (used for the top-level record and for
 // TSSTArchiveScanRecordKindArchive children):
@@ -102,6 +120,10 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 // PDF kind:
 @property (nonatomic) NSInteger pdfPageCount;
 
+// Folder kind (top-level record only, when streaming):
+@property (nonatomic, strong, nullable) TSSTFileSetByteSource *builtFileSet;
+@property (nonatomic, copy, nullable) NSArray<NSNumber *> *folderReadingOrder; // file indices, in display order
+
 // Set only on the final progressive batch: every non-fatal error
 // collected across the whole scan (nested-archive/PDF extraction
 // failures), to be reported individually by the caller, same as
@@ -111,6 +133,11 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 @end
 
 @implementation TSSTArchiveScanRecord
+- (instancetype)init
+{
+	if ((self = [super init])) { _index = -1; }
+	return self;
+}
 @end
 
 /*
@@ -270,6 +297,52 @@ static TSSTArchiveScanRecord *TSSTPDFChildRecord(NSData *fileData, NSString *fil
 	return child;
 }
 
+#pragma mark - Folder scanning
+
+/// Shared state while walking one folder tree (see
+/// +scanRecordForFolderURL:name:streaming:errors:).
+@interface TSSTFolderScanContext : NSObject
+@property (nonatomic) BOOL streaming;
+@property (nonatomic, strong) NSMutableArray<NSURL *> *files;      // streaming: every image/text file, indexed
+@property (nonatomic, strong) NSMutableArray<NSNumber *> *sizes;
+@property (nonatomic, strong) NSMutableArray<TSSTArchiveScanRecord *> *fileRecords;
+@property (nonatomic, strong) NSMutableArray<NSError *> *errors;
+@end
+
+@implementation TSSTFolderScanContext
+- (instancetype)init
+{
+	if ((self = [super init]))
+	{
+		_files = [NSMutableArray array];
+		_sizes = [NSMutableArray array];
+		_fileRecords = [NSMutableArray array];
+	}
+	return self;
+}
+@end
+
+#if DEBUG
+/// The DEBUG SC_SIMULATE_LINK profile name ("wifi", "smb", "lan"), or nil.
+/// Read live from the environment (not NSProcessInfo's launch-time
+/// snapshot) so tests can switch it per test.
+static NSString * _Nullable TSSTSimulatedLinkProfileName(void)
+{
+	const char *value = getenv("SC_SIMULATE_LINK");
+	return (value && *value) ? [[NSString stringWithUTF8String: value] lowercaseString] : nil;
+}
+#endif
+
+/// The display order pages are sorted in (TSSTSortDescriptor's comparison
+/// on imagePath), which is also the order the streamer reads in.
+static NSComparisonResult TSSTReadingOrderCompare(NSString *a, NSString *b)
+{
+	const NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+	return [a compare: b options: comparisonOptions];
+}
+
+NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgressNotification";
+
 /*
  * setFileURL:/fileURL used to call -[NSApp presentError:] directly, once per
  * bad file. Scanning a folder or archive with many unreadable entries could
@@ -307,7 +380,6 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 {
 	return NSThread.currentThread.threadDictionary[kURLErrorBatchThreadKey];
 }
-NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgressNotification";
 
 @implementation TSSTManagedGroup
 
@@ -441,12 +513,15 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 		}
 	}
 	[self.fileURL stopAccessingSecurityScopedResource];
+	[_streamer cancel];
+	[_cachingSource invalidate];
 }
 
 - (void)didTurnIntoFault
 {
 	instance = nil;
 	groupLock = nil;
+	[self tearDownStreaming];
 }
 
 @synthesize fileURL=_url;
@@ -588,8 +663,37 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 	return nil;
 }
 
+/// Folder pages that stream carry the index of their file in the top folder's
+/// file set (folders read straight from disk have no index and never get
+/// here). Reads go through the same caching source the streamer fills.
 - (void)requestDataForPageIndex:(NSInteger)index completionHandler:(void(^)(NSData *_Nullable pageData, NSError *_Nullable error))callback
 {
+	TSSTManagedGroup *owner = [self streamingOwner];
+	TSSTFileSetByteSource *fileSet = owner ? owner->_fileSet : nil;
+	if (fileSet && index >= 0 && (NSUInteger)index < fileSet.fileCount)
+	{
+		NSRange range = [fileSet rangeOfFileAtIndex: (NSUInteger)index];
+		NSError *error = nil;
+		NSData *data = [owner->_cachingSource readAtOffset: range.location length: range.length error: &error];
+		callback(data, error);
+		return;
+	}
+	// A restored session: pages remember their file index but the file set
+	// (not persisted) is gone. Read the page's own file straight from disk.
+	// Pages of a nested archive number their entries from 0 in their own
+	// index space, so they can collide with a folder file's index: skip them
+	// (the set is unordered, which made the wrong match intermittent).
+	for (TSSTPage *page in self.nestedImages)
+	{
+		if ([page.group isKindOfClass: [TSSTManagedArchive class]]) { continue; }
+		if (page.index != nil && page.index.integerValue == index && page.imagePath.length > 0)
+		{
+			NSError *error = nil;
+			NSData *data = [NSData dataWithContentsOfFile: page.imagePath options: 0 error: &error];
+			callback(data, error);
+			return;
+		}
+	}
 	callback(nil, [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:nil]);
 }
 
@@ -605,65 +709,384 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 
 - (void)nestedFolderContents
 {
-	[TSSTManagedGroup beginURLErrorBatchForGroupName: self.name ?: self.fileURL.lastPathComponent];
-	NSURL * folderPath = self.fileURL;
-	NSFileManager * fileManager = [NSFileManager defaultManager];
-	TSSTManagedGroup * nestedDescription;
-	NSError * error = nil;
-	NSArray<NSURL*> * nestedFiles = [fileManager contentsOfDirectoryAtURL:folderPath includingPropertiesForKeys:nil options:(NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles) error:&error];
+	[TSSTManagedGroup batchURLErrorsForGroupName: self.name ?: self.fileURL.lastPathComponent during: ^(NSMutableArray<NSError *> *errors) {
+		// Local folders never stream: reads stay straight from disk.
+		[self applyFolderScanRecord: [TSSTManagedGroup scanRecordForFolderURL: self.fileURL name: self.name streaming: NO errors: errors]];
+	}];
+}
+
+/// DEBUG SC_SIMULATE_LINK: a directory read costs one round trip.
++ (void)simulateDirectoryLatency
+{
+#if DEBUG
+	NSString *profile = TSSTSimulatedLinkProfileName();
+	if (profile)
+	{
+		TSSTFileSetByteSource *empty = [[TSSTFileSetByteSource alloc] initWithFileURLs: @[] sizes: @[]];
+		TSSTSimulatedLinkByteSource *link = [TSSTSimulatedLinkByteSource linkWithProfileName: profile wrapping: empty];
+		if (link) { [NSThread sleepForTimeInterval: link.latency]; }
+	}
+#endif
+}
+
+/// One folder level: a single enumeration that also fetches each entry's
+/// directory/symlink/size properties, so nothing is stat'ed per file.
++ (TSSTArchiveScanRecord *)folderRecordForURL:(NSURL *)folderURL name:(nullable NSString *)name context:(TSSTFolderScanContext *)context
+{
+	TSSTArchiveScanRecord *record = [TSSTArchiveScanRecord new];
+	record.kind = TSSTArchiveScanRecordKindFolder;
+	record.name = name;
+	record.url = folderURL;
+	NSMutableArray<TSSTArchiveScanRecord *> *children = [NSMutableArray array];
+
+	NSError *error = nil;
+	NSArray<NSURLResourceKey> *keys = @[NSURLIsDirectoryKey, NSURLIsSymbolicLinkKey, NSURLFileSizeKey];
+	NSArray<NSURL *> *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL: folderURL includingPropertiesForKeys: keys options: (NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles) error: &error];
 	if (error)
 	{
-		NSLog(@"%@",[error localizedDescription]);
+		NSLog(@"%@", [error localizedDescription]);
 	}
-	BOOL isDirectory;
-	
-	for (NSURL *path in nestedFiles)
+	[self simulateDirectoryLatency];
+
+	for (NSURL *url in contents)
 	{
-		nestedDescription = nil;
-		NSString *fileExtension = [[path pathExtension] lowercaseString];
-		BOOL exists = [fileManager fileExistsAtPath: path.path isDirectory: &isDirectory];
-		if(exists && ![[[path lastPathComponent] substringToIndex: 1] isEqualToString: @"."])
+		NSString *lastComponent = url.lastPathComponent;
+		NSString *fileExtension = url.pathExtension.lowercaseString;
+
+		BOOL exists = YES, isDirectory = NO;
+		unsigned long long size = 0;
+		NSDictionary<NSURLResourceKey, id> *values = [url resourceValuesForKeys: keys error: NULL];
+		if (!values || [values[NSURLIsSymbolicLinkKey] boolValue])
 		{
-			if(isDirectory)
+			// Symlinks (and anything the properties couldn't describe) are
+			// judged by where they point, like fileExistsAtPath: always did.
+			struct stat st;
+			exists = stat(url.fileSystemRepresentation, &st) == 0;
+			isDirectory = exists && S_ISDIR(st.st_mode);
+			size = exists ? (unsigned long long)st.st_size : 0;
+		}
+		else
+		{
+			isDirectory = [values[NSURLIsDirectoryKey] boolValue];
+			size = [values[NSURLFileSizeKey] unsignedLongLongValue];
+		}
+		if (!exists || lastComponent.length == 0 || [lastComponent hasPrefix: @"."]) { continue; }
+
+		NSString *childName = url.relativePath ?: url.path;
+		TSSTArchiveScanRecord *child = nil;
+		if (isDirectory)
+		{
+			child = [self folderRecordForURL: url name: childName context: context];
+		}
+		else if ([[TSSTManagedArchive archiveExtensions] containsObject: fileExtension])
+		{
+			child = [TSSTManagedArchive scanRecordForFileURL: url name: childName password: nil errors: context.errors];
+			child.kind = TSSTArchiveScanRecordKindArchive;
+			child.path = url.path;
+			child.url = url;
+			child.isUserFile = YES;
+		}
+		else if ([fileExtension isEqualToString: @"pdf"])
+		{
+			child = [TSSTArchiveScanRecord new];
+			child.kind = TSSTArchiveScanRecordKindPDF;
+			child.name = childName;
+			child.path = url.path;
+			child.url = url;
+			child.isUserFile = YES;
+			PDFDocument *pdfDoc = [[PDFDocument alloc] initWithURL: url];
+			child.builtInstance = pdfDoc;
+			child.pdfPageCount = pdfDoc.pageCount;
+		}
+		else
+		{
+			BOOL isImage = [[TSSTPage imageExtensions] containsObject: fileExtension];
+			if (isImage || [[TSSTPage textExtensions] containsObject: fileExtension])
 			{
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"ImageGroup" inManagedObjectContext: [self managedObjectContext]];
-				nestedDescription.fileURL = path;
-				nestedDescription.name = path.relativePath ?: path.path;
-				[nestedDescription nestedFolderContents];
-			}
-			else if([[TSSTManagedArchive archiveExtensions] containsObject: fileExtension])
-			{
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
-				nestedDescription.fileURL = path;
-				nestedDescription.name = path.relativePath ?: path.path;
-				[(TSSTManagedArchive *)nestedDescription nestedArchiveContents];
-			}
-			else if([fileExtension isEqualToString: @"pdf"])
-			{
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"PDF" inManagedObjectContext: [self managedObjectContext]];
-				nestedDescription.fileURL = path;
-				nestedDescription.name = path.relativePath ?: path.path;
-				[(TSSTManagedPDF *)nestedDescription pdfContents];
-			}
-			else if([[TSSTPage imageExtensions] containsObject: fileExtension])
-			{
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
-				[nestedDescription setValue: path.path forKey: @"imagePath"];
-			}
-			else if ([[TSSTPage textExtensions] containsObject: fileExtension])
-			{
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
-				[nestedDescription setValue: path.path forKey: @"imagePath"];
-				[nestedDescription setValue: @YES forKey: @"text"];
-			}
-			
-			if(nestedDescription)
-			{
-				[nestedDescription setValue: self forKey: @"group"];
+				child = TSSTImageChildRecord(url.path, -1, !isImage);
+				if (context.streaming)
+				{
+					child.index = (NSInteger)context.files.count;
+					[context.files addObject: url];
+					[context.sizes addObject: @(size)];
+					[context.fileRecords addObject: child];
+				}
 			}
 		}
+		if (child) { [children addObject: child]; }
 	}
-	[TSSTManagedGroup endURLErrorBatch];
+	record.children = children;
+	return record;
+}
+
++ (nullable id)scanRecordForFolderURL:(NSURL *)folderURL name:(nullable NSString *)name streaming:(BOOL)streaming errors:(NSMutableArray<NSError *> *)errors
+{
+	TSSTFolderScanContext *context = [TSSTFolderScanContext new];
+	context.streaming = streaming;
+	context.errors = errors;
+	TSSTArchiveScanRecord *record = [self folderRecordForURL: folderURL name: name ?: folderURL.lastPathComponent context: context];
+
+	if (streaming && context.files.count > 0)
+	{
+		// One virtual byte space for the whole tree, through the same
+		// [simulated link ->] caching stack the archives use.
+		TSSTFileSetByteSource *fileSet = [[TSSTFileSetByteSource alloc] initWithFileURLs: context.files sizes: context.sizes];
+		TSSTCachingByteSource *cachingSource = nil;
+		[self byteSourceStackOverFile: fileSet fileURL: folderURL requireCache: YES cachingSource: &cachingSource];
+		record.builtFileSet = fileSet;
+		record.builtCachingSource = cachingSource;
+
+		NSArray<TSSTArchiveScanRecord *> *sorted = [context.fileRecords sortedArrayUsingComparator: ^NSComparisonResult(TSSTArchiveScanRecord *a, TSSTArchiveScanRecord *b) {
+			return TSSTReadingOrderCompare(a.imagePath, b.imagePath);
+		}];
+		NSMutableArray<NSNumber *> *order = [NSMutableArray arrayWithCapacity: sorted.count];
+		for (TSSTArchiveScanRecord *fileRecord in sorted) { [order addObject: @(fileRecord.index)]; }
+		record.folderReadingOrder = order;
+	}
+	return record;
+}
+
+- (void)applyFolderScanRecord:(id)recordObject
+{
+	TSSTArchiveScanRecord *record = (TSSTArchiveScanRecord *)recordObject;
+	if (!record) { return; }
+	if (record.builtFileSet && record.builtCachingSource)
+	{
+		_fileSet = record.builtFileSet;
+		[self adoptCachingSource: record.builtCachingSource];
+		NSDictionary<NSNumber *, NSNumber *> *map = nil;
+		NSArray<NSValue *> *spans = [_fileSet spansForFileIndices: record.folderReadingOrder ?: @[] spanIndexMap: &map];
+		[self startStreamerWithSpans: spans entryIndexMap: map];
+	}
+	[self insertChildRecords: record.children];
+}
+
+/// Main-thread only: inserts the Core Data entities for newChildren (a
+/// subset of some record's children, or the whole list for a single-batch
+/// scan) and returns the newly created image pages.
+- (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<id> *)newChildren
+{
+	NSMutableSet<TSSTPage *> *newImages = [NSMutableSet set];
+	for (TSSTArchiveScanRecord *child in newChildren)
+	{
+		TSSTManagedGroup *nestedDescription = nil;
+		switch (child.kind)
+		{
+			case TSSTArchiveScanRecordKindImage:
+				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
+				[nestedDescription setValue: child.imagePath forKey: @"imagePath"];
+				if (child.index >= 0)
+				{
+					[nestedDescription setValue: @(child.index) forKey: @"index"];
+				}
+				if (child.text)
+				{
+					[nestedDescription setValue: @YES forKey: @"text"];
+				}
+				[newImages addObject: (TSSTPage *)nestedDescription];
+				break;
+			case TSSTArchiveScanRecordKindArchive:
+				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
+				nestedDescription.name = child.name;
+				nestedDescription.nested = !child.isUserFile;
+				if (child.url) { nestedDescription.fileURL = child.url; } else { nestedDescription.path = child.path; }
+				[(TSSTManagedArchive *)nestedDescription applyScanRecord: child];
+				break;
+			case TSSTArchiveScanRecordKindPDF:
+				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"PDF" inManagedObjectContext: [self managedObjectContext]];
+				if (child.url) { nestedDescription.fileURL = child.url; } else { nestedDescription.path = child.path; }
+				nestedDescription.nested = !child.isUserFile;
+				nestedDescription.name = child.name;
+				[(TSSTManagedPDF *)nestedDescription applyPDFScanRecord: child];
+				break;
+			case TSSTArchiveScanRecordKindFolder:
+				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"ImageGroup" inManagedObjectContext: [self managedObjectContext]];
+				nestedDescription.fileURL = child.url;
+				nestedDescription.name = child.name;
+				[nestedDescription insertChildRecords: child.children];
+				break;
+		}
+
+		if (nestedDescription)
+		{
+			nestedDescription.group = self;
+		}
+	}
+	return newImages;
+}
+
+#pragma mark - Streaming (shared by archives and folders)
+
+/// YES when the given file is worth caching/streaming: a non-local
+/// volume (e.g. SMB), or DEBUG SC_SIMULATE_LINK is set (so the app can be
+/// exercised against the caching path using a local file).
++ (BOOL)shouldUseCacheForFileURL:(NSURL *)fileURL
+{
+#if DEBUG
+	if (TSSTSimulatedLinkProfileName())
+	{
+		return YES;
+	}
+#endif
+	NSNumber *isLocal = nil;
+	NSError *error = nil;
+	if ([fileURL getResourceValue: &isLocal forKey: NSURLVolumeIsLocalKey error: &error] && isLocal)
+	{
+		return !isLocal.boolValue;
+	}
+	return NO;
+}
+
+/// The byte-source stack every backend (zip index, XAD source, folder file
+/// set) reads through: file -> [simulated slow link, DEBUG
+/// SC_SIMULATE_LINK=<profile>, so slow-volume behaviour can be checked
+/// against a local file] -> [caching source]. The caching source is added
+/// when the file is on a slow volume (see +shouldUseCacheForFileURL:) or
+/// \c requireCache is YES (a folder scan already decided to stream); it is
+/// returned through \c cachingSourceOut (nil when reads go straight through)
+/// so the caller can keep it for the streamer.
++ (id<TSSTArchiveByteSource>)byteSourceStackOverFile:(id<TSSTArchiveByteSource>)source fileURL:(NSURL *)fileURL requireCache:(BOOL)requireCache cachingSource:(TSSTCachingByteSource * _Nullable * _Nullable)cachingSourceOut
+{
+	if (cachingSourceOut) { *cachingSourceOut = nil; }
+#if DEBUG
+	NSString *simulatedLinkName = TSSTSimulatedLinkProfileName();
+	TSSTSimulatedLinkByteSource *linkSource = simulatedLinkName ? [TSSTSimulatedLinkByteSource linkWithProfileName: simulatedLinkName wrapping: source] : nil;
+	if (linkSource)
+	{
+		linkSource.simulateTime = YES;
+		source = linkSource;
+	}
+#endif
+	if (requireCache || [self shouldUseCacheForFileURL: fileURL])
+	{
+		TSSTCachingByteSource *cachingSource = [[TSSTCachingByteSource alloc] initWithUpstream: source];
+		if (cachingSourceOut) { *cachingSourceOut = cachingSource; }
+		source = cachingSource;
+	}
+	return source;
+}
+
+/// Makes \c cachingSource this group's cache, shutting down (streamer and
+/// temp directory) any different one it replaces.
+- (void)adoptCachingSource:(nullable TSSTCachingByteSource *)cachingSource
+{
+	if (_cachingSource && _cachingSource != cachingSource)
+	{
+		[_streamer cancel];
+		[_cachingSource invalidate];
+	}
+	_cachingSource = cachingSource;
+}
+
+/// The group that owns the streaming cache serving this group's pages:
+/// itself, or (for a subfolder) the folder above it. nil when nothing here
+/// streams (local volume, PDF, archive without a cache).
+- (nullable TSSTManagedGroup *)streamingOwner
+{
+	if (_cachingSource) { return self; }
+	if ([self isKindOfClass: [TSSTManagedArchive class]] || [self isKindOfClass: [TSSTManagedPDF class]]) { return nil; }
+	id parent = [self valueForKey: @"group"];
+	return [parent isKindOfClass: [TSSTManagedGroup class]] ? [(TSSTManagedGroup *)parent streamingOwner] : nil;
+}
+
+/// The one place a streamer is built, for zip, XAD and folder backends.
+/// \c map takes an entry index to its span index (see
+/// -noteReadingEntryIndex:). Replaces any running streamer.
+- (void)startStreamerWithSpans:(NSArray<NSValue *> *)spans entryIndexMap:(nullable NSDictionary<NSNumber *, NSNumber *> *)map
+{
+	[_streamer cancel];
+	_entryIndexToSpanIndex = map;
+	_streamer = [[TSSTArchiveStreamer alloc] initWithCachingByteSource: _cachingSource spans: spans];
+	_streamer.avoidsRuntTailReads = (_fileSet != nil);
+	// Lets the timeline bar redraw as spans land in the cache.
+	__weak typeof(self) weakSelf = self;
+	_streamer.progressHandler = ^(NSIndexSet *cachedSpanIndexes, double cachedFraction, double throughputBytesPerSecond, BOOL isComplete) {
+		TSSTManagedGroup *strongSelf = weakSelf;
+		if (strongSelf)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName: TSSTArchiveCacheProgressNotification object: strongSelf];
+		}
+	};
+	[_streamer start];
+}
+
+#if DEBUG
+- (nullable TSSTArchiveStreamer *)streamer
+{
+	return _streamer;
+}
+#endif
+
+/// Retargets the streamer at the page the reader is on. Called only from
+/// the session's display path (-changeViewImages), never from the byte-read
+/// path: hover thumbnails, pre-decoding and the exposé all read pages the
+/// reader is not on, and each such read would drag the streamer's target
+/// away from the reader's own neighbourhood.
+- (void)noteReadingEntryIndex:(NSInteger)entryIndex
+{
+	TSSTManagedGroup *owner = [self streamingOwner];
+	if (!owner) { return; }
+	NSNumber *spanIndex = owner->_entryIndexToSpanIndex[@(entryIndex)];
+	if (spanIndex) { owner->_streamer.currentSpanIndex = spanIndex.unsignedIntegerValue; }
+}
+
+- (void)prioritizeEntryIndex:(NSInteger)entryIndex
+{
+	TSSTManagedGroup *owner = [self streamingOwner];
+	if (!owner) { return; }
+	NSNumber *spanIndex = owner->_entryIndexToSpanIndex[@(entryIndex)];
+	if (spanIndex) { [owner->_streamer prioritizeSpanIndex: spanIndex.unsignedIntegerValue]; }
+}
+
+- (nullable TSSTCachingByteSource *)cachingSourceForTesting
+{
+	TSSTManagedGroup *owner = [self streamingOwner];
+	return owner ? owner->_cachingSource : nil;
+}
+
+- (BOOL)isStreamingArchive
+{
+	return [self streamingOwner] != nil;
+}
+
+- (BOOL)isEntryIndexCached:(NSInteger)entryIndex
+{
+	TSSTManagedGroup *owner = [self streamingOwner];
+	if (!owner)
+	{
+		// No streaming cache -- local file, reads are already fast.
+		return YES;
+	}
+	if (!owner->_streamer)
+	{
+		// Streaming archive whose streamer hasn't started yet (a RAR/7z
+		// still being listed): nothing is known to be cached, so callers
+		// must not read on the main thread -- doing so re-extracted the
+		// displayed page synchronously on every progressive batch.
+		return NO;
+	}
+	NSNumber *spanIndex = owner->_entryIndexToSpanIndex[@(entryIndex)];
+	if (!spanIndex)
+	{
+		// Not a span we know about (out of range, or non-zip fallback):
+		// treat conservatively as not-cached.
+		return NO;
+	}
+	NSArray<NSValue *> *spans = owner->_streamer.spans;
+	NSUInteger idx = spanIndex.unsignedIntegerValue;
+	if (idx >= spans.count) { return NO; }
+	NSRange span = spans[idx].rangeValue;
+	return [owner->_cachingSource isRangeCachedAtOffset: span.location length: span.length];
+}
+
+- (void)tearDownStreaming
+{
+	[_streamer cancel];
+	[_cachingSource invalidate];
+	_streamer = nil;
+	_cachingSource = nil;
+	_fileSet = nil;
+	_entryIndexToSpanIndex = nil;
 }
 
 - (NSSet *)nestedImages
@@ -775,9 +1198,6 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 - (void)willTurnIntoFault
 {
 	NSError * error;
-	[_streamer cancel];
-	[_cachingSource invalidate];
-
 	if(self.nested)
 	{
 		if(![[NSFileManager defaultManager] removeItemAtPath: self.path error: &error])
@@ -794,26 +1214,6 @@ NSString * const TSSTArchiveCacheProgressNotification = @"TSSTArchiveCacheProgre
 			NSLog(@"%@",[error localizedDescription]);
 		}
 	}
-}
-
-/// YES when the given file is worth caching/streaming: a non-local
-/// volume (e.g. SMB), or DEBUG SC_SIMULATE_LINK is set (so the app can be
-/// exercised against the caching path using a local file).
-+ (BOOL)shouldUseCacheForFileURL:(NSURL *)fileURL
-{
-#if DEBUG
-	if ([[NSProcessInfo processInfo].environment[@"SC_SIMULATE_LINK"] length] > 0)
-	{
-		return YES;
-	}
-#endif
-	NSNumber *isLocal = nil;
-	NSError *error = nil;
-	if ([fileURL getResourceValue: &isLocal forKey: NSURLVolumeIsLocalKey error: &error] && isLocal)
-	{
-		return !isLocal.boolValue;
-	}
-	return NO;
 }
 
 /// Prompts for (or reuses) an archive's password the same way for every
@@ -999,33 +1399,6 @@ static BOOL TSSTFileIsPermissionBlocked(NSURL *url)
 	return result;
 }
 
-/// The byte-source stack every backend (zip index, XAD source) reads
-/// through: file -> [simulated slow link, DEBUG SC_SIMULATE_LINK=<profile>,
-/// so slow-volume behaviour can be checked against a local file] ->
-/// [caching source, on a slow volume]. The caching source is also returned
-/// through \c cachingSourceOut (nil when reads go straight through) so the
-/// caller can keep it for the streamer.
-+ (id<TSSTArchiveByteSource>)byteSourceStackOverFile:(id<TSSTArchiveByteSource>)source fileURL:(NSURL *)fileURL cachingSource:(TSSTCachingByteSource * _Nullable * _Nullable)cachingSourceOut
-{
-	if (cachingSourceOut) { *cachingSourceOut = nil; }
-#if DEBUG
-	NSString *simulatedLinkName = [[NSProcessInfo processInfo].environment[@"SC_SIMULATE_LINK"] lowercaseString];
-	TSSTSimulatedLinkByteSource *linkSource = simulatedLinkName.length > 0 ? [TSSTSimulatedLinkByteSource linkWithProfileName: simulatedLinkName wrapping: source] : nil;
-	if (linkSource)
-	{
-		linkSource.simulateTime = YES;
-		source = linkSource;
-	}
-#endif
-	if ([self shouldUseCacheForFileURL: fileURL])
-	{
-		TSSTCachingByteSource *cachingSource = [[TSSTCachingByteSource alloc] initWithUpstream: source];
-		if (cachingSourceOut) { *cachingSourceOut = cachingSource; }
-		source = cachingSource;
-	}
-	return source;
-}
-
 /// Builds the zip index over the shared byte-source stack, or returns nil
 /// to make callers use XADArchive (non-zips, unreadable files, unsupported
 /// zip features). Shared by the lazy -zipIndex accessor and the background
@@ -1045,7 +1418,7 @@ static BOOL TSSTFileIsPermissionBlocked(NSURL *url)
 	NSData *magic = [rawFile readAtOffset: 0 length: 2 error: NULL];
 	if (magic.length < 2 || memcmp(magic.bytes, "PK", 2) != 0) { return nil; }
 
-	id<TSSTArchiveByteSource> source = [self byteSourceStackOverFile: rawFile fileURL: fileURL cachingSource: cachingSourceOut];
+	id<TSSTArchiveByteSource> source = [self byteSourceStackOverFile: rawFile fileURL: fileURL requireCache: NO cachingSource: cachingSourceOut];
 	TSSTZipIndex *index = [TSSTZipIndex indexWithByteSource: source error: NULL];
 	if (!index && cachingSourceOut && *cachingSourceOut)
 	{
@@ -1085,7 +1458,7 @@ static BOOL TSSTFileIsPermissionBlocked(NSURL *url)
 	TSSTVolumeSetByteSource *volumeSet = volumeURLs ? [[TSSTVolumeSetByteSource alloc] initWithVolumeSources: fileSources] : nil;
 	id<TSSTArchiveByteSource> fileSource = volumeSet ?: fileSources.firstObject;
 
-	id<TSSTArchiveByteSource> source = [self byteSourceStackOverFile: fileSource fileURL: fileURL cachingSource: cachingSourceOut];
+	id<TSSTArchiveByteSource> source = [self byteSourceStackOverFile: fileSource fileURL: fileURL requireCache: NO cachingSource: cachingSourceOut];
 	TSSTXADArchiveSource *xadSource = [[TSSTXADArchiveSource alloc] initWithByteSource: source volumeLengths: volumeSet.volumeLengths name: name path: fileURL.path password: password passwordProvider: passwordProvider error: error];
 	if (!xadSource && cachingSourceOut && *cachingSourceOut)
 	{
@@ -1132,18 +1505,6 @@ static BOOL TSSTFileIsPermissionBlocked(NSURL *url)
 		return nil;
 	}
 	return zi;
-}
-
-/// Makes \c cachingSource this archive's cache, shutting down (streamer and
-/// temp directory) any different one it replaces.
-- (void)adoptCachingSource:(nullable TSSTCachingByteSource *)cachingSource
-{
-	if (_cachingSource && _cachingSource != cachingSource)
-	{
-		[_streamer cancel];
-		[_cachingSource invalidate];
-	}
-	_cachingSource = cachingSource;
 }
 
 /// Build-once gate for the lazy accessors. Returns YES to exactly one
@@ -1346,11 +1707,8 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 		if ([zi canExtractEntry: i]) { [extractable addObject: @(i)]; }
 	}
 
-	const NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
 	NSArray<NSNumber *> *sorted = [extractable sortedArrayUsingComparator: ^NSComparisonResult(NSNumber *a, NSNumber *b) {
-		NSString *nameA = [zi nameOfEntry: a.unsignedIntegerValue];
-		NSString *nameB = [zi nameOfEntry: b.unsignedIntegerValue];
-		return [nameA compare: nameB options: comparisonOptions];
+		return TSSTReadingOrderCompare([zi nameOfEntry: a.unsignedIntegerValue], [zi nameOfEntry: b.unsignedIntegerValue]);
 	}];
 
 	NSDictionary<NSNumber *, NSNumber *> *map = nil;
@@ -1373,9 +1731,8 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 		if (!entry.isDirectory) { [extractable addObject: entry]; }
 	}
 
-	const NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
 	NSArray<TSSTXADArchiveEntry *> *sorted = [extractable sortedArrayUsingComparator: ^NSComparisonResult(TSSTXADArchiveEntry *a, TSSTXADArchiveEntry *b) {
-		return [a.name compare: b.name options: comparisonOptions];
+		return TSSTReadingOrderCompare(a.name, b.name);
 	}];
 
 	BOOL anyHasSpan = NO;
@@ -1418,89 +1775,9 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	[self startStreamerWithSpans: spans entryIndexMap: map];
 }
 
-/// The one place a streamer is built. \c map takes an entry index to its
-/// span index (see -noteReadingEntryIndex:). Replaces any running streamer.
-- (void)startStreamerWithSpans:(NSArray<NSValue *> *)spans entryIndexMap:(nullable NSDictionary<NSNumber *, NSNumber *> *)map
-{
-	[_streamer cancel];
-	_entryIndexToSpanIndex = map;
-	_streamer = [[TSSTArchiveStreamer alloc] initWithCachingByteSource: _cachingSource spans: spans];
-	__weak typeof(self) weakSelf = self;
-	_streamer.progressHandler = ^(NSIndexSet *cachedSpanIndexes, double cachedFraction, double throughputBytesPerSecond, BOOL isComplete) {
-		TSSTManagedArchive *strongSelf = weakSelf;
-		if (strongSelf)
-		{
-			[[NSNotificationCenter defaultCenter] postNotificationName: TSSTArchiveCacheProgressNotification object: strongSelf];
-		}
-	};
-	[_streamer start];
-}
-
-#if DEBUG
-- (nullable TSSTArchiveStreamer *)streamer
-{
-	return _streamer;
-}
-#endif
-
-/// Retargets the streamer at the page the reader is on. Called only from
-/// the session's display path (-changeViewImages), never from the byte-read
-/// path: hover thumbnails, pre-decoding and the exposé all read pages the
-/// reader is not on, and each such read would drag the streamer's target
-/// away from the reader's own neighbourhood.
-- (void)noteReadingEntryIndex:(NSInteger)entryIndex
-{
-	NSNumber *spanIndex = _entryIndexToSpanIndex[@(entryIndex)];
-	if (spanIndex) { _streamer.currentSpanIndex = spanIndex.unsignedIntegerValue; }
-}
-
-- (void)prioritizeEntryIndex:(NSInteger)entryIndex
-{
-	NSNumber *spanIndex = _entryIndexToSpanIndex[@(entryIndex)];
-	if (spanIndex) { [_streamer prioritizeSpanIndex: spanIndex.unsignedIntegerValue]; }
-}
-
-- (BOOL)isStreamingArchive
-{
-	return _cachingSource != nil;
-}
-
-- (BOOL)isEntryIndexCached:(NSInteger)entryIndex
-{
-	if (!_cachingSource)
-	{
-		// No streaming cache -- local file, reads are already fast.
-		return YES;
-	}
-	if (!_streamer)
-	{
-		// Streaming archive whose streamer hasn't started yet (a RAR/7z
-		// still being listed): nothing is known to be cached, so callers
-		// must not read on the main thread -- doing so re-extracted the
-		// displayed page synchronously on every progressive batch.
-		return NO;
-	}
-	NSNumber *spanIndex = _entryIndexToSpanIndex[@(entryIndex)];
-	if (!spanIndex)
-	{
-		// Not a span we know about (out of range, or non-zip fallback):
-		// treat conservatively as not-cached.
-		return NO;
-	}
-	NSArray<NSValue *> *spans = _streamer.spans;
-	NSUInteger idx = spanIndex.unsignedIntegerValue;
-	if (idx >= spans.count) { return NO; }
-	NSRange span = spans[idx].rangeValue;
-	return [_cachingSource isRangeCachedAtOffset: span.location length: span.length];
-}
-
 - (void)didTurnIntoFault
 {
 	[super didTurnIntoFault];
-	[_streamer cancel];
-	[_cachingSource invalidate];
-	_streamer = nil;
-	_cachingSource = nil;
 	_zipIndex = nil;
 	_zipIndexAttempted = NO;
 	_xadSource = nil;
@@ -1859,51 +2136,6 @@ static void TSSTFinishBuild(NSCondition *lock, BOOL *building, void (^publish)(v
 	{
 		self.solidDirectory = record.solidDirectory;
 	}
-}
-
-/// Main-thread only: inserts the Core Data entities for newChildren (a
-/// subset of some record's children, or the whole list for the
-/// single-batch zip path) and returns the newly created image pages.
-- (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<id> *)newChildren
-{
-	NSMutableSet<TSSTPage *> *newImages = [NSMutableSet set];
-	for (TSSTArchiveScanRecord *child in newChildren)
-	{
-		TSSTManagedGroup *nestedDescription = nil;
-		switch (child.kind)
-		{
-			case TSSTArchiveScanRecordKindImage:
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
-				[nestedDescription setValue: child.imagePath forKey: @"imagePath"];
-				[nestedDescription setValue: @(child.index) forKey: @"index"];
-				if (child.text)
-				{
-					[nestedDescription setValue: @YES forKey: @"text"];
-				}
-				[newImages addObject: (TSSTPage *)nestedDescription];
-				break;
-			case TSSTArchiveScanRecordKindArchive:
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
-				nestedDescription.name = child.name;
-				nestedDescription.nested = YES;
-				nestedDescription.path = child.path;
-				[(TSSTManagedArchive *)nestedDescription applyScanRecord: child];
-				break;
-			case TSSTArchiveScanRecordKindPDF:
-				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"PDF" inManagedObjectContext: [self managedObjectContext]];
-				nestedDescription.path = child.path;
-				nestedDescription.nested = YES;
-				nestedDescription.name = child.name;
-				[(TSSTManagedPDF *)nestedDescription applyPDFScanRecord: child];
-				break;
-		}
-
-		if (nestedDescription)
-		{
-			nestedDescription.group = self;
-		}
-	}
-	return newImages;
 }
 
 - (void)nestedArchiveContents

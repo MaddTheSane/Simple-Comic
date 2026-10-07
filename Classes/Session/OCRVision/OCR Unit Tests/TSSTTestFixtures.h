@@ -24,6 +24,20 @@ NS_ASSUME_NONNULL_BEGIN
 /// A fixture by file name in Fixtures/ (else Fixtures/rarzoo/), nil if absent or unreadable.
 + (nullable NSURL *)fixtureNamed:(NSString *)name;
 
+/// The inner 36-JPEG .cbz, extracted once per process from the review zip.
++ (nullable NSURL *)jessieJamesCBZ;
+
+/// Extracts the first \c count pages (in name order) of the cbz into a
+/// fresh directory under \c parent and returns their names in that order.
+/// Returns nil if the cbz is missing or extraction fails.
++ (nullable NSArray<NSString *> *)extractJessieJamesPagesInto:(NSString *)directory count:(NSUInteger)count;
+
+/// Path of the Homebrew 7zz tool, nil if not installed.
++ (nullable NSString *)sevenZipPath;
+
+/// Runs a tool synchronously; YES when it exits 0.
++ (BOOL)runTool:(NSString *)path arguments:(NSArray<NSString *> *)arguments inDirectory:(NSString *)directory;
+
 @end
 
 /// Declares `NSURL *var` for the fixture \c name, or SKIPS the test when the

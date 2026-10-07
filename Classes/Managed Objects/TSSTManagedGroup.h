@@ -20,6 +20,7 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 
 @class TSSTPage;
 @class TSSTArchiveStreamer;
+@class TSSTCachingByteSource;
 @class TSSTXADArchiveEntry;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -73,6 +74,66 @@ NS_ASSUME_NONNULL_BEGIN
   Attempts to resolve the filleURL, but doesn't alter self on failure. Note: If it fails, always call fileURL to truly update the state.
  */
 - (nullable NSURL *)probeFileURL;
+
+/**
+ Main-thread only: inserts the Core Data entities for newChildren (a
+ subset of some record's children) and returns the new TSSTPage/-derived
+ image pages to union into session.images. Safe to call multiple times
+ as more children arrive from -scanArchiveProgressivelyForFileURL:name:password:perBatch:.
+ */
+- (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<id> *)newChildren;
+
+/**
+ Background-safe scan of a folder of loose files: one directory enumeration
+ (with the properties needed, so no per-file stat) per folder level, recursing
+ into subfolders and building nested archive/PDF records. Returns an opaque
+ scan record without touching any \c NSManagedObject. When \c streaming is YES
+ (non-local volume, or DEBUG SC_SIMULATE_LINK) every image/text page also gets
+ an entry index and the record carries the caching byte source that streams
+ the whole tree. Non-fatal errors are appended to \c errors.
+ */
++ (nullable id)scanRecordForFolderURL:(NSURL *)folderURL name:(nullable NSString *)name streaming:(BOOL)streaming errors:(NSMutableArray<NSError *> *)errors;
+
+/// Main-thread only: applies a folder record's backend (file set, cache and
+/// streamer) to this folder, then inserts its children.
+- (void)applyFolderScanRecord:(id)record;
+
+/// YES when the file is worth caching/streaming: a non-local volume (e.g.
+/// SMB), or DEBUG SC_SIMULATE_LINK is set.
++ (BOOL)shouldUseCacheForFileURL:(NSURL *)fileURL;
+
+#if DEBUG
+/**
+ The background prefetcher for this archive or folder, when a caching byte source
+ was built for it (non-local volume, or DEBUG SC_SIMULATE_LINK). nil on
+ local volumes, where reads go straight to disk.
+ */
+@property (nonatomic, readonly, nullable) TSSTArchiveStreamer *streamer;
+#endif
+
+/// Maps \c entryIndex to its reading-order span and moves the streamer's
+/// current position there, without forcing it to the front of the queue.
+- (void)noteReadingEntryIndex:(NSInteger)entryIndex;
+
+/// Like -noteReadingEntryIndex:, but also wakes the streamer immediately
+/// (used when the user jumps to a page far from the current position).
+- (void)prioritizeEntryIndex:(NSInteger)entryIndex;
+
+/// YES when reading this entry's bytes won't have to wait on the network:
+/// there's no streaming cache at all (local file, or no zip index), or the
+/// entry's whole span is already cached. Used to decide whether displaying
+/// a page can happen synchronously on main.
+- (BOOL)isEntryIndexCached:(NSInteger)entryIndex;
+
+/// YES only when this archive actually streams through a caching byte
+/// source (non-local volume or SC_SIMULATE_LINK). Unlike
+/// -isEntryIndexCached:, this is NO for ordinary local files, so callers
+/// can tell "nothing to wait for" apart from "nothing to show progress for".
+@property (nonatomic, readonly) BOOL isStreamingArchive;
+
+/// The caching byte source serving this group's pages (its own, or the
+/// folder above's), for tests that inspect the link underneath.
+- (nullable TSSTCachingByteSource *)cachingSourceForTesting;
 
 @end
 
@@ -146,14 +207,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)applyScanRecordHeader:(id)record;
 
 /**
- Main-thread only: inserts the Core Data entities for newChildren (a
- subset of some record's children) and returns the new TSSTPage/-derived
- image pages to union into session.images. Safe to call multiple times
- as more children arrive from -scanArchiveProgressivelyForFileURL:name:password:perBatch:.
- */
-- (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<id> *)newChildren;
-
-/**
  Main-thread only: called once the progressive XAD parse (from
  -scanArchiveProgressivelyForFileURL:name:password:perBatch:) has fully finished, with every entry
  it found, in discovery order. Builds the prefetcher's reading-order
@@ -161,36 +214,6 @@ NS_ASSUME_NONNULL_BEGIN
  source (local volume, no SC_SIMULATE_LINK).
  */
 - (void)startXADStreamerWithAllEntries:(NSArray<TSSTXADArchiveEntry *> *)entries;
-
-#if DEBUG
-/**
- The background prefetcher for this archive, when a caching byte source
- was built for it (non-local volume, or DEBUG SC_SIMULATE_LINK). nil on
- local volumes, where reads go straight to disk.
- */
-@property (nonatomic, readonly, nullable) TSSTArchiveStreamer *streamer;
-#endif
-
-/// Maps \c entryIndex to its reading-order span and moves the streamer's
-/// current position there, without forcing it to the front of the queue.
-- (void)noteReadingEntryIndex:(NSInteger)entryIndex;
-
-/// Like -noteReadingEntryIndex:, but also wakes the streamer immediately
-/// (used when the user jumps to a page far from the current position).
-- (void)prioritizeEntryIndex:(NSInteger)entryIndex;
-
-/// YES when reading this entry's bytes won't have to wait on the network:
-/// there's no streaming cache at all (local file, or no zip index), or the
-/// entry's whole span is already cached. Used to decide whether displaying
-/// a page can happen synchronously on main.
-- (BOOL)isEntryIndexCached:(NSInteger)entryIndex;
-
-/// YES only when this archive actually streams through a caching byte
-/// source (non-local volume or SC_SIMULATE_LINK). Unlike
-/// -isEntryIndexCached:, this is NO for ordinary local files, so callers
-/// can tell "nothing to wait for" apart from "nothing to show progress for".
-@property (nonatomic, readonly) BOOL isStreamingArchive;
-
 
 #pragma mark Folder access (sandbox)
 
@@ -203,7 +226,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSURL *)resolvedAccessBookmarkForFolderURL:(NSURL *)folderURL;
 @end
 
-/// Posted (object = the TSSTManagedArchive) as the streamer's cache fills
+/// Posted (object = the TSSTManagedGroup) as the streamer's cache fills
 /// in, throttled to ~4 Hz. userInfo is currently unused.
 extern NSString * const TSSTArchiveCacheProgressNotification;
 

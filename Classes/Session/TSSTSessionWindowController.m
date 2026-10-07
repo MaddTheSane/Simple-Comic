@@ -277,11 +277,11 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	for (NSUInteger i = 0; i < pages.count; ++i)
 	{
 		TSSTManagedGroup * group = pages[i].group;
-		if (![group isKindOfClass: [TSSTManagedArchive class]])
+		if (![group isKindOfClass: [TSSTManagedGroup class]])
 		{
 			continue;
 		}
-		TSSTManagedArchive * archive = (TSSTManagedArchive *)group;
+		TSSTManagedGroup * archive = (TSSTManagedGroup *)group;
 		if (!archive.isStreamingArchive)
 		{
 			continue;
@@ -1410,7 +1410,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		return YES; // decoding already set the aspect ratio as a side effect
 	}
 	TSSTManagedGroup * group = page.group;
-	if (![group isKindOfClass: [TSSTManagedArchive class]])
+	if (![group isKindOfClass: [TSSTManagedGroup class]])
 	{
 		return YES; // local file / nested PDF page -- disk read is fast
 	}
@@ -1418,7 +1418,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	{
 		return YES;
 	}
-	return [(TSSTManagedArchive *)group isEntryIndexCached: page.index.integerValue];
+	return [(TSSTManagedGroup *)group isEntryIndexCached: page.index.integerValue];
 }
 
 /// -shouldDisplayAlone, but safe to call from anywhere (including
@@ -1440,7 +1440,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	// Bytes aren't cached and the aspect is unknown -- nudge the streamer
 	// toward this entry (we're likely headed there) without blocking here.
-	[(TSSTManagedArchive *)page.group prioritizeEntryIndex: page.index.integerValue];
+	[(TSSTManagedGroup *)page.group prioritizeEntryIndex: page.index.integerValue];
 	return YES;
 }
 
@@ -1462,9 +1462,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 /// read, so the background streamer follows the reader.
 - (void)noteReadingForPage:(nullable TSSTPage *)page
 {
-	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedArchive class]])
+	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedGroup class]])
 	{
-		[(TSSTManagedArchive *)page.group noteReadingEntryIndex: page.index.integerValue];
+		[(TSSTManagedGroup *)page.group noteReadingEntryIndex: page.index.integerValue];
 	}
 }
 
@@ -1472,9 +1472,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 /// used when a page has to be fetched now, not merely queued.
 - (void)prioritizeReadingForPage:(nullable TSSTPage *)page
 {
-	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedArchive class]])
+	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedGroup class]])
 	{
-		[(TSSTManagedArchive *)page.group prioritizeEntryIndex: page.index.integerValue];
+		[(TSSTManagedGroup *)page.group prioritizeEntryIndex: page.index.integerValue];
 	}
 }
 
@@ -1737,7 +1737,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		{
 			continue;
 		}
-		if ([self pageIsSafeToInspectSynchronously: page] && (page.group == nil || ![page.group isKindOfClass: [TSSTManagedArchive class]] || page.index == nil || [(TSSTManagedArchive *)page.group isEntryIndexCached: page.index.integerValue]))
+		if ([self pageIsSafeToInspectSynchronously: page] && (page.group == nil || ![page.group isKindOfClass: [TSSTManagedGroup class]] || page.index == nil || [(TSSTManagedGroup *)page.group isEntryIndexCached: page.index.integerValue]))
 		{
 			[candidates addObject: page];
 		}
