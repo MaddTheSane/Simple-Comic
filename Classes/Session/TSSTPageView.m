@@ -26,6 +26,7 @@
 #import "TSSTSessionWindowController.h"
 #import "TSSTManagedSession.h"
 #import "Simple_Comic-Swift.h"
+#import "TSSTEdgeBlurRenderer.h"
 
 typedef NS_ENUM(int, TSSTTurn) {
 	TSSTTurnNone = 0,
@@ -72,6 +73,12 @@ typedef struct {
 	int pageSelection;
 	/*! This is the rect describing the users page selection. */
 	NSRect cropRect;
+
+	/*!	The page-key pair -requestMissingBackgroundSources was last called
+		for, so repeated -drawRect: calls during the same still-missing page
+		(e.g. while resizing) don't keep re-requesting it. */
+	id pendingBackgroundFirstKey;
+	id pendingBackgroundSecondKey;
 }
 @synthesize imageBounds;
 @synthesize rotation;
@@ -335,6 +342,70 @@ typedef struct {
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 	NSColor * color = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:[defaults dataForKey: TSSTBackgroundColor] error:NULL];
 	self.layer.backgroundColor = [color CGColor];
+
+	if([defaults integerForKey: TSSTBackgroundMode] == TSSTBackgroundModeBlurredEdges && [firstPageImage isValid] && self.firstPageKey)
+	{
+		NSRect scannedFirstRect = [self centerScanRect: firstPageRect];
+		NSRect scannedSecondRect = [self centerScanRect: secondPageRect];
+		BOOL hasSecondPage = [secondPageImage isValid] && self.secondPageKey != nil;
+		id secondKeyForLookup = hasSecondPage ? self.secondPageKey : nil;
+
+		// Synchronous and cheap (a few ms of Core Image work on small,
+		// already-decoded sources) when the sources are already prepared --
+		// which they normally are, since -changeViewImages prefetches
+		// neighboring pages ahead of time. A miss just means "not yet";
+		// there's no placeholder and no crossfade, only a plain swap once
+		// -requestMissingBackgroundSources finishes and redraws.
+		CGImageRef canvasImage = [[TSSTEdgeBlurRenderer sharedRenderer] canvasImageForFirstPageKey: self.firstPageKey
+																						  firstRect: scannedFirstRect
+																					  secondPageKey: secondKeyForLookup
+																						 secondRect: scannedSecondRect
+																					  fallbackColor: color];
+
+		if(canvasImage)
+		{
+			pendingBackgroundFirstKey = nil;
+			pendingBackgroundSecondKey = nil;
+
+			NSRect pageUnion = hasSecondPage ? NSUnionRect(scannedFirstRect, scannedSecondRect) : scannedFirstRect;
+			CGFloat padding = [TSSTEdgeBlurRenderer canvasPadding];
+			NSRect canvasFrame = NSInsetRect(pageUnion, -padding * pageUnion.size.width, -padding * pageUnion.size.height);
+
+			[CATransaction begin];
+			[CATransaction setDisableActions: YES];
+			// The canvas legitimately extends past the view's bounds (that's
+			// the point -- it keeps stretching outward), so it needs its own
+			// masking container: clipping newLayer itself would also clip
+			// the loupe/selection layers added below, which must stay
+			// unclipped.
+			CALayer * backgroundContainer = [CALayer layer];
+			backgroundContainer.frame = self.bounds;
+			backgroundContainer.masksToBounds = YES;
+			CALayer * backgroundLayer = [CALayer layer];
+			backgroundLayer.frame = canvasFrame;
+			backgroundLayer.contents = (__bridge id)canvasImage;
+			backgroundLayer.contentsGravity = kCAGravityResize;
+			backgroundLayer.magnificationFilter = kCAFilterLinear;
+			[backgroundContainer addSublayer: backgroundLayer];
+			[newLayer addSublayer: backgroundContainer];
+			[CATransaction commit];
+		}
+		else
+		{
+			// Miss: the solid layer.backgroundColor set above shows through
+			// as-is. Ask (at most once per distinct page-key pair) for the
+			// missing source(s) to be prepared; -setNeedsDisplay: once ready
+			// picks this back up with no animation.
+			BOOL sameAsPending = [self.firstPageKey isEqual: pendingBackgroundFirstKey]
+				&& (secondKeyForLookup == pendingBackgroundSecondKey || [secondKeyForLookup isEqual: pendingBackgroundSecondKey]);
+			if(!sameAsPending && self.requestMissingBackgroundSources)
+			{
+				pendingBackgroundFirstKey = self.firstPageKey;
+				pendingBackgroundSecondKey = secondKeyForLookup;
+				self.requestMissingBackgroundSources();
+			}
+		}
+	}
 
 	{
 		CALayer *firstPageLayer = [CALayer layer];

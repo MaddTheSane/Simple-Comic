@@ -41,6 +41,7 @@ NSString *const TSSTPageScaleOptions =  @"scaleOptions";
 NSString *const TSSTTwoPageSpread =     @"twoPageSpread";
 NSString *const TSSTStatusbarVisible =  @"statusBarVisisble";
 NSString *const TSSTBackgroundColor =   @"pageBackgroundColor";
+NSString *const TSSTBackgroundMode =    @"pageBackgroundMode";
 NSString *const TSSTConstrainScale =    @"constrainScale";
 NSString *const TSSTWindowAutoResize =  @"windowAutoResize";
 NSString *const TSSTSessionRestore =    @"NSQuitAlwaysKeepsWindows";
@@ -200,6 +201,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		  TSSTTwoPageSpread: @YES,
 		  TSSTScrollersVisible: @YES,
 		  TSSTBackgroundColor: [NSKeyedArchiver archivedDataWithRootObject: [NSColor whiteColor] requiringSecureCoding: YES error: NULL],
+		  TSSTBackgroundMode: @(TSSTBackgroundModeSolid),
 		  TSSTConstrainScale: @YES,
 		  TSSTWindowAutoResize: @YES,
 		  TSSTEnableSwipe: @NO,

@@ -28,6 +28,7 @@
 #import "TSSTManagedGroup.h"
 #import "TSSTManagedSession.h"
 #import "OCRFind.h"
+#import "TSSTEdgeBlurRenderer.h"
 #import "OCRFindViewController.h"
 #import "OCRTracker.h"
 #import "OCRVision.h"
@@ -149,6 +150,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults addObserver: self forKeyPath: TSSTStatusbarVisible options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTScrollersVisible options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTBackgroundColor options: 0 context: nil];
+	[defaults addObserver: self forKeyPath: TSSTBackgroundMode options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTLoupeDiameter options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTLoupePower options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTUnifiedTitlebar options: 0 context: nil];
@@ -194,6 +196,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults removeObserver: self forKeyPath: TSSTStatusbarVisible];
 	[defaults removeObserver: self forKeyPath: TSSTScrollersVisible];
 	[defaults removeObserver: self forKeyPath: TSSTBackgroundColor];
+	[defaults removeObserver: self forKeyPath: TSSTBackgroundMode];
 	[defaults removeObserver: self forKeyPath: TSSTConstrainScale];
 	[defaults removeObserver: self forKeyPath: TSSTLoupeDiameter];
 	[defaults removeObserver: self forKeyPath: TSSTLoupePower];
@@ -264,6 +267,10 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	{
 		NSColor * color = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:[defaults valueForKey: TSSTBackgroundColor] error:NULL];
 		[pageScrollView setBackgroundColor: color];
+	}
+	else if([keyPath isEqualToString: TSSTBackgroundMode])
+	{
+		[pageView setNeedsDisplay: YES];
 	}
 	else if([keyPath isEqualToString: TSSTStatusbarVisible])
 	{
@@ -1181,10 +1188,92 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		self.window.subtitle = titleString;
 	}
 	[pageView setFirstPage: pageOne.pageImage secondPageImage: pageTwo.pageImage];
-	
+	pageView.firstPageKey = pageOne.objectID;
+	pageView.secondPageKey = pageTwo.objectID;
+
+	// Called by the page view when its blur source isn't cached yet; redraws
+	// once each page's source is ready (unless the view has moved on).
+	__weak TSSTSessionWindowController * weakSelf = self;
+	__weak TSSTPageView * weakPageView = pageView;
+	pageView.requestMissingBackgroundSources = ^{
+		for(TSSTPage * page in (pageTwo ? @[pageOne, pageTwo] : @[pageOne]))
+		{
+			[weakSelf prepareEdgeBlurSourceForPage: page completion: ^{
+				TSSTPageView * strongPageView = weakPageView;
+				if([strongPageView.firstPageKey isEqual: page.objectID] || [strongPageView.secondPageKey isEqual: page.objectID])
+				{
+					[strongPageView setNeedsDisplay: YES];
+				}
+			}];
+		}
+	};
+
 	[self scaleToWindow];
 	[pageView correctViewPoint];
 	[self refreshLoupePanel];
+
+	[self prefetchEdgeBlurSourcesAroundIndex: index twoPageMode: (pageTwo != nil)];
+}
+
+
+/*!	Ensures a small (256px) decoded blur source is cached for `page`,
+	following the app's existing off-main thumbnail precedent: if
+	`page.thumbnailData` already exists, decoding it touches nothing but the
+	data itself off the main thread; if it doesn't, `page.thumbnail` (which
+	itself reads/writes the managed `thumbnailData` attribute) is called off
+	the main thread exactly the way TSSTThumbnailItemView already does for
+	the Touch Bar strip. `completion` always runs on the main queue. */
+- (void)prepareEdgeBlurSourceForPage:(TSSTPage *)page completion:(void (^)(void))completion
+{
+	TSSTEdgeBlurRenderer * renderer = [TSSTEdgeBlurRenderer sharedRenderer];
+	NSManagedObjectID * key = page.objectID;
+	if([renderer hasSourceForPageKey: key])
+	{
+		if(completion)
+		{
+			completion();
+		}
+		return;
+	}
+
+	NSData * existingThumbnailData = page.thumbnailData; // Core Data read, main thread
+	__weak TSSTPage * weakPage = page;
+	NSImage * (^pageImageProvider)(void) = existingThumbnailData ? nil : ^NSImage * {
+		return weakPage.thumbnail;
+	};
+
+	[renderer prepareSourceForPageKey: key
+						thumbnailData: existingThumbnailData
+					pageImageProvider: pageImageProvider
+						   completion: completion];
+}
+
+
+/*!	Best-effort prefetch of blur sources for the pages around `index`, so
+	the "blurred page edges" background is normally already cached by the
+	time a page turn actually happens. Single-page mode covers -1, current,
+	+1 and +2; two-page mode covers -2 through +3 (which already includes
+	the current pair). Off the main thread; see -prepareEdgeBlurSourceForPage:. */
+- (void)prefetchEdgeBlurSourcesAroundIndex:(NSUInteger)index twoPageMode:(BOOL)twoPageMode
+{
+	if([[NSUserDefaults standardUserDefaults] integerForKey: TSSTBackgroundMode] != TSSTBackgroundModeBlurredEdges)
+	{
+		return;
+	}
+
+	NSArray<TSSTPage *> * pages = [pageController arrangedObjects];
+	NSInteger count = (NSInteger)pages.count;
+	NSArray<NSNumber *> * offsets = twoPageMode ? @[@-2, @-1, @0, @1, @2, @3] : @[@-1, @0, @1, @2];
+
+	for(NSNumber * offsetNumber in offsets)
+	{
+		NSInteger candidate = (NSInteger)index + offsetNumber.integerValue;
+		if(candidate < 0 || candidate >= count)
+		{
+			continue;
+		}
+		[self prepareEdgeBlurSourceForPage: pages[candidate] completion: nil];
+	}
 }
 
 
