@@ -20,7 +20,137 @@
 
 @end
 
+/*
+ * setFileURL:/fileURL used to call -[NSApp presentError:] directly, once per
+ * bad file. Scanning a folder or archive with many unreadable entries could
+ * therefore pop up dozens or thousands of modal alerts in a row (#147, #123).
+ * These helpers let the recursive scan in nestedFolderContents/
+ * nestedArchiveContents batch those errors and present a single summary
+ * alert once the whole top-level scan finishes, while single top-level
+ * file opens (scan depth 0) still present their error immediately.
+ *
+ * Scans can run on background threads, so the batch is kept per thread (in
+ * the thread dictionary) rather than in shared statics: each scan only ever
+ * touches its own batch, which needs no locking and keeps concurrent scans'
+ * errors from being mixed into one alert.
+ */
+@interface TSSTURLErrorBatch : NSObject
+@property NSInteger depth;
+@property (copy) NSString *groupName;
+@property (readonly) NSMutableArray<NSError *> *errors;
+@end
+
+@implementation TSSTURLErrorBatch
+- (instancetype)init
+{
+	if ((self = [super init]))
+	{
+		_errors = [NSMutableArray array];
+	}
+	return self;
+}
+@end
+
+static NSString *const kURLErrorBatchThreadKey = @"TSSTManagedGroupURLErrorBatch";
+
+static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
+{
+	return NSThread.currentThread.threadDictionary[kURLErrorBatchThreadKey];
+}
+
 @implementation TSSTManagedGroup
+
++ (void)beginURLErrorBatchForGroupName:(NSString *)groupName
+{
+	TSSTURLErrorBatch *batch = CurrentURLErrorBatch();
+	if (batch == nil)
+	{
+		batch = [[TSSTURLErrorBatch alloc] init];
+		batch.groupName = groupName;
+		NSThread.currentThread.threadDictionary[kURLErrorBatchThreadKey] = batch;
+	}
+	batch.depth++;
+}
+
+/// Pure summary-message builder, split out of endURLErrorBatch so it can be
+/// unit tested without going through NSAlert/-runModal.
++ (nullable NSString *)urlErrorBatchSummaryMessageForErrorCount:(NSUInteger)errorCount groupName:(NSString *)groupName
+{
+	if (errorCount == 0)
+	{
+		return nil;
+	}
+	if (errorCount == 1)
+	{
+		return [NSString stringWithFormat: NSLocalizedString(@"1 file in “%@” could not be opened.", @"single unreadable file summary"), groupName];
+	}
+	return [NSString stringWithFormat: NSLocalizedString(@"%lu files in “%@” could not be opened.", @"multiple unreadable files summary"), (unsigned long)errorCount, groupName];
+}
+
++ (void)endURLErrorBatch
+{
+	TSSTURLErrorBatch *batch = CurrentURLErrorBatch();
+	if (batch == nil || --batch.depth > 0)
+	{
+		return;
+	}
+	[NSThread.currentThread.threadDictionary removeObjectForKey: kURLErrorBatchThreadKey];
+	NSString *summary = [self urlErrorBatchSummaryMessageForErrorCount: batch.errors.count groupName: batch.groupName];
+	if (summary == nil)
+	{
+		return;
+	}
+	NSString *detail = batch.errors.firstObject.localizedDescription ?: @"";
+	// Alerts belong on the main thread; don't block the scan thread on the user.
+	dispatch_block_t present = ^{
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.alertStyle = NSAlertStyleWarning;
+		alert.messageText = summary;
+		alert.informativeText = detail;
+		[alert runModal];
+	};
+	if (NSThread.isMainThread)
+	{
+		present();
+	}
+	else
+	{
+		dispatch_async(dispatch_get_main_queue(), present);
+	}
+}
+
++ (void)reportURLError:(NSError *)error
+{
+	TSSTURLErrorBatch *batch = CurrentURLErrorBatch();
+	if (batch != nil)
+	{
+		[batch.errors addObject: error];
+	}
+	else
+	{
+		[NSApp presentError: error];
+	}
+}
+
+#pragma mark - Testing support
+// Accessors for the current thread's batch, used only by
+// TSSTManagedGroupURLErrorBatchTests so the test target can observe queueing
+// behavior without ever triggering the NSAlert/-runModal path.
+
++ (NSInteger)urlErrorBatchDepthForTesting
+{
+	return CurrentURLErrorBatch().depth;
+}
+
++ (NSUInteger)pendingURLErrorCountForTesting
+{
+	return CurrentURLErrorBatch().errors.count;
+}
+
++ (void)resetURLErrorBatchStateForTesting
+{
+	[NSThread.currentThread.threadDictionary removeObjectForKey: kURLErrorBatchThreadKey];
+}
 
 - (void)awakeFromInsert
 {
@@ -74,7 +204,7 @@
 	if (bookmarkData == nil || urlError != nil)
 	{
 		bookmarkData = nil;
-		[NSApp presentError: urlError];
+		[TSSTManagedGroup reportURLError: urlError];
 	}
 	self.pathData = bookmarkData;
 }
@@ -158,7 +288,7 @@
 		fileURL = nil;
 		[[self managedObjectContext] deleteObject: self];
 		if (urlError) {
-			[NSApp presentError: urlError];
+			[TSSTManagedGroup reportURLError: urlError];
 		}
 	}
 	else if (stale)
@@ -207,6 +337,7 @@
 
 - (void)nestedFolderContents
 {
+	[TSSTManagedGroup beginURLErrorBatchForGroupName: self.name ?: self.fileURL.lastPathComponent];
 	NSURL * folderPath = self.fileURL;
 	NSFileManager * fileManager = [NSFileManager defaultManager];
 	TSSTManagedGroup * nestedDescription;
@@ -264,6 +395,7 @@
 			}
 		}
 	}
+	[TSSTManagedGroup endURLErrorBatch];
 }
 
 - (NSSet *)nestedImages
@@ -428,6 +560,7 @@
 
 - (void)nestedArchiveContents
 {
+	[TSSTManagedGroup beginURLErrorBatchForGroupName: self.name ?: self.fileURL.lastPathComponent];
 	XADArchive * imageArchive = self.instance;
 	
 	NSFileManager * fileManager = [NSFileManager defaultManager];
@@ -518,6 +651,7 @@
 			}
 		}
 	}
+	[TSSTManagedGroup endURLErrorBatch];
 }
 
 
