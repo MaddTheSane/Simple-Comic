@@ -41,9 +41,40 @@ static const NSTimeInterval kProgressInterval = 0.25; // 4 Hz
 	return self;
 }
 
-+ (NSArray<NSValue *> *)spansForZipIndex:(TSSTZipIndex *)zipIndex entryIndices:(NSArray<NSNumber *> *)entryIndices
++ (NSArray<NSValue *> *)spansForEntryIndices:(NSArray<NSNumber *> *)entryIndices
+								rangeProvider:(BOOL (^)(NSUInteger entryIndex, NSRange *outRange))rangeProvider
+								 spanIndexMap:(NSDictionary<NSNumber *, NSNumber *> * _Nullable * _Nullable)outMap
 {
 	NSMutableArray<NSValue *> *spans = [NSMutableArray arrayWithCapacity: entryIndices.count];
+	NSMutableDictionary<NSNumber *, NSNumber *> *map = [NSMutableDictionary dictionaryWithCapacity: entryIndices.count];
+	NSMutableDictionary<NSValue *, NSNumber *> *spanForRange = [NSMutableDictionary dictionary];
+	for (NSNumber *n in entryIndices)
+	{
+		NSRange range;
+		if (!rangeProvider(n.unsignedIntegerValue, &range)) { continue; }
+		NSValue *key = [NSValue valueWithRange: range];
+		NSNumber *spanIndex = spanForRange[key];
+		if (!spanIndex)
+		{
+			// First entry with this range (a solid 7z folder shares one
+			// range across all its files): contribute a new span.
+			spanIndex = @(spans.count);
+			spanForRange[key] = spanIndex;
+			[spans addObject: key];
+		}
+		map[n] = spanIndex;
+	}
+	if (outMap) { *outMap = map; }
+	return spans;
+}
+
++ (NSArray<NSValue *> *)spansForZipIndex:(TSSTZipIndex *)zipIndex entryIndices:(NSArray<NSNumber *> *)entryIndices
+{
+	return [self spansForZipIndex: zipIndex entryIndices: entryIndices spanIndexMap: NULL];
+}
+
++ (NSArray<NSValue *> *)spansForZipIndex:(TSSTZipIndex *)zipIndex entryIndices:(NSArray<NSNumber *> *)entryIndices spanIndexMap:(NSDictionary<NSNumber *, NSNumber *> * _Nullable * _Nullable)outMap
+{
 	uint64_t archiveLength = 0;
 	// TSSTZipIndex has no direct -length; derive an upper bound from the
 	// largest entry's offset + size hints so clamping below is safe even
@@ -54,16 +85,13 @@ static const NSTimeInterval kProgressInterval = 0.25; // 4 Hz
 		uint64_t end = [zipIndex dataOffsetHintForEntry: idx] + 30 + 512 + [zipIndex compressedSizeOfEntry: idx];
 		if (end > archiveLength) { archiveLength = end; }
 	}
-	for (NSNumber *n in entryIndices)
-	{
-		NSUInteger idx = n.unsignedIntegerValue;
+	return [self spansForEntryIndices: entryIndices rangeProvider: ^BOOL(NSUInteger idx, NSRange *outRange) {
 		uint64_t offset = [zipIndex dataOffsetHintForEntry: idx];
 		uint64_t hint = 30 + 512 + [zipIndex compressedSizeOfEntry: idx];
 		uint64_t remaining = offset < archiveLength ? archiveLength - offset : 0;
-		NSUInteger len = (NSUInteger)MIN(hint, remaining);
-		[spans addObject: [NSValue valueWithRange: NSMakeRange((NSUInteger)offset, len)]];
-	}
-	return spans;
+		*outRange = NSMakeRange((NSUInteger)offset, (NSUInteger)MIN(hint, remaining));
+		return YES;
+	} spanIndexMap: outMap];
 }
 
 - (NSArray<NSValue *> *)spans { return _spans; }
@@ -204,13 +232,20 @@ static const NSTimeInterval kProgressInterval = 0.25; // 4 Hz
 			chunkLen = MIN(chunkLen, remaining);
 
 			NSDate *startTime = [NSDate date];
+			uint64_t cachedBefore = _cache.cachedByteCount;
 			_cache.focusOffset = offset;
 			NSError *err = nil;
 			[_cache prefetchAtOffset: offset length: chunkLen error: &err];
 			NSTimeInterval elapsed = -[startTime timeIntervalSinceNow];
-			if (elapsed > 0)
+			// Only bytes that really crossed the link say anything about its
+			// speed: an already-cached chunk "downloads" at memory speed and
+			// would inflate the estimate, and with it the chunk size and how
+			// long a demand read can sit behind an in-flight chunk.
+			uint64_t cachedAfter = _cache.cachedByteCount;
+			uint64_t fetched = cachedAfter > cachedBefore ? cachedAfter - cachedBefore : 0;
+			if (elapsed > 0 && fetched > 0)
 			{
-				double sample = (double)chunkLen / elapsed;
+				double sample = (double)fetched / elapsed;
 				_ewmaBytesPerSecond = _ewmaBytesPerSecond > 0 ? (0.3 * sample + 0.7 * _ewmaBytesPerSecond) : sample;
 			}
 

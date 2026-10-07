@@ -73,6 +73,14 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	NSProgressIndicator *loadingSpinner;
 	NSTextField *loadingLabel;
 
+	/** The page object auto-pinned to selection while a background scan
+	    (RAR/7z progressive listing) is still delivering pages
+	    in batches. Reading order isn't discovery order, so a later batch
+	    can insert a page that now sorts before it; re-pin to the new
+	    page 1 only while the user hasn't navigated away from the one we
+	    pinned. nil once the scan finishes or the user moves selection. */
+	id autoPinnedPageDuringScan;
+
 	/** Bumped on every -changeViewImages call; an async page load compares
 	    its captured value against the current one before applying its
 	    result, so a stale load (superseded by a later selection change)
@@ -410,6 +418,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	{
 		// Pages already exist and the scan just finished -- nothing to do
 		// here beyond hiding the loading overlay, handled in -updateLoadingOverlay.
+		autoPinnedPageDuringScan = nil;
 		[self updateLoadingOverlay];
 		return;
 	}
@@ -439,7 +448,37 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		if (pageCount > 0 && (selectionIndex == NSNotFound || selectionIndex >= pageCount))
 		{
 			NSUInteger restoredSelection = (NSUInteger)session.selection;
-			[pageController setSelectionIndex: restoredSelection < pageCount ? restoredSelection : 0];
+			NSUInteger target = restoredSelection < pageCount ? restoredSelection : 0;
+			[pageController setSelectionIndex: target];
+			if (session.isLoading)
+			{
+				autoPinnedPageDuringScan = [pageController arrangedObjects][target];
+			}
+		}
+		else if (pageCount > 0 && session.isLoading && autoPinnedPageDuringScan)
+		{
+			// A background archive scan is still delivering pages in
+			// batches (RAR/7z progressive listing); entries
+			// don't necessarily arrive in reading order, so a later batch
+			// can insert a page that now sorts before the one we pinned.
+			// Follow it to the new index 0 -- but only while the user
+			// hasn't navigated away from the page we auto-selected;
+			// re-pinning unconditionally on every batch would fight the
+			// reader for the whole (possibly many-second) scan window.
+			id currentSelection = [pageController selectedObjects].firstObject;
+			if (currentSelection == autoPinnedPageDuringScan)
+			{
+				id newFirstPage = [pageController arrangedObjects][0];
+				if (newFirstPage != autoPinnedPageDuringScan)
+				{
+					[pageController setSelectionIndex: 0];
+					autoPinnedPageDuringScan = newFirstPage;
+				}
+			}
+			else
+			{
+				autoPinnedPageDuringScan = nil;
+			}
 		}
 
 		/* Thumbnails are only generated while the exposé is open (see
