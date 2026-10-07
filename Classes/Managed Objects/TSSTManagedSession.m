@@ -11,6 +11,9 @@
 
 @implementation TSSTManagedSession
 
+@synthesize loading = _loading;
+@synthesize lastOpenHadErrors = _lastOpenHadErrors;
+
 /*	The whole point of this method is to check for files in a session.
 	Making sure they are still there. If not they are deleted. */
 - (void)awakeFromFetch

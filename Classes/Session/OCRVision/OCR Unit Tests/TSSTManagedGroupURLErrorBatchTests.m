@@ -109,6 +109,29 @@
 		@"the background thread's error must not land in the main thread's batch");
 }
 
+// The scan helper must run its work inside a batch, and fold the errors the
+// work collects into an enclosing batch instead of raising its own alert.
+- (void)testBatchHelperJoinsEnclosingBatch
+{
+	[TSSTManagedGroup beginURLErrorBatchForGroupName: @"Outer"];
+	__block NSInteger depthInsideWork = 0;
+	[TSSTManagedGroup batchURLErrorsForGroupName: @"Scanned.cbz" during: ^(NSMutableArray<NSError *> *errors) {
+		depthInsideWork = [TSSTManagedGroup urlErrorBatchDepthForTesting];
+		[errors addObject: [self sampleErrorWithDescription: @"a"]];
+		[errors addObject: [self sampleErrorWithDescription: @"b"]];
+	}];
+	XCTAssertEqual(depthInsideWork, 2);
+	XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 1);
+	XCTAssertEqual([TSSTManagedGroup pendingURLErrorCountForTesting], 2u);
+}
+
+// No errors means no alert (a non-empty standalone batch would run a modal).
+- (void)testBatchHelperWithNoErrorsEndsCleanly
+{
+	[TSSTManagedGroup batchURLErrorsForGroupName: @"Clean.cbz" during: ^(NSMutableArray<NSError *> *errors) {}];
+	XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 0);
+}
+
 // A single top-level file open (no active scan) is the pre-existing behavior:
 // it should NOT be queued. We only assert on depth here rather than calling
 // reportURLError: at depth 0, since that would call -[NSApp presentError:].

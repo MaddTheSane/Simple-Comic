@@ -78,6 +78,11 @@ class TSSTThumbnailView: NSView {
 		needsDisplay = true
 	}
 	
+	/// Stops a running -processThumbs loop (e.g. the window is closing).
+	@objc func cancelThumbnailProcessing() {
+		threadIdent += 1
+	}
+	
 	@objc func processThumbs() {
 		autoreleasepool() {
 			threadIdent += 1
@@ -91,7 +96,7 @@ class TSSTThumbnailView: NSView {
 					dataSource!.imageForPage(at: limit)
 					if (limit % 5) == 0 {
 						DispatchQueue.main.async {
-							if self.window!.isVisible {
+							if self.window?.isVisible ?? false {
 								self.needsDisplay = true
 							}
 						}
