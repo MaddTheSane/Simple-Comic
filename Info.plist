@@ -209,7 +209,6 @@
 				<string>com.simplecomic.cb7-archive</string>
 				<string>public.cb7-archive</string>
 				<string>com.macitbetter.cb7-archive</string>
-				<string>cx.c3.cb7-archive</string>
 				<string>org.7-zip.7-zip-comic-archive</string>
 			</array>
 			<key>LSTypeIsPackage</key>
@@ -550,6 +549,92 @@
 				</array>
 			</dict>
 		</dict>
+		<!-- Simple Comic's own identifiers for its comic extensions. These are the ids named in
+		     CFBundleDocumentTypes and TSSTManagedArchive.archiveTypes. -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>public.zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>ZIP comic archive</string>
+			<key>UTTypeIconFile</key>
+			<string>cbz</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>comic-fill</string>
+				<key>UTTypeIconText</key>
+				<string>cbz</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.simplecomic.cbz-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbz</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>com.rarlab.rar-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>RAR comic archive</string>
+			<key>UTTypeIconFile</key>
+			<string>cbr</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>comic-fill</string>
+				<key>UTTypeIconText</key>
+				<string>cbr</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.simplecomic.cbr-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbr</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>org.7-zip.7-zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>7-Zip comic archive</string>
+			<key>UTTypeIconFile</key>
+			<string>cb7</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>comic-fill</string>
+				<key>UTTypeIconText</key>
+				<string>cb7</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.simplecomic.cb7-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cb7</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
@@ -725,6 +810,181 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>cur</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Fallback for when MacItBetter's comic reader is not installed. -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>public.zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>ZIP comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.macitbetter.cbz-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbz</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>com.rarlab.rar-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>RAR comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.macitbetter.cbr-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbr</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>org.7-zip.7-zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>7-Zip comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.macitbetter.cb7-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cb7</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Fallback for when YACReader is not installed. -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>public.zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>ZIP comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.yacreader.yacreader.cbz</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbz</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>com.rarlab.rar-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>RAR comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.yacreader.yacreader.cbr</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbr</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Fallback for when the com.milke comic reader is not installed. -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>public.zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>ZIP comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.milke.cbz-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbz</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>com.rarlab.rar-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>RAR comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.milke.cbr-archive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbr</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Fallback for when Comic Book Lover is not installed. -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>public.zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>ZIP comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.bitcartel.comicbooklover.cbz</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbz</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.archive</string>
+				<string>com.rarlab.rar-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>RAR comic archive</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.bitcartel.comicbooklover.cbr</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbr</string>
 				</array>
 			</dict>
 		</dict>
