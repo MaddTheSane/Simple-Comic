@@ -7,15 +7,21 @@
 
 @implementation TSSTTestFixtures
 
-+ (NSURL *)fixturesDirectory
++ (nullable NSURL *)overrideDirectory
 {
-	const char *override = getenv("SC_FIXTURES_DIR");
-	if (override && *override)
-	{
-		return [NSURL fileURLWithPath: [NSString stringWithUTF8String: override] isDirectory: YES];
-	}
+	const char *value = getenv("SC_FIXTURES_DIR");
+	return (value && *value) ? [NSURL fileURLWithPath: [NSString stringWithUTF8String: value] isDirectory: YES] : nil;
+}
+
++ (NSURL *)sourceFixturesDirectory
+{
 	NSURL *thisFile = [NSURL fileURLWithPath: [NSString stringWithUTF8String: __FILE__]];
 	return [[thisFile URLByDeletingLastPathComponent] URLByAppendingPathComponent: @"Fixtures" isDirectory: YES];
+}
+
++ (NSURL *)fixturesDirectory
+{
+	return [self overrideDirectory] ?: [self sourceFixturesDirectory];
 }
 
 /// The URL if its first byte can actually be read. A hosted test run is
@@ -32,6 +38,7 @@
 	return failed ? nil : url;
 }
 
+/// Fixtures/<name>, else Fixtures/rarzoo/<name> (SC_FIXTURES_DIR mirrors that layout).
 + (nullable NSURL *)fixtureNamed:(NSString *)name
 {
 	NSURL *directory = [self fixturesDirectory];
