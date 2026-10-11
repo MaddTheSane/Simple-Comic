@@ -46,6 +46,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, copy) NSImage *textPage;
 @property (readonly, copy, nullable) NSImage *pageImage;
 
+/// Wraps \c imageData in an \c NSImage sized to \c pixelSize using the same
+/// cache-mode dance as \c -pageImage (disable NSImage's own size-keyed
+/// cache while setting the size, so it doesn't clash with the size that
+/// was just decided from the page's stored width/height, then re-enable
+/// it). Returns nil if either input is unusable. Shared with background
+/// pre-decode so both paths produce identical images.
++ (nullable NSImage *)imageWithData:(nullable NSData *)imageData pixelSize:(NSSize)pixelSize;
+
 @end
 
 NS_ASSUME_NONNULL_END

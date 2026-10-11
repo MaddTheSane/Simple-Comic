@@ -19,6 +19,7 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 #import <Cocoa/Cocoa.h>
 
 @class TSSTPage;
+@class TSSTArchiveStreamer;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -105,7 +106,40 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)applyScanRecord:(id)record;
 
+#if DEBUG
+/**
+ The background prefetcher for this archive, when a caching byte source
+ was built for it (non-local volume, or DEBUG SC_SIMULATE_LINK). nil on
+ local volumes, where reads go straight to disk.
+ */
+@property (nonatomic, readonly, nullable) TSSTArchiveStreamer *streamer;
+#endif
+
+/// Maps \c entryIndex to its reading-order span and moves the streamer's
+/// current position there, without forcing it to the front of the queue.
+- (void)noteReadingEntryIndex:(NSInteger)entryIndex;
+
+/// Like -noteReadingEntryIndex:, but also wakes the streamer immediately
+/// (used when the user jumps to a page far from the current position).
+- (void)prioritizeEntryIndex:(NSInteger)entryIndex;
+
+/// YES when reading this entry's bytes won't have to wait on the network:
+/// there's no streaming cache at all (local file, or no zip index), or the
+/// entry's whole span is already cached. Used to decide whether displaying
+/// a page can happen synchronously on main.
+- (BOOL)isEntryIndexCached:(NSInteger)entryIndex;
+
+/// YES only when this archive actually streams through a caching byte
+/// source (non-local volume or SC_SIMULATE_LINK). Unlike
+/// -isEntryIndexCached:, this is NO for ordinary local files, so callers
+/// can tell "nothing to wait for" apart from "nothing to show progress for".
+@property (nonatomic, readonly) BOOL isStreamingArchive;
+
 @end
+
+/// Posted (object = the TSSTManagedArchive) as the streamer's cache fills
+/// in, throttled to ~4 Hz. userInfo is currently unused.
+extern NSString * const TSSTArchiveCacheProgressNotification;
 
 @interface TSSTManagedPDF : TSSTManagedGroup
 

@@ -242,28 +242,29 @@ static NSSize monospaceCharacterSize;
 		return [self textPage];
 	}
 	
-	NSImage * imageFromData = nil;
 	NSData * imageData = [self pageData];
-	
 	if(imageData)
 	{
 		[self setOwnSizeInfoWithData: imageData];
-		imageFromData = [[NSImage alloc] initWithData: imageData];
 	}
 	
-	NSSize imageSize =  NSMakeSize(self.width, self.height);
-	
-	if(!imageFromData || NSEqualSizes(NSZeroSize, imageSize))
+	return [TSSTPage imageWithData: imageData pixelSize: NSMakeSize(self.width, self.height)];
+}
+
++ (nullable NSImage *)imageWithData:(nullable NSData *)imageData pixelSize:(NSSize)pixelSize
+{
+	if (!imageData || NSEqualSizes(NSZeroSize, pixelSize))
 	{
-		imageFromData = nil;
+		return nil;
 	}
-	else
+	NSImage * imageFromData = [[NSImage alloc] initWithData: imageData];
+	if (!imageFromData)
 	{
-		[imageFromData setCacheMode: NSImageCacheNever];
-		[imageFromData setSize: imageSize];
-		[imageFromData setCacheMode: NSImageCacheBySize];
+		return nil;
 	}
-	
+	[imageFromData setCacheMode: NSImageCacheNever];
+	[imageFromData setSize: pixelSize];
+	[imageFromData setCacheMode: NSImageCacheBySize];
 	return imageFromData;
 }
 
