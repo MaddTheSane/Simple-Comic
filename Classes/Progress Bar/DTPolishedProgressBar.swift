@@ -37,7 +37,15 @@ private var barBackgroundColor: NSColor {
 	}
 }
 private var barProgressColor: NSColor {
-	if #available(OSX 10.14, *) {
+	if #available(OSX 10.15, *) {
+		// The stock selected-control colour is nearly white-on-white in
+		// light mode, so darken it there; dark mode is unchanged.
+		return NSColor(name: nil) { appearance in
+			let base = NSColor.selectedControlColor
+			guard appearance.bestMatch(from: [.darkAqua, .aqua]) == .aqua else { return base }
+			return base.blended(withFraction: 0.4, of: .black) ?? base
+		}
+	} else if #available(OSX 10.14, *) {
 		return NSColor.selectedControlColor
 	} else {
 		return NSColor(deviceRed: 0.44, green: 0.44, blue: 0.44, alpha: 1)
@@ -126,6 +134,28 @@ textStyle: Dictionary of string attributes.
 		}
 	}
 	
+	/// Page positions (0-based, in the arranged order) whose bytes are
+	/// already cached by a background archive streamer -- drawn in the
+	/// progress colour, the rest of the bar being empty track. nil (the
+	/// default, e.g. local files, where nothing streams) means every page
+	/// counts as loaded; an empty set means nothing is cached yet.
+	@objc dynamic var bufferedIndexes: IndexSet? = nil {
+		didSet {
+			if oldValue != bufferedIndexes { needsDisplay = true }
+		}
+	}
+
+	/// Pure helper (unit tested): merges `indexes` into contiguous runs,
+	/// each expressed as a fractional [start, end) range of `total`. Split
+	/// out of `draw(_:)` so the run-merging logic can be tested without a
+	/// view/graphics context.
+	static func bufferedFractionalRuns(indexes: IndexSet, total: Int) -> [(start: CGFloat, end: CGFloat)] {
+		guard total > 0 else { return [] }
+		return indexes.rangeView.map { range in
+			(CGFloat(range.lowerBound) / CGFloat(total), CGFloat(range.upperBound) / CGFloat(total))
+		}
+	}
+	
 	/// This is the section of the view. Users can mouse over and click here.
 	@objc private(set) var progressRect = NSRect()
 	
@@ -171,6 +201,23 @@ textStyle: Dictionary of string attributes.
 		barBackgroundColor.set()
 		var fillRect = barRect
 		fillRect.fill()
+
+		// The bar shows what is loaded: buffered pages in the progress
+		// colour, the rest as empty track. Position is the marker alone.
+		// With nothing streaming (local files) every page counts as loaded.
+		barProgressColor.set()
+		let loaded = bufferedIndexes ?? IndexSet(integersIn: 0..<max(maxValue, 0))
+		for run in DTPolishedProgressBar.bufferedFractionalRuns(indexes: loaded, total: maxValue) {
+			var segment = barRect
+			if leftToRight {
+				segment.origin.x = round(bounds2.width * run.start)
+				segment.size.width = round(bounds2.width * run.end) - segment.origin.x
+			} else {
+				segment.origin.x = round(bounds2.width * (1 - run.end))
+				segment.size.width = round(bounds2.width * (1 - run.start)) - segment.origin.x
+			}
+			segment.fill()
+		}
 		
 		// Determine label positions and progress rect size+position
 		// An empty archive has maxValue 0; avoid dividing by zero (NaN width).
@@ -192,10 +239,6 @@ textStyle: Dictionary of string attributes.
 		
 		let leftSize = leftString.size(withAttributes: numberStyle)
 		let rightSize = rightString.size(withAttributes: numberStyle)
-		
-		// Draw progress
-		barProgressColor.set()
-		fillRect.fill()
 		
 		// Draw indicator
 		if #available(OSX 10.14, *) {

@@ -18,7 +18,26 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 
 #import <Cocoa/Cocoa.h>
 
+@class TSSTManagedGroup;
+
 NS_ASSUME_NONNULL_BEGIN
+
+/// Immutable plain-value copy of what's needed to read a page's bytes, so
+/// background queues never touch the NSManagedObject (whose properties may
+/// only be read on its context's queue). Take it with -[TSSTPage dataSnapshot]
+/// on that queue, then hand it to any thread.
+@interface TSSTPageDataSnapshot : NSObject
+@property (nonatomic, readonly) NSManagedObjectID *pageID;
+@property (nonatomic, readonly) BOOL isText;
+/// The group is only messaged through -requestDataForPageIndex:completionHandler:,
+/// which is safe from any thread.
+@property (nonatomic, readonly, nullable) TSSTManagedGroup *group;
+@property (nonatomic, readonly) NSInteger entryIndex; // NSNotFound for loose files
+@property (nonatomic, readonly, copy, nullable) NSString *imagePath;
+- (instancetype)initWithPageID:(NSManagedObjectID *)pageID isText:(BOOL)isText group:(nullable TSSTManagedGroup *)group entryIndex:(NSInteger)entryIndex imagePath:(nullable NSString *)imagePath;
+/// The page's bytes; blocks while an archive entry is fetched.
+- (nullable NSData *)data;
+@end
 
 @interface TSSTPage : NSManagedObject
 {
@@ -39,8 +58,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, copy) NSImage *thumbnail;
 - (nullable NSData *)prepThumbnail;
 @property (readonly, copy, nullable) NSData *pageData;
+- (TSSTPageDataSnapshot *)dataSnapshot;
 @property (readonly, copy) NSImage *textPage;
 @property (readonly, copy, nullable) NSImage *pageImage;
+
+/// Wraps \c imageData in an \c NSImage sized to \c pixelSize using the same
+/// cache-mode dance as \c -pageImage (disable NSImage's own size-keyed
+/// cache while setting the size, so it doesn't clash with the size that
+/// was just decided from the page's stored width/height, then re-enable
+/// it). Returns nil if either input is unusable. Shared with background
+/// pre-decode so both paths produce identical images.
++ (nullable NSImage *)imageWithData:(nullable NSData *)imageData pixelSize:(NSSize)pixelSize;
 
 @end
 
