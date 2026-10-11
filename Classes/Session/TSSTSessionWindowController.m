@@ -341,7 +341,13 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			[pageController setSelectionIndex: restoredSelection < pageCount ? restoredSelection : 0];
 		}
 
-		[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
+		// Thumbnails are only generated while the exposé is open (togglePageExpose:
+		// starts them on show); doing it eagerly here read every page right after
+		// opening, competing with the visible page on slow volumes.
+		if([exposeBezel isVisible])
+		{
+			[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
+		}
 		[self changeViewImages];
 	}
 	else if([keyPath isEqualToString: TSSTPageOrder])

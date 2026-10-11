@@ -23,6 +23,7 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 #import "TSSTManagedGroup.h"
 #import <XADMaster/XADArchive.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
+#import <ImageIO/ImageIO.h>
 
 static NSDictionary * TSSTInfoPageAttributes = nil;
 static NSSize monospaceCharacterSize;
@@ -139,10 +140,22 @@ static NSSize monospaceCharacterSize;
 	return aspect != 0 ? aspect > defaultAspect : YES;
 }
 
-- (void)setOwnSizeInfoWithData:(NSData *)imageData
++ (NSSize)headerPixelSizeOfImageData:(NSData *)imageData
 {
-	CGFloat aspect;
-	NSSize imageSize;
+	// ImageIO reads the size from the image header without decoding the whole
+	// image (expensive for formats like JPEG XL).
+	NSDictionary * properties = nil;
+	CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
+	if (source) {
+		properties = CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, 0, NULL));
+		CFRelease(source);
+	}
+	return NSMakeSize([properties[(id)kCGImagePropertyPixelWidth] doubleValue],
+					  [properties[(id)kCGImagePropertyPixelHeight] doubleValue]);
+}
+
++ (NSSize)decodedPixelSizeOfImageData:(NSData *)imageData
+{
 	// Try NSBitmapImageRep first.
 	NSImageRep * pageRep = [NSBitmapImageRep imageRepWithData: imageData];
 	if (!pageRep) {
@@ -150,14 +163,28 @@ static NSSize monospaceCharacterSize;
 		Class imgRepClass = [NSImageRep imageRepClassForData:imageData];
 		pageRep = [imgRepClass imageRepWithData: imageData];
 	}
-	imageSize = NSMakeSize([pageRep pixelsWide], [pageRep pixelsHigh]);
-	
+	return NSMakeSize([pageRep pixelsWide], [pageRep pixelsHigh]);
+}
+
++ (NSSize)pixelSizeOfImageData:(NSData *)imageData
+{
+	NSSize imageSize = [self headerPixelSizeOfImageData: imageData];
+	if (NSEqualSizes(NSZeroSize, imageSize)) {
+		// ImageIO couldn't size it (e.g. WebP handled by the vendored decoder,
+		// or other custom NSImageRep types): decode the image instead.
+		imageSize = [self decodedPixelSizeOfImageData: imageData];
+	}
+	return imageSize;
+}
+
+- (void)setOwnSizeInfoWithData:(NSData *)imageData
+{
+	NSSize imageSize = [TSSTPage pixelSizeOfImageData: imageData];
 	if(!NSEqualSizes(NSZeroSize, imageSize))
 	{
-		aspect = imageSize.width / imageSize.height;
 		self.width = imageSize.width;
 		self.height = imageSize.height;
-		self.aspectRatio = aspect;
+		self.aspectRatio = imageSize.width / imageSize.height;
 	}
 }
 

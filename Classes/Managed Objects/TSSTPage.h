@@ -32,6 +32,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, copy) NSString *name;
 @property (readonly) BOOL shouldDisplayAlone;
 - (void)setOwnSizeInfoWithData:(NSData *)imageData;
+
+/// Pixel size of encoded image data: the header size if ImageIO can read it,
+/// otherwise the size from decoding the image. NSZeroSize if neither works.
++ (NSSize)pixelSizeOfImageData:(NSData *)imageData;
+/// The two strategies behind +pixelSizeOfImageData:, exposed so tests can check
+/// that they agree. The first is NSZeroSize when ImageIO can't read the header.
++ (NSSize)headerPixelSizeOfImageData:(NSData *)imageData;
++ (NSSize)decodedPixelSizeOfImageData:(NSData *)imageData;
 @property (readonly, copy) NSImage *thumbnail;
 - (nullable NSData *)prepThumbnail;
 @property (readonly, copy, nullable) NSData *pageData;
