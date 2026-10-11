@@ -230,6 +230,7 @@ static const NSTimeInterval kProgressInterval = 0.25; // 4 Hz
 			NSUInteger remaining = (NSUInteger)(runEnd - offset);
 			NSUInteger chunkLen = [self adaptiveChunkSizeForRemaining: remaining];
 			chunkLen = MIN(chunkLen, remaining);
+			if (_avoidsRuntTailReads && remaining - chunkLen < kMinChunkSize) { chunkLen = remaining; }
 
 			NSDate *startTime = [NSDate date];
 			uint64_t cachedBefore = _cache.cachedByteCount;
