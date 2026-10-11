@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern const NSUInteger TSSTCachingByteSourceBlockSize; // 256 KB
+extern const NSUInteger TSSTCachingByteSourceBlockSize; // 16 KB
 
 extern NSString * const TSSTCachingByteSourceErrorDomain;
 typedef NS_ENUM(NSInteger, TSSTCachingByteSourceError) {

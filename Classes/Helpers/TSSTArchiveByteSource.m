@@ -17,6 +17,26 @@ static NSError *TSSTByteSourceError(TSSTArchiveByteSourceError code, NSString *d
 	return [NSError errorWithDomain: TSSTArchiveByteSourceErrorDomain code: code userInfo: @{ NSLocalizedDescriptionKey: description }];
 }
 
+void TSSTWaitOnConditionWhile(NSCondition *condition, BOOL (^waiting)(void))
+{
+	while (waiting())
+	{
+		if ([NSThread isMainThread])
+		{
+			[condition unlock];
+			if (![[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode beforeDate: [NSDate dateWithTimeIntervalSinceNow: 0.01]])
+			{
+				[NSThread sleepForTimeInterval: 0.005]; // no sources to run: don't spin
+			}
+			[condition lock];
+		}
+		else
+		{
+			[condition wait];
+		}
+	}
+}
+
 #pragma mark - TSSTFileByteSource
 
 @interface TSSTFileByteSource ()
