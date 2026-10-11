@@ -20,6 +20,7 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 
 @class TSSTPage;
 @class TSSTArchiveStreamer;
+@class TSSTXADArchiveEntry;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,12 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nullable) NSURL *fileURL;
 
 /**
- Runs \c during inside a URL-error batch: bookmark errors raised meanwhile are
- presented as one summary alert for \c groupName. Joins an enclosing batch on
- this thread if there is one. The batch is always closed, even if \c during
- throws. Call on the main thread.
+ Runs \c during inside a URL-error batch and presents any errors it appends to
+ \c errors, plus bookmark errors raised meanwhile, as one summary alert for
+ \c groupName. Joins an enclosing batch on this thread if there is one. The
+ batch is always closed, even if \c during throws. Call on the main thread.
  */
-+ (void)batchURLErrorsForGroupName:(NSString *)groupName during:(dispatch_block_t)during;
++ (void)batchURLErrorsForGroupName:(NSString *)groupName during:(void (^)(NSMutableArray<NSError *> *errors))during;
 
 - (void)requestDataForPageIndex:(NSInteger)index completionHandler:(void(^)(NSData *_Nullable pageData, NSError *_Nullable error))callback;
 @property (readonly, strong, nullable) NSManagedObject *topLevelGroup;
@@ -117,6 +118,52 @@ NS_ASSUME_NONNULL_BEGIN
  applied; applied records are cleaned up by their managed objects instead.
  */
 + (void)discardScanRecord:(TSSTArchiveScanRecord *)record;
+
+/**
+ Progressive counterpart to +scanRecordForFileURL:.../-applyScanRecord:,
+ used for top-level RAR/7z archives (and zips under SC_FORCE_XAD). Runs on
+ the calling thread (background); calls perBatch possibly many times as
+ entries are discovered, so pages can be inserted while the header walk
+ is still running. Zip archives still take the single-batch fast
+ path internally (one call, isFinal YES) since building the zip index is
+ already fast and synchronous.
+
+ \c fileURL, \c name and \c password are plain values captured by the
+ caller on the main thread: the scan runs off-main and never reads the
+ managed object's attributes.
+
+ On the first call, the caller must apply the returned record's header
+ (backend/password/streamer) via -applyScanRecordHeader: on the MOC's
+ queue before inserting children. Every call's newChildren (a subset of
+ the eventual full child list, not cumulative) should be applied via
+ -insertChildRecords:, also on the MOC's queue.
+ */
+- (void)scanArchiveProgressivelyForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password perBatch:(void (^)(id _Nullable recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError * _Nullable error))perBatch;
+
+/**
+ Main-thread only: applies just the header fields of a scan record
+ (backend/password/solidDirectory, starts the streamer for a zip's
+ caching source) without touching children. Called once, on the first
+ batch/call.
+ */
+- (void)applyScanRecordHeader:(id)record;
+
+/**
+ Main-thread only: inserts the Core Data entities for newChildren (a
+ subset of some record's children) and returns the new TSSTPage/-derived
+ image pages to union into session.images. Safe to call multiple times
+ as more children arrive from -scanArchiveProgressivelyForFileURL:name:password:perBatch:.
+ */
+- (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<id> *)newChildren;
+
+/**
+ Main-thread only: called once the progressive XAD parse (from
+ -scanArchiveProgressivelyForFileURL:name:password:perBatch:) has fully finished, with every entry
+ it found, in discovery order. Builds the prefetcher's reading-order
+ spans. No-op if this archive isn't streaming through a caching byte
+ source (local volume, no SC_SIMULATE_LINK).
+ */
+- (void)startXADStreamerWithAllEntries:(NSArray<TSSTXADArchiveEntry *> *)entries;
 
 #if DEBUG
 /**

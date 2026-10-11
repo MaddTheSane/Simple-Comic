@@ -72,6 +72,49 @@
 
 #pragma mark - TSSTFileByteSource
 
+- (void)testWaitOnConditionOnMainThreadServicesDispatchSyncToMain
+{
+	// The shape of a password prompt: the thread being waited on blocks in
+	// dispatch_sync(main) before it can finish.
+	NSCondition *condition = [NSCondition new];
+	__block BOOL finished = NO;
+	__block BOOL mainBlockRan = NO;
+	dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+		dispatch_sync(dispatch_get_main_queue(), ^{ mainBlockRan = YES; });
+		[condition lock];
+		finished = YES;
+		[condition broadcast];
+		[condition unlock];
+	});
+	XCTAssertTrue([NSThread isMainThread]);
+	[condition lock];
+	TSSTWaitOnConditionWhile(condition, ^BOOL{ return !finished; });
+	[condition unlock];
+	XCTAssertTrue(mainBlockRan);
+}
+
+- (void)testWaitOnConditionOffMainThreadSleepsUntilBroadcast
+{
+	NSCondition *condition = [NSCondition new];
+	__block BOOL finished = NO;
+	XCTestExpectation *waited = [self expectationWithDescription: @"waiter returned"];
+	dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+		XCTAssertFalse([NSThread isMainThread]);
+		[condition lock];
+		TSSTWaitOnConditionWhile(condition, ^BOOL{ return !finished; });
+		XCTAssertTrue(finished);
+		[condition unlock];
+		[waited fulfill];
+	});
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		[condition lock];
+		finished = YES;
+		[condition broadcast];
+		[condition unlock];
+	});
+	[self waitForExpectations: @[waited] timeout: 5.0];
+}
+
 - (void)testFileByteSourceReadsBytes
 {
 	NSString *path = [self pathForName: @"plain.txt"];

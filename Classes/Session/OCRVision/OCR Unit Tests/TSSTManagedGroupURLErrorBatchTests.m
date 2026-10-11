@@ -100,7 +100,7 @@
 - (void)testBatchHelperClosesBatchWhenWorkThrows
 {
 	XCTAssertThrowsSpecificNamed(
-		[TSSTManagedGroup batchURLErrorsForGroupName: @"Throwing.cbz" during: ^{
+		[TSSTManagedGroup batchURLErrorsForGroupName: @"Throwing.cbz" during: ^(NSMutableArray<NSError *> *errors) {
 			XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 1);
 			@throw [NSException exceptionWithName: @"TSSTTestException" reason: @"boom" userInfo: nil];
 		}],
@@ -138,16 +138,16 @@
 		@"the background thread's error must not land in the main thread's batch");
 }
 
-// The scan helper must run its work inside a batch, and fold the errors
-// reported meanwhile into an enclosing batch instead of raising its own alert.
+// The scan helper must run its work inside a batch, and fold the errors the
+// work collects into an enclosing batch instead of raising its own alert.
 - (void)testBatchHelperJoinsEnclosingBatch
 {
 	[TSSTManagedGroup beginURLErrorBatchForGroupName: @"Outer"];
 	__block NSInteger depthInsideWork = 0;
-	[TSSTManagedGroup batchURLErrorsForGroupName: @"Scanned.cbz" during: ^{
+	[TSSTManagedGroup batchURLErrorsForGroupName: @"Scanned.cbz" during: ^(NSMutableArray<NSError *> *errors) {
 		depthInsideWork = [TSSTManagedGroup urlErrorBatchDepthForTesting];
-		[TSSTManagedGroup reportURLError: [self sampleErrorWithDescription: @"a"]];
-		[TSSTManagedGroup reportURLError: [self sampleErrorWithDescription: @"b"]];
+		[errors addObject: [self sampleErrorWithDescription: @"a"]];
+		[errors addObject: [self sampleErrorWithDescription: @"b"]];
 	}];
 	XCTAssertEqual(depthInsideWork, 2);
 	XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 1);
@@ -157,7 +157,7 @@
 // No errors means no alert (a non-empty standalone batch would run a modal).
 - (void)testBatchHelperWithNoErrorsEndsCleanly
 {
-	[TSSTManagedGroup batchURLErrorsForGroupName: @"Clean.cbz" during: ^{}];
+	[TSSTManagedGroup batchURLErrorsForGroupName: @"Clean.cbz" during: ^(NSMutableArray<NSError *> *errors) {}];
 	XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 0);
 }
 

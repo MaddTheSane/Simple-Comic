@@ -11,7 +11,7 @@
 
 @implementation TSSTManagedSession
 
-@synthesize pendingScanCount;
+@synthesize pendingScanCount, lastOpenHadErrors;
 
 + (NSSet<NSString *> *)keyPathsForValuesAffectingLoading
 {
