@@ -26,6 +26,14 @@
  */
 @property (nonatomic, readonly, getter=isLoading) BOOL loading;
 
+/**
+ Transient, non-persisted: set by -[SimpleComicAppDelegate addFileURLs:toSession:]
+ when a background scan reported any per-file errors (already surfaced via
+ an error alert). TSSTSessionWindowController checks this so it
+ doesn't pile a second, redundant "no pages found" alert on top of that one.
+ */
+@property (nonatomic) BOOL lastOpenHadErrors;
+
 @end
 
 #import "TSSTManagedSession+CoreDataProperties.h"

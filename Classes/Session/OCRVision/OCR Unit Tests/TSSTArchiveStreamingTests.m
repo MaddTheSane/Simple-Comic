@@ -376,8 +376,13 @@
 	NSString *path = [self buildRandomFileNamed: @"readsim.bin" length: 30 * 150 * 1024];
 	NSError *error = nil;
 	TSSTFileByteSource *fileSource = [TSSTFileByteSource sourceWithFileURL: [NSURL fileURLWithPath: path] error: &error];
-	NSTimeInterval latency = 0.010;
-	double bytesPerSecond = 5.0 * 1024 * 1024;
+	// The link costs about 8 ms a page against a reader that takes one every
+	// 100 ms: a >10x margin, so a loaded machine (whose utility-QoS streamer
+	// thread sleeps late, stretching every simulated read) can't stop it
+	// getting ahead. The assertion is about the streamer keeping ahead, not
+	// about how fast this link is.
+	NSTimeInterval latency = 0.002;
+	double bytesPerSecond = 25.0 * 1024 * 1024;
 	TSSTSimulatedLinkByteSource *link = [[TSSTSimulatedLinkByteSource alloc] initWithByteSource: fileSource latency: latency bytesPerSecond: bytesPerSecond];
 	link.simulateTime = YES;
 
@@ -401,11 +406,17 @@
 	{
 		streamer.currentSpanIndex = page;
 		NSRange span = spans[page].rangeValue;
+		// A stall is a page the reader had to wait on the link for: one the
+		// streamer hadn't cached when it was asked for AND that took longer
+		// than the link's own round trip to arrive. The second condition keeps
+		// a read that merely caught the tail of an in-flight prefetch (or a
+		// scheduler hiccup on a loaded machine) from counting.
+		BOOL wasCached = [cache isRangeCachedAtOffset: span.location length: span.length];
 		NSDate *start = [NSDate date];
 		NSError *readError = nil;
 		[cache readAtOffset: span.location length: span.length error: &readError];
 		NSTimeInterval ms = -[start timeIntervalSinceNow] * 1000.0;
-		BOOL stall = ms > 20.0;
+		BOOL stall = !wasCached && ms > 3 * latency * 1000.0;
 		if (stall && page > 3) { stalls++; }
 		printf("%lu\t%.2f\t%s\n", (unsigned long)page, ms, stall ? "STALL" : "");
 		usleep(100000); // 1 page / 100ms

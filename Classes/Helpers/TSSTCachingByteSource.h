@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern const NSUInteger TSSTCachingByteSourceBlockSize; // 256 KB
+extern const NSUInteger TSSTCachingByteSourceBlockSize; // 16 KB
 
 @interface TSSTCachingByteSource : NSObject <TSSTArchiveByteSource>
 
