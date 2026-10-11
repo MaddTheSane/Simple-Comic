@@ -250,28 +250,29 @@ static NSSize monospaceCharacterSize;
 		return [self textPage];
 	}
 	
-	NSImage * imageFromData = nil;
 	NSData * imageData = [self pageData];
-	
 	if(imageData)
 	{
 		[self setOwnSizeInfoWithData: imageData];
-		imageFromData = [[NSImage alloc] initWithData: imageData];
 	}
 	
-	NSSize imageSize =  NSMakeSize(self.width, self.height);
-	
-	if(!imageFromData || NSEqualSizes(NSZeroSize, imageSize))
+	return [TSSTPage imageWithData: imageData pixelSize: NSMakeSize(self.width, self.height)];
+}
+
++ (nullable NSImage *)imageWithData:(nullable NSData *)imageData pixelSize:(NSSize)pixelSize
+{
+	if (!imageData || NSEqualSizes(NSZeroSize, pixelSize))
 	{
-		imageFromData = nil;
+		return nil;
 	}
-	else
+	NSImage * imageFromData = [[NSImage alloc] initWithData: imageData];
+	if (!imageFromData)
 	{
-		[imageFromData setCacheMode: NSImageCacheNever];
-		[imageFromData setSize: imageSize];
-		[imageFromData setCacheMode: NSImageCacheBySize];
+		return nil;
 	}
-	
+	[imageFromData setCacheMode: NSImageCacheNever];
+	[imageFromData setSize: pixelSize];
+	[imageFromData setCacheMode: NSImageCacheBySize];
 	return imageFromData;
 }
 
@@ -338,21 +339,16 @@ static NSSize monospaceCharacterSize;
 
 - (NSData *)pageData
 {
-	__block NSData * imageData = nil;
-	TSSTManagedGroup * group = self.group;
-	if(self.index != nil)
-	{
-		NSInteger entryIndex = [self.index integerValue];
-		[group requestDataForPageIndex:entryIndex completionHandler:^(NSData * _Nullable pageData, NSError * _Nullable error) {
-			imageData = pageData;
-		}];
-	}
-	else if([self imagePath])
-	{
-		imageData = [NSData dataWithContentsOfFile: self.imagePath];
-	}
-	
-	return imageData;
+	return [[self dataSnapshot] data];
+}
+
+- (TSSTPageDataSnapshot *)dataSnapshot
+{
+	return [[TSSTPageDataSnapshot alloc] initWithPageID: self.objectID
+												 isText: self.text
+												  group: self.group
+											 entryIndex: self.index != nil ? [self.index integerValue] : NSNotFound
+											  imagePath: self.imagePath];
 }
 
 #pragma mark - Applescript
@@ -372,6 +368,41 @@ static NSSize monospaceCharacterSize;
 		}
 	}
 	return nil;
+}
+
+@end
+
+
+@implementation TSSTPageDataSnapshot
+
+- (instancetype)initWithPageID:(NSManagedObjectID *)pageID isText:(BOOL)isText group:(TSSTManagedGroup *)group entryIndex:(NSInteger)entryIndex imagePath:(NSString *)imagePath
+{
+	self = [super init];
+	if (self)
+	{
+		_pageID = pageID;
+		_isText = isText;
+		_group = group;
+		_entryIndex = entryIndex;
+		_imagePath = [imagePath copy];
+	}
+	return self;
+}
+
+- (NSData *)data
+{
+	__block NSData * imageData = nil;
+	if (_entryIndex != NSNotFound)
+	{
+		[_group requestDataForPageIndex: _entryIndex completionHandler:^(NSData * _Nullable pageData, NSError * _Nullable error) {
+			imageData = pageData;
+		}];
+	}
+	else if (_imagePath)
+	{
+		imageData = [NSData dataWithContentsOfFile: _imagePath];
+	}
+	return imageData;
 }
 
 @end
