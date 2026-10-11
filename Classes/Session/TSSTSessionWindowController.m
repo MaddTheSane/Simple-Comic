@@ -1610,6 +1610,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)prepareToEnd
 {
+	[(TSSTThumbnailView *)exposeView cancelThumbnailProcessing];
 	[[self window] setAcceptsMouseMovedEvents: NO];
 	[mouseMovedTimer invalidate];
 	mouseMovedTimer = nil;
