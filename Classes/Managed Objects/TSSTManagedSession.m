@@ -11,6 +11,18 @@
 
 @implementation TSSTManagedSession
 
+@synthesize pendingScanCount;
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingLoading
+{
+	return [NSSet setWithObject: @"pendingScanCount"];
+}
+
+- (BOOL)isLoading
+{
+	return pendingScanCount > 0;
+}
+
 /*	The whole point of this method is to check for files in a session.
 	Making sure they are still there. If not they are deleted. */
 - (void)awakeFromFetch

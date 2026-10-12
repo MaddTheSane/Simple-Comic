@@ -22,6 +22,13 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Value-only result of scanning an archive off the main thread (see
+/// +[TSSTManagedArchive scanRecordForFileURL:name:password:]); the rest of its
+/// state is private to TSSTManagedGroup.m.
+@interface TSSTArchiveScanRecord : NSObject
+@property (nonatomic, readonly, strong, nullable) NSArray<TSSTArchiveScanRecord *> *children;
+@end
+
 @interface TSSTManagedGroup : NSManagedObject
 {
     id instance;
@@ -33,6 +40,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (copy) NSString *path;
 @property (copy, nullable) NSURL *fileURL;
+
+/**
+ Runs \c during inside a URL-error batch: bookmark errors raised meanwhile are
+ presented as one summary alert for \c groupName. Joins an enclosing batch on
+ this thread if there is one. Call on the main thread.
+ */
++ (void)batchURLErrorsForGroupName:(NSString *)groupName during:(dispatch_block_t)during;
 
 - (void)requestDataForPageIndex:(NSInteger)index completionHandler:(void(^)(NSData *_Nullable pageData, NSError *_Nullable error))callback;
 @property (readonly, strong, nullable) NSManagedObject *topLevelGroup;
@@ -70,6 +84,30 @@ NS_ASSUME_NONNULL_BEGIN
 /**  Recurses through archives looking for archives and images */
 - (void)nestedArchiveContents;
 @property (readonly) BOOL quicklookCompatible;
+
+/**
+ Background-safe scan of the archive at \c fileURL. Opens the archive
+ (XADArchive) itself and returns a record describing every entry, without
+ touching any \c NSManagedObject / MOC. Safe to call from any thread.
+ \c password may be nil; if the archive needs one and none is supplied, the
+ password prompt is bounced to the main thread.
+ */
++ (nullable TSSTArchiveScanRecord *)scanRecordForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password;
+
+/**
+ Applies a scan record produced by \c +scanRecordForFileURL:name:password:
+ to this (already-inserted) managed object: inserts the child entities,
+ reuses the record's already-opened archive (no re-parsing), and sets
+ password / solidDirectory as needed. Must be called on the MOC's queue.
+ */
+- (void)applyScanRecord:(TSSTArchiveScanRecord *)record;
+
+/**
+ Removes the temp files and directories a scan record (and, recursively, its
+ nested archives/PDFs) created. Use when a record is dropped without being
+ applied; applied records are cleaned up by their managed objects instead.
+ */
++ (void)discardScanRecord:(TSSTArchiveScanRecord *)record;
 
 @end
 

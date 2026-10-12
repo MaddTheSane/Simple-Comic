@@ -13,6 +13,13 @@
 
 #import <XCTest/XCTest.h>
 #import "TSSTManagedGroup.h"
+#import "TSSTManagedSession.h"
+#import <CoreData/CoreData.h>
+
+// Also covers the scan-lifecycle helpers below (in-flight scan counting and
+// temp-file ownership), which need no GUI.
+extern NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *(^candidateName)(NSInteger attempt));
+
 
 @interface TSSTManagedGroup (Testing)
 + (void)beginURLErrorBatchForGroupName:(NSString *)groupName;
@@ -25,6 +32,9 @@
 @end
 
 @interface TSSTManagedGroupURLErrorBatchTests : XCTestCase
+{
+	NSInteger _loadingChangeCount;
+}
 @end
 
 @implementation TSSTManagedGroupURLErrorBatchTests
@@ -109,6 +119,29 @@
 		@"the background thread's error must not land in the main thread's batch");
 }
 
+// The scan helper must run its work inside a batch, and fold the errors
+// reported meanwhile into an enclosing batch instead of raising its own alert.
+- (void)testBatchHelperJoinsEnclosingBatch
+{
+	[TSSTManagedGroup beginURLErrorBatchForGroupName: @"Outer"];
+	__block NSInteger depthInsideWork = 0;
+	[TSSTManagedGroup batchURLErrorsForGroupName: @"Scanned.cbz" during: ^{
+		depthInsideWork = [TSSTManagedGroup urlErrorBatchDepthForTesting];
+		[TSSTManagedGroup reportURLError: [self sampleErrorWithDescription: @"a"]];
+		[TSSTManagedGroup reportURLError: [self sampleErrorWithDescription: @"b"]];
+	}];
+	XCTAssertEqual(depthInsideWork, 2);
+	XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 1);
+	XCTAssertEqual([TSSTManagedGroup pendingURLErrorCountForTesting], 2u);
+}
+
+// No errors means no alert (a non-empty standalone batch would run a modal).
+- (void)testBatchHelperWithNoErrorsEndsCleanly
+{
+	[TSSTManagedGroup batchURLErrorsForGroupName: @"Clean.cbz" during: ^{}];
+	XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 0);
+}
+
 // A single top-level file open (no active scan) is the pre-existing behavior:
 // it should NOT be queued. We only assert on depth here rather than calling
 // reportURLError: at depth 0, since that would call -[NSApp presentError:].
@@ -135,6 +168,96 @@
 	NSString *message = [TSSTManagedGroup urlErrorBatchSummaryMessageForErrorCount: 42 groupName: @"Some Folder"];
 	XCTAssertTrue([message containsString: @"42 files"]);
 	XCTAssertTrue([message containsString: @"Some Folder"]);
+}
+
+#pragma mark - Scan lifecycle
+
+/// Observes "loading" changes, to prove the derived property is KVO-compliant.
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	_loadingChangeCount++;
+}
+
+// Overlapping adds to one session each count their archives; the session is
+// "loading" until the last scan has landed, not the first.
+- (void)testSessionStaysLoadingUntilEveryPendingScanFinishes
+{
+	NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles: nil];
+	NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: model];
+	NSError *error = nil;
+	XCTAssertNotNil([coordinator addPersistentStoreWithType: NSInMemoryStoreType configuration: nil URL: nil options: nil error: &error], @"%@", error);
+	NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType: NSMainQueueConcurrencyType];
+	context.persistentStoreCoordinator = coordinator;
+	TSSTManagedSession *session = [NSEntityDescription insertNewObjectForEntityForName: @"Session" inManagedObjectContext: context];
+
+	XCTAssertFalse(session.isLoading);
+	_loadingChangeCount = 0;
+	[session addObserver: self forKeyPath: @"loading" options: 0 context: NULL];
+
+	session.pendingScanCount++;   // first addFileURLs:toSession: call
+	session.pendingScanCount++;   // second call while the first still scans
+	XCTAssertTrue(session.isLoading);
+	XCTAssertEqual(_loadingChangeCount, 2, @"loading is KVO-observable through pendingScanCount");
+
+	session.pendingScanCount--;   // first scan lands
+	XCTAssertTrue(session.isLoading, @"the second scan is still in flight");
+	session.pendingScanCount--;
+	XCTAssertFalse(session.isLoading);
+
+	[session removeObserver: self forKeyPath: @"loading"];
+}
+
+// A scan record that is dropped (its session was deleted) must take its temp
+// files with it, including those of nested archives and PDFs.
+- (void)testDiscardScanRecordRemovesTempItemsRecursively
+{
+	NSFileManager *fileManager = NSFileManager.defaultManager;
+	NSString *solid = TSSTCreateUnusedTempPath(YES, ^NSString *(NSInteger n) { return [NSString stringWithFormat: @"SC-test-solid-%li", (long)n]; });
+	NSString *nestedArchive = TSSTCreateUnusedTempPath(NO, ^NSString *(NSInteger n) { return [NSString stringWithFormat: @"SC-test-%li-nested.zip", (long)n]; });
+	NSString *nestedSolid = TSSTCreateUnusedTempPath(YES, ^NSString *(NSInteger n) { return [NSString stringWithFormat: @"SC-test-nsolid-%li", (long)n]; });
+	NSString *deepPDF = TSSTCreateUnusedTempPath(NO, ^NSString *(NSInteger n) { return [NSString stringWithFormat: @"SC-test-%li-deep.pdf", (long)n]; });
+
+	TSSTArchiveScanRecord *pdf = [TSSTArchiveScanRecord new];
+	[pdf setValue: deepPDF forKey: @"path"];
+	TSSTArchiveScanRecord *nested = [TSSTArchiveScanRecord new];
+	[nested setValue: nestedArchive forKey: @"path"];
+	[nested setValue: nestedSolid forKey: @"solidDirectory"];
+	[nested setValue: @[pdf] forKey: @"children"];
+	TSSTArchiveScanRecord *top = [TSSTArchiveScanRecord new];
+	[top setValue: solid forKey: @"solidDirectory"];
+	[top setValue: @[nested] forKey: @"children"];
+
+	for (NSString *path in @[solid, nestedArchive, nestedSolid, deepPDF]) {
+		XCTAssertTrue([fileManager fileExistsAtPath: path]);
+	}
+	[TSSTManagedArchive discardScanRecord: top];
+	for (NSString *path in @[solid, nestedArchive, nestedSolid, deepPDF]) {
+		XCTAssertFalse([fileManager fileExistsAtPath: path], @"%@ should have been removed", path);
+	}
+}
+
+// Picking a temp name must claim it, so concurrent scans never share a path.
+- (void)testCreateUnusedTempPathIsUniqueAcrossThreads
+{
+	const NSUInteger count = 64;
+	NSMutableArray<NSString *> *paths = [NSMutableArray array];
+	dispatch_group_t group = dispatch_group_create();
+	for (NSUInteger i = 0; i < count; ++i) {
+		dispatch_group_async(group, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+			// Every caller proposes the same sequence of names.
+			NSString *path = TSSTCreateUnusedTempPath(i % 2 == 0, ^NSString *(NSInteger n) {
+				return [NSString stringWithFormat: @"SC-test-unique-%li", (long)n];
+			});
+			@synchronized (paths) { [paths addObject: path]; }
+		});
+	}
+	XCTAssertEqual(dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, 30 * NSEC_PER_SEC)), 0);
+
+	XCTAssertEqual([NSSet setWithArray: paths].count, count, @"two callers were handed the same path");
+	for (NSString *path in paths) {
+		XCTAssertTrue([NSFileManager.defaultManager fileExistsAtPath: path]);
+		[NSFileManager.defaultManager removeItemAtPath: path error: NULL];
+	}
 }
 
 @end
