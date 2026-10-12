@@ -679,11 +679,12 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 
 - (void)addFileURLs:(NSArray<NSURL*> *)paths toSession:(TSSTManagedSession *)session
 {
-	// Top-level archives are scanned on a background queue so the window can
-	// appear before the (possibly slow) listing finishes. Folders, PDFs and
-	// loose images are cheap enough to stay synchronous. In-flight scans are
-	// counted on the session (not per call) so overlapping adds to one
-	// session keep it "loading" until the last of them has landed.
+	// Top-level archives, and folders on a network volume (or under
+	// SC_SIMULATE_LINK), are scanned on a background queue so the window can
+	// appear before the (possibly slow) listing finishes. Local folders,
+	// PDFs and loose images are cheap enough to stay synchronous. In-flight
+	// scans are counted on the session (not per call) so overlapping adds to
+	// one session keep it "loading" until the last of them has landed.
 
 	[[self managedObjectContext] performBlockAndWait:^{
 		// The one landing path for every async scan result, run on the MOC's
@@ -741,7 +742,30 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 					mgroup = [NSEntityDescription insertNewObjectForEntityForName: @"ImageGroup" inManagedObjectContext: [self managedObjectContext]];
 					mgroup.fileURL = path;
 					mgroup.name = path.lastPathComponent;
-					[mgroup nestedFolderContents];
+					if ([TSSTManagedGroup shouldUseCacheForFileURL: path])
+					{
+						mgroup.session = session;
+						scanAsync = YES;
+						session.pendingScanCount++;
+
+						TSSTManagedGroup *folder = mgroup;
+						NSURL *scanURL = path;
+						NSString *scanName = folder.name;
+						NSManagedObjectContext *moc = [self managedObjectContext];
+						dispatch_async(archiveScanQueue, ^{
+							TSSTArchiveScanRecord *record = [TSSTManagedGroup scanRecordForFolderURL: scanURL name: scanName streaming: YES];
+							[moc performBlock: ^{
+								BOOL landed = landScanResult(folder, YES, ^(NSMutableArray<NSError *> *errors) {
+									[folder applyFolderScanRecord: record];
+								}, nil);
+								if (!landed) { [TSSTManagedArchive discardScanRecords: @[record]]; }
+							}];
+						});
+					}
+					else
+					{
+						[mgroup nestedFolderContents];
+					}
 				}
 				else if([[TSSTManagedArchive archiveExtensions] containsObject: fileExtension])
 				{
@@ -790,8 +814,8 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 								{
 									// Nothing owns this batch's temp files
 									// (solid directory, nested archives/PDFs).
-									[TSSTManagedArchive discardScanRecord: recordSoFar];
-									for (id child in newChildren) { [TSSTManagedArchive discardScanRecord: child]; }
+									[TSSTManagedArchive discardScanRecords: newChildren];
+									if (recordSoFar) { [TSSTManagedArchive discardScanRecords: @[recordSoFar]]; }
 								}
 							}];
 						}];

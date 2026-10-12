@@ -27,6 +27,9 @@
 		708DE06789374E0BAE939FCD /* TSSTArchiveByteSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C69F05BC2544412492D8FCCB /* TSSTArchiveByteSourceTests.m */; };
 		A30798F539FE46CDBD08C86D /* TSSTByteSourceHandleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 551113E49626444D9D30867C /* TSSTByteSourceHandleTests.m */; };
 		522A1C3A1B3441A6AE423B4B /* TSSTXADArchiveSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08B50E4BEF6348EBB37D1A1D /* TSSTXADArchiveSourceTests.m */; };
+		9691EFED4D4F4560E6D91128 /* TSSTFileSetByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D12D30B6E317162571303B9D /* TSSTFileSetByteSource.m */; };
+		01D2C7276C9F5F72951B57D0 /* TSSTFolderStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 39777B2912D5130554FC2AA9 /* TSSTFolderStreamingTests.m */; };
+		2E5BE968B74F8DE7888C9FBF /* TSSTPublicDomainStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00221E0ED7F9F78D78157C57 /* TSSTPublicDomainStreamingTests.m */; };
 		1A2B3C4D50014A1AA1000008 /* TSSTArchiveStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */; };
 		285FE3300F945E2300CD8F96 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 285FE32F0F945E2300CD8F96 /* Carbon.framework */; };
 		286236020AADDB6200B83E77 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286236010AADDB6200B83E77 /* QuartzCore.framework */; };
@@ -119,6 +122,7 @@
 		63AA7C0151AA0002007F240B /* rarzoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA7C0151AA0001007F240B /* rarzoo */; };
 		63AA7C0151AA0004007F240B /* jessie-james-rar4.cbr in Resources */ = {isa = PBXBuildFile; fileRef = 63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */; };
 		63AA7C0151AA0006007F240B /* jessie-james-rar5.cbr in Resources */ = {isa = PBXBuildFile; fileRef = 63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */; };
+		63AA7C0151AA0008007F240B /* Public-Domain-Comic-Jessie-James.cbz.zip in Resources */ = {isa = PBXBuildFile; fileRef = 63AA7C0151AA0007007F240B /* Public-Domain-Comic-Jessie-James.cbz.zip */; };
 		63AA00F628610014007F240B /* TSSTCb7FixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */; };
 		63AA000128610001007F240B /* TSSTImageUtilitiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */; };
 		63AA00FE28610010007F240B /* TSSTUTIDeclarationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */; };
@@ -409,6 +413,10 @@
 		C69F05BC2544412492D8FCCB /* TSSTArchiveByteSourceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveByteSourceTests.m; sourceTree = "<group>"; };
 		551113E49626444D9D30867C /* TSSTByteSourceHandleTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTByteSourceHandleTests.m; sourceTree = "<group>"; };
 		08B50E4BEF6348EBB37D1A1D /* TSSTXADArchiveSourceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTXADArchiveSourceTests.m; sourceTree = "<group>"; };
+		1BC67467BE69F0A4F0C66860 /* TSSTFileSetByteSource.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TSSTFileSetByteSource.h; sourceTree = "<group>"; };
+		D12D30B6E317162571303B9D /* TSSTFileSetByteSource.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSSTFileSetByteSource.m; sourceTree = "<group>"; };
+		39777B2912D5130554FC2AA9 /* TSSTFolderStreamingTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSSTFolderStreamingTests.m; sourceTree = "<group>"; };
+		00221E0ED7F9F78D78157C57 /* TSSTPublicDomainStreamingTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSSTPublicDomainStreamingTests.m; sourceTree = "<group>"; };
 		1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveStreamingTests.m; sourceTree = "<group>"; };
 		28B34A721013779B006C551C /* NSWindow+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSWindow+Extensions.swift"; sourceTree = "<group>"; };
 		28BD08E50C9836E600BD7EAF /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
@@ -515,6 +523,7 @@
 		63AA7C0151AA0001007F240B /* rarzoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fixtures/rarzoo; sourceTree = "<group>"; };
 		63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixtures/jessie-james-rar4.cbr; sourceTree = "<group>"; };
 		63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixtures/jessie-james-rar5.cbr; sourceTree = "<group>"; };
+		63AA7C0151AA0007007F240B /* Public-Domain-Comic-Jessie-James.cbz.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "App Review Info/Public-Domain-Comic-Jessie-James.cbz.zip"; sourceTree = SOURCE_ROOT; };
 		63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCb7FixtureTests.m; sourceTree = "<group>"; };
 		63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTImageUtilitiesTests.m; sourceTree = "<group>"; };
 		63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTUTIDeclarationTests.m; sourceTree = "<group>"; };
@@ -660,6 +669,8 @@
 				99E2A23979FF4A4DB0941DBD /* TSSTByteSourceHandle.h */,
 				7A1C0DE5B1A24F0E9C3D5A02 /* TSSTRAR5QuickOpen.h */,
 				7A1C0DE5B1A24F0E9C3D5A03 /* TSSTRAR5QuickOpen.m */,
+				1BC67467BE69F0A4F0C66860 /* TSSTFileSetByteSource.h */,
+				D12D30B6E317162571303B9D /* TSSTFileSetByteSource.m */,
 				4A6363ABA3B74E4FA5F0F18A /* TSSTXADArchiveSource.h */,
 				D34C674663E641248BC4F5BC /* TSSTByteSourceHandle.m */,
 				D57E674C430A43BE8B619F34 /* TSSTXADArchiveSource.m */,
@@ -926,6 +937,7 @@
 				63AA7C0151AA0001007F240B /* rarzoo */,
 				63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */,
 				63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */,
+				63AA7C0151AA0007007F240B /* Public-Domain-Comic-Jessie-James.cbz.zip */,
 				63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */,
 				63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */,
 				6323E4C228613F83007F240B /* OCR_NSStringTests.m */,
@@ -943,6 +955,8 @@
 				C69F05BC2544412492D8FCCB /* TSSTArchiveByteSourceTests.m */,
 				551113E49626444D9D30867C /* TSSTByteSourceHandleTests.m */,
 				08B50E4BEF6348EBB37D1A1D /* TSSTXADArchiveSourceTests.m */,
+				00221E0ED7F9F78D78157C57 /* TSSTPublicDomainStreamingTests.m */,
+				39777B2912D5130554FC2AA9 /* TSSTFolderStreamingTests.m */,
 				1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */,
 				C0FFEE0000000000000000A2 /* DTPolishedProgressBarTests.m */,
 			);
@@ -1334,6 +1348,7 @@
 				63AA7C0151AA0002007F240B /* rarzoo in Resources */,
 				63AA7C0151AA0004007F240B /* jessie-james-rar4.cbr in Resources */,
 				63AA7C0151AA0006007F240B /* jessie-james-rar5.cbr in Resources */,
+				63AA7C0151AA0008007F240B /* Public-Domain-Comic-Jessie-James.cbz.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1399,6 +1414,8 @@
 				708DE06789374E0BAE939FCD /* TSSTArchiveByteSourceTests.m in Sources */,
 				A30798F539FE46CDBD08C86D /* TSSTByteSourceHandleTests.m in Sources */,
 				522A1C3A1B3441A6AE423B4B /* TSSTXADArchiveSourceTests.m in Sources */,
+				2E5BE968B74F8DE7888C9FBF /* TSSTPublicDomainStreamingTests.m in Sources */,
+				01D2C7276C9F5F72951B57D0 /* TSSTFolderStreamingTests.m in Sources */,
 				1A2B3C4D50014A1AA1000008 /* TSSTArchiveStreamingTests.m in Sources */,
 				C0FFEE0000000000000000A1 /* DTPolishedProgressBarTests.m in Sources */,
 			);
@@ -1434,6 +1451,7 @@
 				4FC078349F8F4428BB7554C6 /* TSSTByteSourceHandle.m in Sources */,
 				D0E574A7DE3B4418A41D7EA2 /* TSSTXADArchiveSource.m in Sources */,
 				7A1C0DE5B1A24F0E9C3D5A01 /* TSSTRAR5QuickOpen.m in Sources */,
+				9691EFED4D4F4560E6D91128 /* TSSTFileSetByteSource.m in Sources */,
 				1A2B3C4D50014A1AA1000003 /* TSSTCachingByteSource.m in Sources */,
 				1A2B3C4D50014A1AA1000012 /* TSSTPageDecodeCache.m in Sources */,
 				1A2B3C4D50014A1AA1000006 /* TSSTArchiveStreamer.m in Sources */,
