@@ -57,8 +57,19 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSSize)pixelSizeOfImageData:(NSData *)imageData;
 @property (readonly, copy) NSImage *thumbnail;
 - (nullable NSData *)prepThumbnail;
+/// Thread-safe (ImageIO header downscale, no Core Data writes) thumbnail
+/// encoding of raw image bytes, max 256px. nil if undecodable.
++ (nullable NSData *)thumbnailDataFromImageData:(nullable NSData *)imageData;
+/// Off-main-safe render of a page's thumbnail from the (local) bytes of a
+/// snapshot taken on the context's queue (-dataSnapshot). Never touches
+/// managed objects; the caller stores the result on main.
++ (nullable NSData *)thumbnailDataForSnapshot:(TSSTPageDataSnapshot *)snapshot;
 @property (readonly, copy, nullable) NSData *pageData;
 - (TSSTPageDataSnapshot *)dataSnapshot;
+/// -dataSnapshot with the group already resolved (`self.group`'s
+/// -groupForOffQueueReads), so a batch of pages in one group walks up to
+/// the streaming folder once instead of per page.
+- (TSSTPageDataSnapshot *)dataSnapshotReadingThrough:(nullable TSSTManagedGroup *)source;
 @property (readonly, copy) NSImage *textPage;
 @property (readonly, copy, nullable) NSImage *pageImage;
 

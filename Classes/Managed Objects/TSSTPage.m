@@ -219,6 +219,36 @@ static NSSize monospaceCharacterSize;
 	return thumbnail;
 }
 
++ (NSData *)thumbnailDataFromImageData:(NSData *)imageData
+{
+	if (!imageData) { return nil; }
+	CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
+	if (!source) { return nil; }
+	NSDictionary * options = @{ (id)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
+								(id)kCGImageSourceCreateThumbnailWithTransform: @YES,
+								(id)kCGImageSourceThumbnailMaxPixelSize: @256 };
+	CGImageRef image = CGImageSourceCreateThumbnailAtIndex(source, 0, (__bridge CFDictionaryRef)options);
+	CFRelease(source);
+	if (!image) { return nil; }
+	NSMutableData * output = [NSMutableData data];
+	CGImageDestinationRef destination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)output, (__bridge CFStringRef)UTTypePNG.identifier, 1, NULL);
+	if (destination)
+	{
+		CGImageDestinationAddImage(destination, image, NULL);
+		if (!CGImageDestinationFinalize(destination)) { output = nil; }
+		CFRelease(destination);
+	}
+	else { output = nil; }
+	CGImageRelease(image);
+	return output;
+}
+
++ (NSData *)thumbnailDataForSnapshot:(TSSTPageDataSnapshot *)snapshot
+{
+	if (snapshot.isText) { return nil; }
+	return [TSSTPage thumbnailDataFromImageData: [snapshot data]];
+}
+
 - (NSData *)prepThumbnail
 {
 	[thumbLock lock];
@@ -344,10 +374,17 @@ static NSSize monospaceCharacterSize;
 
 - (TSSTPageDataSnapshot *)dataSnapshot
 {
+	// Resolved here, on the context's queue: the snapshot never reaches back
+	// into Core Data. A page with no group to read through reads its own file.
+	return [self dataSnapshotReadingThrough: [self.group groupForOffQueueReads]];
+}
+
+- (TSSTPageDataSnapshot *)dataSnapshotReadingThrough:(nullable TSSTManagedGroup *)source
+{
 	return [[TSSTPageDataSnapshot alloc] initWithPageID: self.objectID
 												 isText: self.text
-												  group: self.group
-											 entryIndex: self.index != nil ? [self.index integerValue] : NSNotFound
+												  group: source
+											 entryIndex: (source && self.index != nil) ? [self.index integerValue] : NSNotFound
 											  imagePath: self.imagePath];
 }
 
