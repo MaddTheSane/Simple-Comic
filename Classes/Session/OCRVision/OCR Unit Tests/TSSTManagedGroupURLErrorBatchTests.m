@@ -248,7 +248,7 @@
 	for (NSString *path in @[solid, nestedArchive, nestedSolid, deepPDF]) {
 		XCTAssertTrue([fileManager fileExistsAtPath: path]);
 	}
-	[TSSTManagedArchive discardScanRecord: top];
+	[TSSTManagedArchive discardScanRecords: @[top]];
 	for (NSString *path in @[solid, nestedArchive, nestedSolid, deepPDF]) {
 		XCTAssertFalse([fileManager fileExistsAtPath: path], @"%@ should have been removed", path);
 	}

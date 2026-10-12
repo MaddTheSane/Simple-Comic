@@ -279,7 +279,9 @@ static const NSTimeInterval kMaxRetryDelay = 8.0;
 
 			NSUInteger remaining = (NSUInteger)(runEnd - offset);
 			NSUInteger chunkLen = [self adaptiveChunkSizeForRemaining: remaining];
-			chunkLen = MIN(chunkLen, MIN(remaining, [_cache maxPrefetchLengthAtOffset: offset]));
+			NSUInteger fittingLen = MIN(remaining, [_cache maxPrefetchLengthAtOffset: offset]); // what the cache budget accepts
+			chunkLen = MIN(chunkLen, fittingLen);
+			if (_avoidsRuntTailReads && remaining - chunkLen < kMinChunkSize) { chunkLen = fittingLen; }
 
 			NSDate *startTime = [NSDate date];
 			uint64_t cachedBefore = _cache.cachedByteCount;

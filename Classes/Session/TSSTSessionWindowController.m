@@ -103,6 +103,12 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	/** Coalesces TSSTArchiveCacheProgressNotification bursts into at most
 	    one -refreshBufferedIndexes call per ~250ms. */
 	BOOL bufferedIndexesRefreshScheduled;
+
+	/** Page (and its arranged index) the progress-bar hover panel is on;
+	    off-main thumbnail renders only update the panel if still this page. */
+	TSSTPage * infoPanelPage;
+	NSInteger infoPanelPageIndex;
+	NSMutableSet<NSManagedObjectID *> * infoPanelThumbnailsInFlight;
 }
 
 @synthesize pageTurn, pageSortDescriptor;
@@ -260,6 +266,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		}
 		strongSelf->bufferedIndexesRefreshScheduled = NO;
 		[strongSelf refreshBufferedIndexes];
+		[strongSelf upgradeInfoPanelPlaceholderIfPossible];
 	});
 }
 
@@ -273,41 +280,40 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
 	NSArray<TSSTPage *> * pages = [pageController arrangedObjects];
 
-	// Group the streaming archives' pages so each archive answers with one
+	// Group the streaming pages by group so each group answers with one
 	// batched cache query instead of one lock acquisition per page.
-	NSMapTable<TSSTManagedArchive *, NSMutableArray<NSNumber *> *> * positionsByArchive = [NSMapTable strongToStrongObjectsMapTable];
-	NSMapTable<TSSTManagedArchive *, NSMutableArray<NSNumber *> *> * entriesByArchive = [NSMapTable strongToStrongObjectsMapTable];
+	NSMapTable<TSSTManagedGroup *, NSMutableArray<NSNumber *> *> * positionsByGroup = [NSMapTable strongToStrongObjectsMapTable];
+	NSMapTable<TSSTManagedGroup *, NSMutableArray<NSNumber *> *> * entriesByGroup = [NSMapTable strongToStrongObjectsMapTable];
 	for (NSUInteger i = 0; i < pages.count; ++i)
 	{
 		TSSTManagedGroup * group = pages[i].group;
 		NSNumber * pageIndex = pages[i].index;
-		if (![group isKindOfClass: [TSSTManagedArchive class]] || !((TSSTManagedArchive *)group).isStreamingArchive)
+		if (![group isKindOfClass: [TSSTManagedGroup class]] || !group.isStreamingArchive)
 		{
 			continue;
 		}
-		TSSTManagedArchive * archive = (TSSTManagedArchive *)group;
-		NSMutableArray<NSNumber *> * positions = [positionsByArchive objectForKey: archive];
+		NSMutableArray<NSNumber *> * positions = [positionsByGroup objectForKey: group];
 		if (!positions)
 		{
 			positions = [NSMutableArray array];
-			[positionsByArchive setObject: positions forKey: archive];
-			[entriesByArchive setObject: [NSMutableArray array] forKey: archive];
+			[positionsByGroup setObject: positions forKey: group];
+			[entriesByGroup setObject: [NSMutableArray array] forKey: group];
 		}
 		// A page without an index can't be cached; -1 matches no span.
 		[positions addObject: @(i)];
-		[[entriesByArchive objectForKey: archive] addObject: pageIndex ?: @(-1)];
+		[[entriesByGroup objectForKey: group] addObject: pageIndex ?: @(-1)];
 	}
 
 	NSMutableIndexSet * cached = [NSMutableIndexSet indexSet];
-	for (TSSTManagedArchive * archive in positionsByArchive)
+	for (TSSTManagedGroup * group in positionsByGroup)
 	{
-		NSArray<NSNumber *> * positions = [positionsByArchive objectForKey: archive];
-		[[archive indexesOfCachedEntries: [entriesByArchive objectForKey: archive]] enumerateIndexesUsingBlock: ^(NSUInteger j, BOOL * stop) {
+		NSArray<NSNumber *> * positions = [positionsByGroup objectForKey: group];
+		[[group indexesOfCachedEntries: [entriesByGroup objectForKey: group]] enumerateIndexesUsingBlock: ^(NSUInteger j, BOOL * stop) {
 			[cached addIndex: positions[j].unsignedIntegerValue];
 		}];
 	}
 
-	progressBar.bufferedIndexes = positionsByArchive.count > 0 ? cached : nil;
+	progressBar.bufferedIndexes = positionsByGroup.count > 0 ? cached : nil;
 }
 
 #pragma mark - Loading overlay
@@ -648,23 +654,140 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
+/// YES when -[TSSTPage thumbnail] can be produced without a network read:
+/// the thumbnail is already stored, or the page is text / not in a
+/// streaming archive / its bytes are already cached.
+- (BOOL)thumbnailIsAvailableWithoutNetwork:(TSSTPage *)page
+{
+	if (page.thumbnailData || page.text)
+	{
+		return YES;
+	}
+	TSSTManagedGroup * group = page.group;
+	if (![group isKindOfClass: [TSSTManagedGroup class]] || page.index == nil)
+	{
+		return YES;
+	}
+	return [group isEntryIndexCached: page.index.integerValue];
+}
+
+/// Subtle "still loading" stand-in: page name/number over a gray card.
+- (NSImage *)infoPanelPlaceholderForPage:(TSSTPage *)page index:(NSInteger)index
+{
+	NSString * label = [NSString stringWithFormat: @"%ld", (long)index + 1];
+	NSString * name = page.name.length ? page.name : @"";
+	NSSize size = NSMakeSize(96, 128);
+	return [NSImage imageWithSize: size flipped: NO drawingHandler: ^BOOL(NSRect rect) {
+		[[NSColor colorWithWhite: 0.5 alpha: 0.25] setFill];
+		NSRectFillUsingOperation(rect, NSCompositingOperationSourceOver);
+		NSMutableParagraphStyle * style = [NSMutableParagraphStyle new];
+		style.alignment = NSTextAlignmentCenter;
+		style.lineBreakMode = NSLineBreakByTruncatingMiddle;
+		NSDictionary * big = @{ NSFontAttributeName: [NSFont systemFontOfSize: 28 weight: NSFontWeightLight],
+								NSForegroundColorAttributeName: NSColor.secondaryLabelColor, NSParagraphStyleAttributeName: style };
+		NSDictionary * small = @{ NSFontAttributeName: [NSFont systemFontOfSize: 10],
+								  NSForegroundColorAttributeName: NSColor.tertiaryLabelColor, NSParagraphStyleAttributeName: style };
+		[label drawInRect: NSMakeRect(0, 62, size.width, 36) withAttributes: big];
+		[name drawInRect: NSMakeRect(4, 40, size.width - 8, 14) withAttributes: small];
+		[@"Loading\u2026" drawInRect: NSMakeRect(4, 24, size.width - 8, 14) withAttributes: small];
+		return YES;
+	}];
+}
+
+- (void)setInfoPanelThumbnail:(nullable NSImage *)thumb
+{
+	NSSize thumbSize = thumb ? sizeConstrainedByDimension([thumb size], 128) : NSMakeSize(96, 128);
+	[infoPicture setFrameSize: thumbSize];
+	[infoPicture setImage: thumb];
+}
+
+/// Renders (once per page) the thumbnail of a page whose bytes are local,
+/// off-main and unconditionally -- a sweep that has already moved on must
+/// still leave the thumbnail stored so the next hover is instant. The
+/// managed attribute is written on main; the panel is only updated if the
+/// hover is still on this page.
+- (void)renderThumbnailForPage:(TSSTPage *)page index:(NSInteger)index
+{
+	if (!infoPanelThumbnailsInFlight)
+	{
+		infoPanelThumbnailsInFlight = [NSMutableSet set];
+	}
+	NSManagedObjectID * key = page.objectID;
+	if ([infoPanelThumbnailsInFlight containsObject: key])
+	{
+		return;
+	}
+	[infoPanelThumbnailsInFlight addObject: key];
+	__weak TSSTSessionWindowController * weakSelf = self;
+	__block NSData * data = nil;
+	TSSTPageDataSnapshot * snapshot = [page dataSnapshot]; // plain values: the queue never touches `page`
+	[[TSSTPageDecodeCache sharedCache] runOnDecodeQueueWhileCurrent: ^BOOL{ return YES; } work: ^{
+		data = [TSSTPage thumbnailDataForSnapshot: snapshot];
+	} completion: ^(BOOL ran) {
+		TSSTSessionWindowController * strongSelf = weakSelf;
+		if (!strongSelf) { return; }
+		[strongSelf->infoPanelThumbnailsInFlight removeObject: key];
+		if (!data) { return; }
+		if (!page.thumbnailData) { page.thumbnailData = data; }
+		if (strongSelf->infoPanelPage == page)
+		{
+			[strongSelf setInfoPanelThumbnail: [[NSImage alloc] initWithData: page.thumbnailData]];
+		}
+	}];
+}
+
+/// Upgrades a placeholder to the real thumbnail once the hovered page's
+/// bytes have arrived (called on streamer progress). Never fetches.
+- (void)upgradeInfoPanelPlaceholderIfPossible
+{
+	TSSTPage * page = infoPanelPage;
+	if (!page || page.thumbnailData || ![self thumbnailIsAvailableWithoutNetwork: page])
+	{
+		return;
+	}
+	[self renderThumbnailForPage: page index: infoPanelPageIndex];
+}
+
+/// Fills the info panel's picture for page `index` without blocking the
+/// main thread or steering the streamer: a stored thumbnail is shown
+/// directly; otherwise a placeholder, plus an off-main render as soon as
+/// the bytes are local (immediately, or on a later streamer progress tick).
+- (void)loadInfoPanelThumbnailForPageIndex:(NSInteger)index
+{
+	NSArray * pages = [pageController arrangedObjects];
+	if (index < 0 || (NSUInteger)index >= pages.count)
+	{
+		return; // stale/out-of-range hover (e.g. archive still scanning)
+	}
+	TSSTPage * page = pages[index];
+	infoPanelPage = page;
+	infoPanelPageIndex = index;
+	NSImage * thumb = page.thumbnailData ? [[NSImage alloc] initWithData: page.thumbnailData] : nil;
+	if (!thumb)
+	{
+		if (page.text)
+		{
+			thumb = page.thumbnail; // text pages render on main
+		}
+		else if ([self thumbnailIsAvailableWithoutNetwork: page])
+		{
+			[self renderThumbnailForPage: page index: index];
+		}
+	}
+	[self setInfoPanelThumbnail: thumb ?: [self infoPanelPlaceholderForPage: page index: index]];
+}
+
 - (void)infoPanelSetupAtPoint:(NSPoint)point
 {
 	NSPoint cursorPoint;
-	NSInteger index;
 	DTPolishedProgressBar * bar = progressBar;
 	
 	[[infoWindow contentView] setBordered: NO];
 	point.y = (NSMaxY([bar frame]) - 6);
 	
 	cursorPoint = [bar convertPoint: point fromView: nil];
-	index = [bar indexForPoint: cursorPoint];
-	
-	NSImage * thumb = [self imageForPageAtIndex: index];
-	NSSize thumbSize = sizeConstrainedByDimension([thumb size], 128);
-	
-	[infoPicture setFrameSize: thumbSize];
-	[infoPicture setImage: thumb];
+	[self loadInfoPanelThumbnailForPageIndex: [bar indexForPoint: cursorPoint]];
+	NSSize thumbSize = infoPicture.frame.size;
 	
 	cursorPoint = [[bar window] convertRectToScreen: (NSRect){point, NSZeroSize}].origin;
 	
@@ -1412,7 +1535,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		return YES; // decoding already set the aspect ratio as a side effect
 	}
 	TSSTManagedGroup * group = page.group;
-	if (![group isKindOfClass: [TSSTManagedArchive class]])
+	if (![group isKindOfClass: [TSSTManagedGroup class]])
 	{
 		return YES; // local file / nested PDF page -- disk read is fast
 	}
@@ -1420,7 +1543,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	{
 		return YES;
 	}
-	return [(TSSTManagedArchive *)group isEntryIndexCached: page.index.integerValue];
+	return [(TSSTManagedGroup *)group isEntryIndexCached: page.index.integerValue];
 }
 
 /// -shouldDisplayAlone, but safe to call from anywhere (including
@@ -1442,7 +1565,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	// Bytes aren't cached and the aspect is unknown -- nudge the streamer
 	// toward this entry (we're likely headed there) without blocking here.
-	[(TSSTManagedArchive *)page.group prioritizeEntryIndex: page.index.integerValue];
+	[(TSSTManagedGroup *)page.group prioritizeEntryIndex: page.index.integerValue];
 	return YES;
 }
 
@@ -1464,9 +1587,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 /// read, so the background streamer follows the reader.
 - (void)noteReadingForPage:(nullable TSSTPage *)page
 {
-	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedArchive class]])
+	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedGroup class]])
 	{
-		[(TSSTManagedArchive *)page.group noteReadingEntryIndex: page.index.integerValue];
+		[(TSSTManagedGroup *)page.group noteReadingEntryIndex: page.index.integerValue];
 	}
 }
 
@@ -1474,9 +1597,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 /// used when a page has to be fetched now, not merely queued.
 - (void)prioritizeReadingForPage:(nullable TSSTPage *)page
 {
-	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedArchive class]])
+	if (page.index != nil && [page.group isKindOfClass: [TSSTManagedGroup class]])
 	{
-		[(TSSTManagedArchive *)page.group prioritizeEntryIndex: page.index.integerValue];
+		[(TSSTManagedGroup *)page.group prioritizeEntryIndex: page.index.integerValue];
 	}
 }
 
@@ -1657,7 +1780,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		{
 			continue;
 		}
-		if ([self pageIsSafeToInspectSynchronously: page] && (page.group == nil || ![page.group isKindOfClass: [TSSTManagedArchive class]] || page.index == nil || [(TSSTManagedArchive *)page.group isEntryIndexCached: page.index.integerValue]))
+		if ([self pageIsSafeToInspectSynchronously: page] && (page.group == nil || ![page.group isKindOfClass: [TSSTManagedGroup class]] || page.index == nil || [(TSSTManagedGroup *)page.group isEntryIndexCached: page.index.integerValue]))
 		{
 			[candidates addObject: page];
 		}
