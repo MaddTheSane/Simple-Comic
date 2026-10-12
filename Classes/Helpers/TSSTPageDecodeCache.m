@@ -96,7 +96,19 @@ static const NSUInteger kDecodeCacheCostLimit = 300 * 1024 * 1024; // ~300 MB of
 - (NSArray<TSSTPageDataSnapshot *> *)snapshotsForPages:(NSArray<TSSTPage *> *)pages
 {
 	NSMutableArray<TSSTPageDataSnapshot *> *snapshots = [NSMutableArray arrayWithCapacity: pages.count];
-	for (TSSTPage *page in pages) { [snapshots addObject: [page dataSnapshot]]; }
+	// Pages of a group share the group they read through: resolve it once.
+	NSMapTable<TSSTManagedGroup *, id> *sources = [NSMapTable strongToStrongObjectsMapTable];
+	for (TSSTPage *page in pages)
+	{
+		TSSTManagedGroup *group = page.group;
+		id source = group ? [sources objectForKey: group] : NSNull.null;
+		if (!source) // not resolved yet (NSNull: resolved to "read its own file")
+		{
+			source = [group groupForOffQueueReads] ?: NSNull.null;
+			[sources setObject: source forKey: group];
+		}
+		[snapshots addObject: [page dataSnapshotReadingThrough: source == NSNull.null ? nil : source]];
+	}
 	return snapshots;
 }
 

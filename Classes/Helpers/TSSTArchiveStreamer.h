@@ -48,6 +48,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// Jumps the reading position and wakes the worker immediately.
 - (void)prioritizeSpanIndex:(NSUInteger)spanIndex;
 
+/// When YES, a span's last chunk is never smaller than the minimum chunk:
+/// the tail is folded into the previous request. For sets of page-sized
+/// spans (loose image files), where a tail read costs a full round trip.
+/// Off by default, so archive streaming keeps its exact chunking.
+@property (nonatomic) BOOL avoidsRuntTailReads;
+
 @property (atomic, readonly) BOOL isComplete;
 @property (atomic, readonly) double throughputBytesPerSecond;
 
