@@ -21,7 +21,22 @@ class TSSTThumbnailView: NSView {
 	private var limit = 0
 	
 	private var thumbLock = NSLock()
-	private var threadIdent: UInt32 = 0
+	/// Generation counter for -processThumbs: bumping it makes any running loop
+	/// stop. Touched from the main thread and the background loop, so access
+	/// goes through the lock.
+	private var _threadIdent: UInt32 = 0
+	private let threadIdentLock = NSLock()
+	private var threadIdent: UInt32 {
+		threadIdentLock.withLock { _threadIdent }
+	}
+	/// Invalidates running loops and returns the new generation.
+	@discardableResult
+	private func bumpThreadIdent() -> UInt32 {
+		threadIdentLock.withLock {
+			_threadIdent &+= 1
+			return _threadIdent
+		}
+	}
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -78,10 +93,14 @@ class TSSTThumbnailView: NSView {
 		needsDisplay = true
 	}
 	
+	/// Stops a running -processThumbs loop (e.g. the window is closing).
+	@objc func cancelThumbnailProcessing() {
+		bumpThreadIdent()
+	}
+	
 	@objc func processThumbs() {
 		autoreleasepool() {
-			threadIdent += 1
-			let localIdent = threadIdent
+			let localIdent = bumpThreadIdent()
 			thumbLock.lock()
 			let pageCount: Int = (pageController!.content! as AnyObject).count
 			limit = 0
@@ -91,7 +110,8 @@ class TSSTThumbnailView: NSView {
 					dataSource!.imageForPage(at: limit)
 					if (limit % 5) == 0 {
 						DispatchQueue.main.async {
-							if self.window!.isVisible {
+							// The window may have closed since this block was queued.
+							if self.window?.isVisible ?? false {
 								self.needsDisplay = true
 							}
 						}

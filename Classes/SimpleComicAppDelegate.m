@@ -168,6 +168,9 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	BOOL      launchInProgress;
 	BOOL	  optionHeldAtlaunch;
 	NSArray<NSString*>	*launchFiles;
+
+	/// Serial queue that all background archive scans run on, so a slow volume never blocks the main thread.
+	dispatch_queue_t archiveScanQueue;
 }
 
 
@@ -289,6 +292,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		autoSave = [NSTimer scheduledTimerWithTimeInterval: 30.0 target: self selector: @selector(saveContext) userInfo: nil repeats: YES];
 	}
 	sessions = [NSMutableArray new];
+	archiveScanQueue = dispatch_queue_create("com.dancingtortoise.simplecomic.archive-scan", DISPATCH_QUEUE_SERIAL);
 	@try {
 		[self sessionRelaunch];
 	} @catch(NSException *e) {
@@ -567,7 +571,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 - (void)windowForSession:(TSSTManagedSession *)settings
 {
 	NSArray * existingSessions = [sessions valueForKey: @"session"];
-	if([settings.images count] > 0 && ![existingSessions containsObject: settings])
+	// A session with 0 pages normally means nothing was found -- except
+	// while a background archive scan is still filling it in, in which case
+	// the window opens right away and shows a "Loading..." state.
+	if((settings.images.count > 0 || settings.isLoading) && ![existingSessions containsObject: settings])
 	{
 		TSSTSessionWindowController * comicWindow = [[TSSTSessionWindowController alloc] initWithSession: settings];
 		[sessions addObject: comicWindow];
@@ -590,7 +597,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	NSArray * managedSessions = [[self managedObjectContext] executeFetchRequest: sessionRequest error: &fetchError];
 	for(TSSTManagedSession *session in managedSessions)
 	{
-		if([session.groups count] <= 0)
+		// A session saved while its archive scans were still running has
+		// groups but no pages; windowForSession: would neither show nor
+		// delete it, so it would linger in the store forever.
+		if([session.groups count] <= 0 || [session.images count] <= 0)
 		{
 			[[self managedObjectContext] deleteObject: session];
 		}
@@ -636,6 +646,12 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 
 - (void)addFileURLs:(NSArray<NSURL*> *)paths toSession:(TSSTManagedSession *)session
 {
+	// Top-level archives are scanned on a background queue so the window can
+	// appear before the (possibly slow) listing finishes. Folders, PDFs and
+	// loose images are cheap enough to stay synchronous. In-flight scans are
+	// counted on the session (not per call) so overlapping adds to one
+	// session keep it "loading" until the last of them has landed.
+
 	[[self managedObjectContext] performBlockAndWait:^{
 		NSFileManager * fileManager = [NSFileManager defaultManager];
 		BOOL isDirectory;
@@ -647,7 +663,8 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 			if(exists && ![[[path lastPathComponent] substringToIndex: 1] isEqualToString: @"."])
 			{
 				TSSTPage * fileDescription = nil;
-				TSSTManagedGroup* mgroup;
+				TSSTManagedGroup* mgroup = nil;
+				BOOL scanAsync = NO;
 				if(isDirectory)
 				{
 					mgroup = [NSEntityDescription insertNewObjectForEntityForName: @"ImageGroup" inManagedObjectContext: [self managedObjectContext]];
@@ -660,7 +677,42 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 					mgroup = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
 					mgroup.fileURL = path;
 					mgroup.name = path.lastPathComponent;
-					[(TSSTManagedArchive *)mgroup nestedArchiveContents];
+					mgroup.session = session;
+					scanAsync = YES;
+					session.pendingScanCount++;
+
+					TSSTManagedArchive *archive = (TSSTManagedArchive *)mgroup;
+					NSString *scanName = archive.name;
+					NSString *scanPassword = archive.password;
+					NSManagedObjectContext *moc = [self managedObjectContext];
+
+					dispatch_async(archiveScanQueue, ^{
+						TSSTArchiveScanRecord *record = [TSSTManagedArchive scanRecordForFileURL: path name: scanName password: scanPassword];
+						// Async, not performBlockAndWait: the main thread must
+						// never block on this queue (the password prompt
+						// above may itself dispatch_sync back to main).
+						[moc performBlock:^{
+							// The window may have been closed (deleting the
+							// session and, by cascade, this archive) while the
+							// scan was running. Drop the result and its temp
+							// files, but still balance the pending count.
+							if (archive.managedObjectContext == nil || archive.isDeleted ||
+								session.managedObjectContext == nil || session.isDeleted)
+							{
+								[TSSTManagedArchive discardScanRecord: record];
+								session.pendingScanCount--;
+								return;
+							}
+
+							[TSSTManagedGroup batchURLErrorsForGroupName: scanName during: ^{
+								[archive applyScanRecord: record];
+							}];
+							[[session mutableSetValueForKey: @"images"] unionSet: archive.nestedImages];
+
+							// Last, so observers see the pages before "loading" ends.
+							session.pendingScanCount--;
+						}];
+					});
 				}
 				else if([fileExtension compare:@"pdf" options:NSCaseInsensitiveSearch] == NSOrderedSame)
 				{
@@ -674,8 +726,8 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 					fileDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
 					[fileDescription setValue: path.path forKey: @"imagePath"];
 				}
-				
-				if(mgroup)
+
+				if(mgroup && !scanAsync)
 				{
 					[pageSet unionSet: mgroup.nestedImages];
 					mgroup.session = session;
