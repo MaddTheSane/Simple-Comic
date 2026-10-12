@@ -109,14 +109,18 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
+/// Hides the title text when the "Unified toolbar and title bar" preference is on.
+- (void)applyUnifiedTitlebarPreference
+{
+	BOOL unified = [[NSUserDefaults standardUserDefaults] boolForKey: TSSTUnifiedTitlebar];
+	self.window.titleVisibility = unified ? NSWindowTitleHidden : NSWindowTitleVisible;
+}
+
+
 - (void)windowDidLoad
 {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey: TSSTUnifiedTitlebar]) {
-		[super windowDidLoad];
-		self.window.titleVisibility = NSWindowTitleHidden;
-	} else {
-		[super windowDidLoad];
-	}
+	[super windowDidLoad];
+	[self applyUnifiedTitlebarPreference];
 	
 	// Set up the toolbar, because Apple decided it hates Interface Builder for toolbars.
 	NSToolbar *newToolbar = [[NSToolbar alloc] initWithIdentifier:@"1A96E21F-07EA-4D3B-B356-508A45D1FCBB"];
@@ -151,6 +155,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults addObserver: self forKeyPath: TSSTBackgroundColor options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTLoupeDiameter options: 0 context: nil];
 	[defaults addObserver: self forKeyPath: TSSTLoupePower options: 0 context: nil];
+	[defaults addObserver: self forKeyPath: TSSTUnifiedTitlebar options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTPageOrder options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTPageScaleOptions options: 0 context: nil];
 	[session addObserver: self forKeyPath: TSSTTwoPageSpread options: 0 context: nil];
@@ -196,6 +201,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[defaults removeObserver: self forKeyPath: TSSTConstrainScale];
 	[defaults removeObserver: self forKeyPath: TSSTLoupeDiameter];
 	[defaults removeObserver: self forKeyPath: TSSTLoupePower];
+	[defaults removeObserver: self forKeyPath: TSSTUnifiedTitlebar];
 	[pageController removeObserver: self forKeyPath: @"selectionIndex"];
 	[pageController removeObserver: self forKeyPath: @"arrangedObjects.@count"];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -279,6 +285,11 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	else if([keyPath isEqualToString: TSSTLoupePower])
 	{
 		[self refreshLoupePanel];
+	}
+	else if([keyPath isEqualToString: TSSTUnifiedTitlebar])
+	{
+		// Apply live so already-open windows follow the Preferences checkbox.
+		[self applyUnifiedTitlebarPreference];
 	}
 	else
 	{
