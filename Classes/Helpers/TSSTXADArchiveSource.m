@@ -16,6 +16,88 @@ static const NSUInteger kBatchEntryCount = 16;
 static const NSTimeInterval kInlineServiceBudget = 1.5;
 static const NSTimeInterval kBatchInterval = 0.1;
 
+@implementation TSSTVolumeSetByteSource
+{
+	NSArray<id<TSSTArchiveByteSource>> *_volumes;
+	NSArray<NSNumber *> *_lengths;
+	uint64_t _length;
+}
+
+- (instancetype)initWithVolumeSources:(NSArray<id<TSSTArchiveByteSource>> *)volumes
+{
+	if ((self = [super init])) {
+		_volumes = [volumes copy];
+		NSMutableArray<NSNumber *> *lengths = [NSMutableArray arrayWithCapacity: volumes.count];
+		for (id<TSSTArchiveByteSource> volume in volumes) {
+			[lengths addObject: @(volume.length)];
+			_length += volume.length;
+		}
+		_lengths = lengths;
+	}
+	return self;
+}
+
+- (uint64_t)length { return _length; }
+- (NSArray<NSNumber *> *)volumeLengths { return _lengths; }
+
+- (NSData *)readAtOffset:(uint64_t)offset length:(NSUInteger)length error:(NSError **)error
+{
+	if (offset > _length) {
+		if (error) *error = [NSError errorWithDomain: TSSTArchiveByteSourceErrorDomain code: TSSTArchiveByteSourceErrorOffsetPastEOF userInfo: nil];
+		return nil;
+	}
+	NSMutableData *out = [NSMutableData data];
+	uint64_t volumeStart = 0;
+	for (NSUInteger i = 0; i < _volumes.count && out.length < length; ++i) {
+		uint64_t volumeLength = _lengths[i].unsignedLongLongValue;
+		uint64_t position = offset + out.length;
+		if (position < volumeStart + volumeLength) {
+			NSUInteger want = (NSUInteger)MIN((uint64_t)(length - out.length), volumeStart + volumeLength - position);
+			NSData *piece = [_volumes[i] readAtOffset: position - volumeStart length: want error: error];
+			if (!piece) return nil;
+			[out appendData: piece];
+			if (piece.length < want) break;
+		}
+		volumeStart += volumeLength;
+	}
+	return out;
+}
+
+@end
+
+/// One volume's own bytes (0-based) as a window onto the shared, cached
+/// volume-set space, so each XADMultiHandle segment reads through the
+/// same cache as everything else.
+@interface TSSTVolumeSliceByteSource : NSObject <TSSTArchiveByteSource>
+- (instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source offset:(uint64_t)offset length:(uint64_t)length;
+@end
+
+@implementation TSSTVolumeSliceByteSource
+{
+	id<TSSTArchiveByteSource> _source;
+	uint64_t _offset;
+	uint64_t _length;
+}
+
+- (instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source offset:(uint64_t)offset length:(uint64_t)length
+{
+	if ((self = [super init])) { _source = source; _offset = offset; _length = length; }
+	return self;
+}
+
+- (uint64_t)length { return _length; }
+
+- (NSData *)readAtOffset:(uint64_t)offset length:(NSUInteger)length error:(NSError **)error
+{
+	if (offset > _length) {
+		if (error) *error = [NSError errorWithDomain: TSSTArchiveByteSourceErrorDomain code: TSSTArchiveByteSourceErrorOffsetPastEOF userInfo: nil];
+		return nil;
+	}
+	return [_source readAtOffset: _offset + offset length: (NSUInteger)MIN((uint64_t)length, _length - offset) error: error];
+}
+
+@end
+
 @implementation TSSTXADArchiveEntry
 
 - (instancetype)initWithIndex:(NSUInteger)index
@@ -83,7 +165,41 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	TSSTXADArchiveSourceBatchHandler _batchHandler;
 }
 
++ (NSArray<NSURL *> *)volumeURLsForFileURL:(NSURL *)fileURL
+{
+	NSString *extension = fileURL.pathExtension.lowercaseString;
+	// Only RAR names its volumes; skip the header read for everything else.
+	if (![extension isEqualToString: @"rar"] && !(extension.length == 3 && [extension characterAtIndex: 0] >= 'r' && [extension characterAtIndex: 0] <= 'z' && isdigit([extension characterAtIndex: 1]) && isdigit([extension characterAtIndex: 2]))) return nil;
+	NSString *path = fileURL.path;
+	@try {
+		id<TSSTArchiveByteSource> fileSource = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
+		if (!fileSource) return nil;
+		CSHandle *handle = [[TSSTByteSourceHandle alloc] initWithByteSource: fileSource];
+		NSData *header = [handle readDataOfLengthAtMost: 4096];
+		XADArchiveParser *probe = [XADArchiveParser archiveParserForHandle: handle firstBytes: header resourceFork: nil name: path];
+		if (!probe) return nil;
+		NSArray<NSString *> *paths = [[probe class] volumesForHandle: handle firstBytes: header name: path];
+		if (paths.count < 2) return nil;
+		NSMutableArray<NSURL *> *urls = [NSMutableArray arrayWithCapacity: paths.count];
+		for (NSString *volumePath in paths) { [urls addObject: [NSURL fileURLWithPath: volumePath]]; }
+		return urls;
+	} @catch (id exception) {
+		return nil;
+	}
+}
+
 - (nullable instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source
+										name:(NSString *)name
+										path:(NSString *)path
+									password:(nullable NSString *)password
+								   passwordProvider:(nullable TSSTXADArchiveSourcePasswordProvider)passwordProvider
+									   error:(NSError **)error
+{
+	return [self initWithByteSource: source volumeLengths: nil name: name path: path password: password passwordProvider: passwordProvider error: error];
+}
+
+- (nullable instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source
+								volumeLengths:(nullable NSArray<NSNumber *> *)volumeLengths
 										name:(NSString *)name
 										path:(NSString *)path
 									password:(nullable NSString *)password
@@ -100,7 +216,27 @@ static const NSTimeInterval kBatchInterval = 0.1;
 		_currentBatch = [NSMutableArray array];
 		_password = [password copy];
 
-		CSHandle *handle = [[TSSTByteSourceHandle alloc] initWithByteSource: source];
+		CSHandle *handle;
+		if (volumeLengths.count > 1) {
+			NSMutableArray<CSHandle *> *segments = [NSMutableArray arrayWithCapacity: volumeLengths.count];
+			uint64_t start = 0;
+			for (NSNumber *length in volumeLengths) {
+				id<TSSTArchiveByteSource> slice = [[TSSTVolumeSliceByteSource alloc] initWithByteSource: source offset: start length: length.unsignedLongLongValue];
+				[segments addObject: [[TSSTByteSourceHandle alloc] initWithByteSource: slice]];
+				start += length.unsignedLongLongValue;
+			}
+			// XADMultiHandle (the segmented handle the RAR parsers key volume
+			// handling on) isn't in the framework's public headers, and
+			// importing the vendor copy clashes with them, so reach it by name.
+			Class multiHandleClass = NSClassFromString(@"XADMultiHandle");
+			handle = [multiHandleClass respondsToSelector: @selector(handleWithHandleArray:)] ? [multiHandleClass performSelector: @selector(handleWithHandleArray:) withObject: segments] : nil;
+			if (!handle) {
+				if (error) { *error = [NSError errorWithDomain: TSSTXADArchiveSourceErrorDomain code: TSSTXADArchiveSourceErrorCannotOpen userInfo: nil]; }
+				return nil;
+			}
+		} else {
+			handle = [[TSSTByteSourceHandle alloc] initWithByteSource: source];
+		}
 		NSError *parserError = nil;
 		_parser = [XADArchiveParser archiveParserForHandle: handle name: name nserror: &parserError];
 		if (!_parser) {
@@ -134,7 +270,8 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	// real header walk, which is slow itself, services requests as it goes
 	// so page 1 can show before the walk ends.
 	_servicesRequestsWhileParsing = NO;
-	if ([TSSTRAR5QuickOpen listParser: _parser error: &error]) {
+	// Quick Open records describe one file's tail, not a volume set.
+	if (!_parser.hasVolumes && [TSSTRAR5QuickOpen listParser: _parser error: &error]) {
 		success = (error == nil);
 	} else {
 		_servicesRequestsWhileParsing = YES;
