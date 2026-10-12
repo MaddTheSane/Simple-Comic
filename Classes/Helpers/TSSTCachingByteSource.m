@@ -9,7 +9,12 @@
 #import <fcntl.h>
 #import <errno.h>
 
-const NSUInteger TSSTCachingByteSourceBlockSize = 256 * 1024;
+// Small on purpose: RAR4 header walks read a few dozen bytes per entry, each
+// in a different place, and every such read fetches a whole block. At 256 KB
+// that was ~52 ms of transfer per entry at 5 MB/s; at 16 KB it is ~3 ms.
+// Streaming reads span many blocks and are coalesced into single upstream
+// requests, so a small block costs them nothing.
+const NSUInteger TSSTCachingByteSourceBlockSize = 16 * 1024;
 
 static NSError *TSSTByteSourceOffsetPastEOFError(void);
 

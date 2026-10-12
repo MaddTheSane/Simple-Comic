@@ -686,6 +686,44 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	// session keep it "loading" until the last of them has landed.
 
 	[[self managedObjectContext] performBlockAndWait:^{
+		// The one landing path for every async scan result, run on the MOC's
+		// queue. A scan whose window closed mid-flight (deleting the session
+		// and, by cascade, the group) is dropped (returning NO so the caller
+		// can delete the scan's temp files), still balancing the pending
+		// count on the final call. Otherwise `apply` inserts the scanned
+		// entities and appends any errors it found, the session's pages are
+		// refreshed, the errors are shown, and on the final call `onFinal`
+		// runs and loading is cleared. Loading is cleared after the errors are
+		// shown so the window controller's "no pages found" alert can tell
+		// whether one was already shown.
+		BOOL (^landScanResult)(TSSTManagedGroup *, BOOL, void (^)(NSMutableArray<NSError *> *), void (^)(void)) =
+		^(TSSTManagedGroup *group, BOOL isFinal, void (^apply)(NSMutableArray<NSError *> *), void (^onFinal)(void)) {
+			if (group.managedObjectContext == nil || group.isDeleted ||
+				session.managedObjectContext == nil || session.isDeleted)
+			{
+				if (isFinal) { session.pendingScanCount--; }
+				return NO;
+			}
+			__block BOOL hadErrors = NO;
+			[TSSTManagedGroup batchURLErrorsForGroupName: group.name during: ^(NSMutableArray<NSError *> *errors) {
+				apply(errors);
+
+				[[session mutableSetValueForKey: @"images"] unionSet: group.nestedImages];
+				hadErrors = errors.count > 0;
+			}];
+			if (hadErrors)
+			{
+				session.lastOpenHadErrors = YES;
+			}
+			if (isFinal)
+			{
+				if (onFinal) { onFinal(); }
+				// Last, so observers see the pages before "loading" ends.
+				session.pendingScanCount--;
+			}
+			return YES;
+		};
+
 		NSFileManager * fileManager = [NSFileManager defaultManager];
 		BOOL isDirectory;
 		NSMutableSet<TSSTPage *> * pageSet = [session.images mutableCopy];
@@ -720,30 +758,42 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 					NSManagedObjectContext *moc = [self managedObjectContext];
 
 					dispatch_async(archiveScanQueue, ^{
-						TSSTArchiveScanRecord *record = [TSSTManagedArchive scanRecordForFileURL: path name: scanName password: scanPassword];
-						// Async, not performBlockAndWait: the main thread must
-						// never block on this queue (the password prompt
-						// above may itself dispatch_sync back to main).
-						[moc performBlock:^{
-							// The window may have been closed (deleting the
-							// session and, by cascade, this archive) while the
-							// scan was running. Drop the result and its temp
-							// files, but still balance the pending count.
-							if (archive.managedObjectContext == nil || archive.isDeleted ||
-								session.managedObjectContext == nil || session.isDeleted)
-							{
-								[TSSTManagedArchive discardScanRecord: record];
-								session.pendingScanCount--;
-								return;
-							}
-
-							[TSSTManagedGroup batchURLErrorsForGroupName: scanName during: ^{
-								[archive applyScanRecord: record];
+						// Progressive: for RAR/7z (or SC_FORCE_XAD) this calls
+						// back many times as entries are found, so pages can
+						// appear while a slow header walk is still running.
+						// Zips take the single-batch path (one call).
+						__block id headerRecord = nil;
+						[archive scanArchiveProgressivelyForFileURL: path name: scanName password: scanPassword perBatch: ^(id _Nullable recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError * _Nullable batchError) {
+							// Async, not performBlockAndWait: the main thread
+							// must never block on this queue (the password
+							// prompt may itself dispatch_sync back to main).
+							[moc performBlock: ^{
+								BOOL landed = landScanResult(archive, isFinal, ^(NSMutableArray<NSError *> *errors) {
+									if (recordSoFar)
+									{
+										headerRecord = recordSoFar;
+										[archive applyScanRecordHeader: recordSoFar];
+									}
+									[archive insertChildRecords: newChildren];
+									if (batchError) { [errors addObject: batchError]; }
+									if (isFinal && [headerRecord respondsToSelector: @selector(scanErrors)])
+									{
+										[errors addObjectsFromArray: [headerRecord valueForKey: @"scanErrors"]];
+									}
+								}, ^{
+									if ([headerRecord respondsToSelector: @selector(xadAllEntriesForStreamer)])
+									{
+										[archive startXADStreamerWithAllEntries: [headerRecord valueForKey: @"xadAllEntriesForStreamer"]];
+									}
+								});
+								if (!landed)
+								{
+									// Nothing owns this batch's temp files
+									// (solid directory, nested archives/PDFs).
+									[TSSTManagedArchive discardScanRecord: recordSoFar];
+									for (id child in newChildren) { [TSSTManagedArchive discardScanRecord: child]; }
+								}
 							}];
-							[[session mutableSetValueForKey: @"images"] unionSet: archive.nestedImages];
-
-							// Last, so observers see the pages before "loading" ends.
-							session.pendingScanCount--;
 						}];
 					});
 				}
