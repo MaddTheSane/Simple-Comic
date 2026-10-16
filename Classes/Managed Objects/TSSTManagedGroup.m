@@ -269,11 +269,7 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	{
 		return nil;
 	}
-	if (errorCount == 1)
-	{
-		return [NSString stringWithFormat: NSLocalizedString(@"1 file in “%@” could not be opened.", @"single unreadable file summary"), groupName];
-	}
-	return [NSString stringWithFormat: NSLocalizedString(@"%lu files in “%@” could not be opened.", @"multiple unreadable files summary"), (unsigned long)errorCount, groupName];
+	return [NSString localizedStringWithFormat: NSLocalizedString(@"%lu files in \"%@\" could not be opened.", @"unreadable files summary"), (unsigned long)errorCount, groupName];
 }
 
 + (void)endURLErrorBatch

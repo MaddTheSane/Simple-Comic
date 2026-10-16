@@ -66,6 +66,47 @@
         }
       }
     },
+    "%lu files in \"%@\" could not be opened." : {
+      "comment" : "unreadable files summary",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "One file in “%2$@” could not be opened."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lu files in “%2$@” could not be opened."
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Un fichier dans “%2$@” n’a pas pu être ouvert."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Les fichiers %1$lu dans “%2$@” n'ont pas pu être ouverts."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Cancel" : {
       "localizations" : {
         "de" : {
@@ -630,6 +671,23 @@
         }
       }
     },
+    "Loading…" : {
+      "comment" : "loading overlay message shown while a background archive scan is in progress",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Chargement..."
+          }
+        }
+      }
+    },
     "Look Up" : {
       "comment" : "Contextual menu command to look up the selected word",
       "localizations" : {
@@ -726,6 +784,23 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "查詢「%@」"
+          }
+        }
+      }
+    },
+    "No pages could be found in “%@”." : {
+      "comment" : "empty session alert",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No pages could be found in “%@”."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Aucune page n'a pu être trouvée dans \"%@\"."
           }
         }
       }

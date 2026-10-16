@@ -350,48 +350,48 @@
       }
     },
     "246.title" : {
-      "comment" : "Class = \"NSWindow\"; title = \"Preferences\"; ObjectID = \"246\";",
+      "comment" : "Class = \"NSWindow\"; title = \"Settings\"; ObjectID = \"246\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Einstellungen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Preferences"
+            "value" : "Settings"
           }
         },
         "en-GB" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Preferences"
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "好み"
           }
         },
         "ko" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "선호도"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "偏好设置"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "偏好設置"
           }
         }
@@ -424,6 +424,12 @@
             "state" : "needs_review",
             "value" : "텍스트를 인식하여 선택하고 복사할 수 있도록 합니다."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "识别文本，以便您选择并复制它。"
+          }
         }
       }
     },
@@ -453,6 +459,12 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "텍스트를 인식하여 선택하고 복사할 수 있도록 합니다. macOS 11 이상이 필요합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "识别文本，以便您进行选择和复制。需要 macOS 11 或更高版本。"
           }
         }
       }
@@ -484,6 +496,12 @@
             "state" : "needs_review",
             "value" : "텍스트 인식"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "识别文本"
+          }
         }
       }
     },
@@ -513,6 +531,234 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "윈도우는 보기 영역을 최대화하기 위해 자동으로 크기를 조정합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Windows 会自动调整大小以最大限度地扩大显示区域。"
+          }
+        }
+      }
+    },
+    "Hp-01-swp.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Use a two-finger trackpad swipe to turn pages\"; ObjectID = \"Hp-01-swp\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Use a two-finger trackpad swipe to turn pages"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use a two-finger trackpad swipe to turn pages"
+          }
+        }
+      }
+    },
+    "Hp-02-swp.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Enable two-finger swipe to turn pages\"; ObjectID = \"Hp-02-swp\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enable two-finger swipe to turn pages"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable two-finger swipe to turn pages"
+          }
+        }
+      }
+    },
+    "Hp-05-pmd.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Keep a file's modification date unchanged when using Set Archive Icon to tag a QuickLook cover page; no other action in Simple Comic touches the source file's date\"; ObjectID = \"Hp-05-pmd\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Keep a file's modification date unchanged when using Set Archive Icon to tag a QuickLook cover page; no other action in Simple Comic touches the source file's date"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep a file's modification date unchanged when using Set Archive Icon to tag a QuickLook cover page; no other action in Simple Comic touches the source file's date"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "使用“设置存档图标”来标记快速查看封面页时，保持文件的修改日期不变；在Simple Comic中，没有其他操作会影响源文件的日期。"
+          }
+        }
+      }
+    },
+    "Hp-06-pmd.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Preserve file modification date\"; ObjectID = \"Hp-06-pmd\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Preserve file modification date"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preserve file modification date"
+          }
+        }
+      }
+    },
+    "Hp-07-utb.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Merge the toolbar into the title bar\"; ObjectID = \"Hp-07-utb\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Merge the toolbar into the title bar"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merge the toolbar into the title bar"
+          }
+        }
+      }
+    },
+    "Hp-08-utb.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Unified toolbar and title bar\"; ObjectID = \"Hp-08-utb\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unified toolbar and title bar"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unified toolbar and title bar"
+          }
+        }
+      }
+    },
+    "Hp-txt-pmd-cel.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Only affects the file's date when using Set Archive Icon to tag a QuickLook cover page.\"; ObjectID = \"Hp-txt-pmd-cel\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Only affects the file's date when using Set Archive Icon to tag a QuickLook cover page."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only affects the file's date when using Set Archive Icon to tag a QuickLook cover page."
+          }
+        }
+      }
+    },
+    "Hp-txt-swp-cel.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Use a two-finger trackpad swipe to turn pages.\"; ObjectID = \"Hp-txt-swp-cel\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Use a two-finger trackpad swipe to turn pages."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use a two-finger trackpad swipe to turn pages."
+          }
+        }
+      }
+    },
+    "Hp-txt-utb-cel.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Merge the toolbar into the title bar.\"; ObjectID = \"Hp-txt-utb-cel\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Merge the toolbar into the title bar."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merge the toolbar into the title bar."
+          }
+        }
+      }
+    },
+    "Lfp-01-btn.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Applies only when Two-Page Spread is enabled\"; ObjectID = \"Lfp-01-btn\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Applies only when Two-Page Spread is enabled"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applies only when Two-Page Spread is enabled"
+          }
+        }
+      }
+    },
+    "Lfp-02-cel.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Show first page alone\"; ObjectID = \"Lfp-02-cel\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Show first page alone"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show first page alone"
+          }
+        }
+      }
+    },
+    "Lfp-04-cel.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"The first page is not paired with a second page in Two-Page Spread mode.\"; ObjectID = \"Lfp-04-cel\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The first page is not paired with a second page in Two-Page Spread mode."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The first page is not paired with a second page in Two-Page Spread mode."
           }
         }
       }

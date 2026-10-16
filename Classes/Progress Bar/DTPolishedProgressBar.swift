@@ -270,7 +270,7 @@ textStyle: Dictionary of string attributes.
 		}
 	}
 	
-	deinit {
+	isolated deinit {
 		// The tracking area may already be gone (e.g. never installed).
 		if let area = trackingAreas.first {
 			removeTrackingArea(area)
