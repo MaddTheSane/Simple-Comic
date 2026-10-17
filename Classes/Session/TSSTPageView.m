@@ -82,7 +82,7 @@ typedef struct {
 {
 	[super awakeFromNib];
 	/* Doing this so users can drag archives into the view. */
-	[self registerForDraggedTypes: @[NSFilenamesPboardType, NSPasteboardTypeFileURL]];
+	[self registerForDraggedTypes: @[NSPasteboardTypeFileURL]];
 }
 
 
@@ -247,7 +247,7 @@ typedef struct {
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard *pboard = [sender draggingPasteboard];
-	if([[pboard types] containsObject: NSFilenamesPboardType] || [[pboard types] containsObject: NSPasteboardTypeFileURL])
+	if([[pboard types] containsObject: NSPasteboardTypeFileURL])
 	{
 		acceptingDrag = YES;
 		[self setNeedsDisplay: YES];
@@ -260,7 +260,7 @@ typedef struct {
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard *pboard = [sender draggingPasteboard];
-	if([[pboard types] containsObject: NSFilenamesPboardType] || [[pboard types] containsObject: NSPasteboardTypeFileURL])
+	if([[pboard types] containsObject: NSPasteboardTypeFileURL])
 	{
 		return NSDragOperationGeneric;
 	}
@@ -292,8 +292,7 @@ typedef struct {
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard * pboard = [sender draggingPasteboard];
-	NSString *fileURLUTI = NSPasteboardTypeFileURL;
-	if([[pboard types] containsObject: fileURLUTI])
+	if([[pboard types] containsObject: NSPasteboardTypeFileURL])
 	{
 		NSArray<NSURL *> * filePaths = [pboard readObjectsForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey: @YES}];
 		[sessionController updateSessionObject];
@@ -307,7 +306,7 @@ typedef struct {
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard *pboard = [sender draggingPasteboard];
-	if([[pboard types] containsObject: NSFilenamesPboardType] || [[pboard types] containsObject: NSPasteboardTypeFileURL])
+	if([[pboard types] containsObject: NSPasteboardTypeFileURL])
 	{
 		return YES;
 	}
