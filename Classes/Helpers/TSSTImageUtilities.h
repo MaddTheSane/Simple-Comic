@@ -25,8 +25,8 @@ extern NSString *const SCQuickLookCoverRect;
 
 NSSize sizeConstrainedByDimension(NSSize size, CGFloat dimension) NS_SWIFT_NAME(constrainSize(_:dimension:));
 
-/// function that adjusts an \c NSSize by the amount designated
-/// in argument \c scale
+/// function that adjusts an `NSSize` by the amount designated
+/// in argument `scale`
 /// Return is an integer size.
 NSSize scaleSize(NSSize aSize, CGFloat scale) NS_SWIFT_NAME(scaleSize(_:scale:));
 CGSize fitSizeInSize(CGSize constraint, CGSize size) NS_SWIFT_NAME(fitSize(_:in:));

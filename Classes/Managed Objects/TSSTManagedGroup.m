@@ -977,8 +977,8 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	[self insertImagesForPageCount: rep.pageCount];
 }
 
-/// Main-thread only: shared by -pdfContents (top-level/synchronous PDFs) and
-/// -applyPDFScanRecord: (PDFs found nested inside a background-scanned
+/// Main-thread only: shared by `-pdfContents` (top-level/synchronous PDFs) and
+/// `-applyPDFScanRecord:` (PDFs found nested inside a background-scanned
 /// archive) -- inserts one Image entity per page.
 - (void)insertImagesForPageCount:(NSInteger)imageCount
 {
@@ -995,7 +995,7 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 }
 
 /// Main-thread only: applies a TSSTArchiveScanRecord (kind PDF) built by
-/// +[TSSTManagedArchive scanRecordForFileURL:...] for a PDF found nested
+/// `+[TSSTManagedArchive scanRecordForFileURL:...]` for a PDF found nested
 /// inside an archive during a background scan. Reuses the already-built
 /// PDFDocument instead of re-parsing it.
 - (void)applyPDFScanRecord:(TSSTArchiveScanRecord *)record

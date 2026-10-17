@@ -217,7 +217,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// - throws: If the method does not complete successfully.
 /// - returns: `YES` on success, `NO` on failure.
 ///
-/// This is the same as calling `+setObject:forKey:atPath:traverseLink:format:error:`
+/// This is the same as calling ``+setObject:forKey:atPath:traverseLink:format:error:``
 /// with `NSPropertyListXMLFormat_v1_0` as the `format`.
 +(BOOL) setObject:(id)obj forKey:(NSString*)key atPath:(NSString*)path
 	 traverseLink:(BOOL)travLnk error:(NSError*__autoreleasing*)error;
