@@ -261,8 +261,8 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			return item
 			
 		case .rotation:
-			let images = [NSImage(systemSymbolName: "arrow.trianglehead.counterclockwise.rotate.90", accessibilityDescription: nil) ?? NSImage(resource: .arrowTriangleheadCounterclockwiseRotate90),
-						  NSImage(systemSymbolName: "arrow.trianglehead.clockwise.rotate.90", accessibilityDescription: nil) ?? NSImage(resource: .arrowTriangleheadClockwiseRotate90)]
+			let images = [NSImage(systemSymbolName: "arrow.trianglehead.counterclockwise.rotate.90", accessibilityDescription: nil)!,
+						  NSImage(systemSymbolName: "arrow.trianglehead.clockwise.rotate.90", accessibilityDescription: nil)!]
 			
 			let labels = [NSLocalizedString("587.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Rotate Left", comment: "Rotate Left"),
 						  NSLocalizedString("587.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Rotate Right", comment: "Rotate Right")]
