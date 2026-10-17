@@ -69,7 +69,43 @@
     "%lu files in \"%@\" could not be opened." : {
       "comment" : "unreadable files summary",
       "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Eine Datei in \"%2$@\" konnte nicht geöffnet werden."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%1$lu-Dateien in \"%2$@\" konnten nicht geöffnet werden."
+                }
+              }
+            }
+          }
+        },
         "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "One file in “%2$@” could not be opened."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lu files in “%2$@” could not be opened."
+                }
+              }
+            }
+          }
+        },
+        "en-GB" : {
           "variations" : {
             "plural" : {
               "one" : {
@@ -100,6 +136,90 @@
                 "stringUnit" : {
                   "state" : "needs_review",
                   "value" : "Les fichiers %1$lu dans “%2$@” n'ont pas pu être ouverts."
+                }
+              }
+            }
+          }
+        },
+        "it" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Un file in \"%2$@\" non è stato aperto."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "I file %1$lu in “%2$@” non sono stati aperti."
+                }
+              }
+            }
+          }
+        },
+        "ja" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "「%2$@」内の%1$luファイルを開くことができませんでした。"
+                }
+              }
+            }
+          }
+        },
+        "ko" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "\"%2$@\"에 있는 \"%1$lu 파일이 열리지 않았습니다."
+                }
+              }
+            }
+          }
+        },
+        "pt" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Um ficheiro em “%2$@” não pôde ser aberto."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "Os ficheiros %1$lu em “%2$@” não puderam ser abertos."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "“%2$@”中的%1$lu文件无法打开。"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%1$lu 檔案在「%2$@」中無法開啟。"
                 }
               }
             }
