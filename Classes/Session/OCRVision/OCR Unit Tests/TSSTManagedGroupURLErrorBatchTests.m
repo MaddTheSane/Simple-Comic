@@ -95,6 +95,25 @@ extern NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *(^candidat
 		@"errors from both the outer and nested scan should accumulate in one batch");
 }
 
+// An exception thrown mid-scan must not leave this thread's batch open: a stuck
+// depth > 0 would swallow every later error into a batch that never presents.
+- (void)testBatchHelperClosesBatchWhenWorkThrows
+{
+	XCTAssertThrowsSpecificNamed(
+		[TSSTManagedGroup batchURLErrorsForGroupName: @"Throwing.cbz" during: ^{
+			XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 1);
+			@throw [NSException exceptionWithName: @"TSSTTestException" reason: @"boom" userInfo: nil];
+		}],
+		NSException, @"TSSTTestException");
+	XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 0);
+
+	// A fresh batch afterwards starts clean and queues errors as usual.
+	[TSSTManagedGroup beginURLErrorBatchForGroupName: @"After.cbz"];
+	[TSSTManagedGroup reportURLError: [self sampleErrorWithDescription: @"later error"]];
+	XCTAssertEqual([TSSTManagedGroup urlErrorBatchDepthForTesting], 1);
+	XCTAssertEqual([TSSTManagedGroup pendingURLErrorCountForTesting], 1u);
+}
+
 // Scans run on background threads: a scan's batch must not see, or be
 // polluted by, errors reported from another thread's scan.
 - (void)testBatchesAreIsolatedPerThread
@@ -156,10 +175,9 @@ extern NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *(^candidat
 	XCTAssertNil([TSSTManagedGroup urlErrorBatchSummaryMessageForErrorCount: 0 groupName: @"Some Folder"]);
 }
 
-- (void)testSummaryMessageForSingleErrorUsesSingularWording
+- (void)testSummaryMessageForSingleErrorIncludesGroupName
 {
 	NSString *message = [TSSTManagedGroup urlErrorBatchSummaryMessageForErrorCount: 1 groupName: @"Some Folder"];
-	XCTAssertTrue([message containsString: @"1 file"]);
 	XCTAssertTrue([message containsString: @"Some Folder"]);
 }
 

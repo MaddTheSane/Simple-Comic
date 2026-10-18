@@ -4,6 +4,7 @@
 //
 
 #import "TSSTUILayoutTestCase.h"
+#import "SimpleComicAppDelegate.h"
 
 @interface TSSTHiddenPrefsLayoutTests : TSSTUILayoutTestCase
 @end
@@ -26,6 +27,15 @@
 		[self assertControl:checkbox isBoundToDefaultsKey:keysByTitle[title]];
 		[self assertControlFitsItsFrame:checkbox];
 	}
+}
+
+// Pins the registered default so changing it is a visible, deliberate edit: new
+// installs preserve a comic's modification date when the app updates its cover
+// metadata. Reads the registered values, so a user's own setting can't skew it.
+- (void)testPreserveModDateDefaultsToYes
+{
+	NSDictionary *registered = NSUserDefaultsController.sharedUserDefaultsController.initialValues;
+	XCTAssertEqualObjects(registered[TSSTPreserveModDate], @YES);
 }
 
 @end
