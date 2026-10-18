@@ -42,9 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nullable) NSURL *fileURL;
 
 /**
- Runs `during` inside a URL-error batch: bookmark errors raised meanwhile are
- presented as one summary alert for `groupName`. Joins an enclosing batch on
- this thread if there is one. Call on the main thread.
+ Runs \c during inside a URL-error batch: bookmark errors raised meanwhile are
+ presented as one summary alert for \c groupName. Joins an enclosing batch on
+ this thread if there is one. The batch is always closed, even if \c during
+ throws. Call on the main thread.
  */
 + (void)batchURLErrorsForGroupName:(NSString *)groupName during:(dispatch_block_t)during;
 

@@ -310,11 +310,21 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	}
 }
 
+/// Runs \c during inside a begin/end pair. The end is in a \c @finally so an
+/// exception thrown by the scan can't leave this thread's batch depth stuck
+/// above zero (which would silently swallow every later error into a batch
+/// that never presents).
 + (void)batchURLErrorsForGroupName:(NSString *)groupName during:(dispatch_block_t)during
 {
 	[self beginURLErrorBatchForGroupName: groupName];
-	during();
-	[self endURLErrorBatch];
+	@try
+	{
+		during();
+	}
+	@finally
+	{
+		[self endURLErrorBatch];
+	}
 }
 
 #pragma mark - Testing support
@@ -522,7 +532,13 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 
 - (void)nestedFolderContents
 {
-	[TSSTManagedGroup beginURLErrorBatchForGroupName: self.name ?: self.fileURL.lastPathComponent];
+	[TSSTManagedGroup batchURLErrorsForGroupName: self.name ?: self.fileURL.lastPathComponent during: ^{
+		[self scanFolderContents];
+	}];
+}
+
+- (void)scanFolderContents
+{
 	NSURL * folderPath = self.fileURL;
 	NSFileManager * fileManager = [NSFileManager defaultManager];
 	TSSTManagedGroup * nestedDescription;
@@ -580,7 +596,6 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 			}
 		}
 	}
-	[TSSTManagedGroup endURLErrorBatch];
 }
 
 - (NSSet *)nestedImages
