@@ -88,33 +88,32 @@
 		55FFF1BE1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1BC1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m */; };
 		55FFF1DF1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1DB1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m */; };
 		55FFF1E61DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1E41DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m */; };
+		5C0000000000000000000A02 /* TSSTThumbnailViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */; };
+		5C0000000000000000000B02 /* TSSTPageSizingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000B01 /* TSSTPageSizingTests.m */; };
 		6304B5D42840190B009E7D61 /* OCRVision.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B5D32840190B009E7D61 /* OCRVision.m */; };
 		6304B5D7284019EC009E7D61 /* OCRTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B5D5284019EC009E7D61 /* OCRTracker.m */; };
 		6304B60A28411F13009E7D61 /* OCRSelectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B60928411F13009E7D61 /* OCRSelectionLayer.m */; };
 		6323E4D228613F83007F240B /* OCR_NSStringTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4C228613F83007F240B /* OCR_NSStringTests.m */; };
-		63AA000328610002007F240B /* TSSTManagedGroupURLErrorBatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000228610002007F240B /* TSSTManagedGroupURLErrorBatchTests.m */; };
-		63AA000428610003007F240B /* TSSTUILayoutTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000528610003007F240B /* TSSTUILayoutTestCase.m */; };
-		63AA000728610004007F240B /* TSSTPreferencesLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000828610004007F240B /* TSSTPreferencesLayoutTests.m */; };
-		63AA000C28610006007F240B /* TSSTHiddenPrefsLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */; };
 		6323E4D528613FBE007F240B /* OCR_NSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D428613FBE007F240B /* OCR_NSString.m */; };
 		6323E4DB2861400B007F240B /* OCRFind.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D72861400B007F240B /* OCRFind.m */; };
 		6323E4DC2861400B007F240B /* OCRFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D82861400B007F240B /* OCRFindViewController.m */; };
 		63A57A152872683F00D0A88B /* OCRFindViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63A57A172872683F00D0A88B /* OCRFindViewController.xib */; };
-		63AA00FB28610012007F240B /* TSSTPreviewPageSelectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */; };
+		63AA000128610001007F240B /* TSSTImageUtilitiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */; };
+		63AA000328610002007F240B /* TSSTManagedGroupURLErrorBatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000228610002007F240B /* TSSTManagedGroupURLErrorBatchTests.m */; };
+		63AA000428610003007F240B /* TSSTUILayoutTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000528610003007F240B /* TSSTUILayoutTestCase.m */; };
+		63AA000728610004007F240B /* TSSTPreferencesLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000828610004007F240B /* TSSTPreferencesLayoutTests.m */; };
+		63AA000C28610006007F240B /* TSSTHiddenPrefsLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */; };
+		63AA00F628610014007F240B /* TSSTCb7FixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */; };
 		63AA00F928610013007F240B /* cb7zoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA00F828610013007F240B /* cb7zoo */; };
+		63AA00FB28610012007F240B /* TSSTPreviewPageSelectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */; };
+		63AA00FE28610010007F240B /* TSSTUTIDeclarationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */; };
+		63AA7B0151BB0000007F240B /* TSSTRARFixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA7A0151AA0000007F240B /* TSSTRARFixtureTests.m */; };
+		63AA7B0151BB0100007F240B /* TSSTTestFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA7A0151AA0100007F240B /* TSSTTestFixtures.m */; };
 		63AA7C0151AA0002007F240B /* rarzoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA7C0151AA0001007F240B /* rarzoo */; };
 		63AA7C0151AA0004007F240B /* jessie-james-rar4.cbr in Resources */ = {isa = PBXBuildFile; fileRef = 63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */; };
 		63AA7C0151AA0006007F240B /* jessie-james-rar5.cbr in Resources */ = {isa = PBXBuildFile; fileRef = 63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */; };
-		63AA00F628610014007F240B /* TSSTCb7FixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */; };
-		63AA000128610001007F240B /* TSSTImageUtilitiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */; };
-		63AA00FE28610010007F240B /* TSSTUTIDeclarationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */; };
 		63BA27152874BEF100E540C0 /* SimpleComic.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 63BA27052874BEF100E540C0 /* SimpleComic.sdef */; };
 		63E5A9072870D1C200A9FFD5 /* OCRRangeEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5A9062870D1C200A9FFD5 /* OCRRangeEnumerator.m */; };
-		63AA7B0151BB0100007F240B /* TSSTTestFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA7A0151AA0100007F240B /* TSSTTestFixtures.m */; };
-		63AA7B0151BB0000007F240B /* TSSTRARFixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA7A0151AA0000007F240B /* TSSTRARFixtureTests.m */; };
-		5C0000000000000000000B02 /* TSSTPageSizingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000B01 /* TSSTPageSizingTests.m */; };
-		5C0000000000000000000A02 /* TSSTThumbnailViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */; };
-		5C0000000000000000000B02 /* TSSTArchiveScanEndToEndTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000B01 /* TSSTArchiveScanEndToEndTests.m */; };
 		77C8280E06725ACE000B614F /* SimpleComicAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C8280C06725ACE000B614F /* SimpleComicAppDelegate.m */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -449,7 +448,6 @@
 		55E21B1123FBCCF900D53932 /* No Sign.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "No Sign.xcconfig"; path = "Classes/No Sign.xcconfig"; sourceTree = SOURCE_ROOT; };
 		55ED4ADA2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSecureUnarchiveFromDataTransformer.swift; sourceTree = "<group>"; };
 		55EE6BAF2945CA5B00C1AAE7 /* QuickComic Preview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "QuickComic Preview.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		63AA00FC28610011007F240B /* TSSTPreviewPageSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSTPreviewPageSelection.h; sourceTree = "<group>"; };
 		55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewProvider.swift; sourceTree = "<group>"; };
 		55EE6BB92945CA5B00C1AAE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		55EE6BBA2945CA5B00C1AAE7 /* QuickComic_Preview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickComic_Preview.entitlements; sourceTree = "<group>"; };
@@ -462,6 +460,8 @@
 		55FFF1DB1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSSTManagedGroup+CoreDataProperties.m"; sourceTree = "<group>"; };
 		55FFF1E31DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TSSTManagedSession+CoreDataProperties.h"; sourceTree = "<group>"; };
 		55FFF1E41DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSSTManagedSession+CoreDataProperties.m"; sourceTree = "<group>"; };
+		5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTThumbnailViewTests.m; sourceTree = "<group>"; };
+		5C0000000000000000000B01 /* TSSTPageSizingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPageSizingTests.m; sourceTree = "<group>"; };
 		6304B5D22840190B009E7D61 /* OCRVision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRVision.h; sourceTree = "<group>"; };
 		6304B5D32840190B009E7D61 /* OCRVision.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRVision.m; sourceTree = "<group>"; };
 		6304B5D5284019EC009E7D61 /* OCRTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRTracker.m; sourceTree = "<group>"; };
@@ -469,11 +469,6 @@
 		6304B5F928411F13009E7D61 /* OCRSelectionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRSelectionLayer.h; sourceTree = "<group>"; };
 		6304B60928411F13009E7D61 /* OCRSelectionLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRSelectionLayer.m; sourceTree = "<group>"; };
 		6323E4C228613F83007F240B /* OCR_NSStringTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCR_NSStringTests.m; sourceTree = "<group>"; };
-		63AA000228610002007F240B /* TSSTManagedGroupURLErrorBatchTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTManagedGroupURLErrorBatchTests.m; sourceTree = "<group>"; };
-		63AA000528610003007F240B /* TSSTUILayoutTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTUILayoutTestCase.m; sourceTree = "<group>"; };
-		63AA000928610003007F240B /* TSSTUILayoutTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTUILayoutTestCase.h; sourceTree = "<group>"; };
-		63AA000828610004007F240B /* TSSTPreferencesLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPreferencesLayoutTests.m; sourceTree = "<group>"; };
-		63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTHiddenPrefsLayoutTests.m; sourceTree = "<group>"; };
 		6323E4D328613FBE007F240B /* OCR_NSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCR_NSString.h; sourceTree = "<group>"; };
 		6323E4D428613FBE007F240B /* OCR_NSString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCR_NSString.m; sourceTree = "<group>"; };
 		6323E4D62861400B007F240B /* OCRFindViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRFindViewController.h; sourceTree = "<group>"; };
@@ -482,22 +477,25 @@
 		6323E4DA2861400B007F240B /* OCRFind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRFind.h; sourceTree = "<group>"; };
 		638E5C3C2832138400BFDAA4 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		63A57A162872683F00D0A88B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OCRFindViewController.xib; sourceTree = "<group>"; };
-		63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPreviewPageSelectionTests.m; sourceTree = "<group>"; };
-		63AA00F828610013007F240B /* cb7zoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fixtures/cb7zoo; sourceTree = "<group>"; };
-		63AA7C0151AA0001007F240B /* rarzoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fixtures/rarzoo; sourceTree = "<group>"; };
-		63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixtures/jessie-james-rar4.cbr; sourceTree = "<group>"; };
-		63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixtures/jessie-james-rar5.cbr; sourceTree = "<group>"; };
-		63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCb7FixtureTests.m; sourceTree = "<group>"; };
 		63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTImageUtilitiesTests.m; sourceTree = "<group>"; };
+		63AA000228610002007F240B /* TSSTManagedGroupURLErrorBatchTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTManagedGroupURLErrorBatchTests.m; sourceTree = "<group>"; };
+		63AA000528610003007F240B /* TSSTUILayoutTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTUILayoutTestCase.m; sourceTree = "<group>"; };
+		63AA000828610004007F240B /* TSSTPreferencesLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPreferencesLayoutTests.m; sourceTree = "<group>"; };
+		63AA000928610003007F240B /* TSSTUILayoutTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTUILayoutTestCase.h; sourceTree = "<group>"; };
+		63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTHiddenPrefsLayoutTests.m; sourceTree = "<group>"; };
+		63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCb7FixtureTests.m; sourceTree = "<group>"; };
+		63AA00F828610013007F240B /* cb7zoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cb7zoo; sourceTree = "<group>"; };
+		63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPreviewPageSelectionTests.m; sourceTree = "<group>"; };
+		63AA00FC28610011007F240B /* TSSTPreviewPageSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSTPreviewPageSelection.h; sourceTree = "<group>"; };
 		63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTUTIDeclarationTests.m; sourceTree = "<group>"; };
+		63AA7A0151AA0000007F240B /* TSSTRARFixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTRARFixtureTests.m; sourceTree = "<group>"; };
+		63AA7A0151AA0100007F240B /* TSSTTestFixtures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTTestFixtures.m; sourceTree = "<group>"; };
+		63AA7A0151AA0200007F240B /* TSSTTestFixtures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTTestFixtures.h; sourceTree = "<group>"; };
+		63AA7C0151AA0001007F240B /* rarzoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rarzoo; sourceTree = "<group>"; };
+		63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */ = {isa = PBXFileReference; lastKnownFileType = file; path = "jessie-james-rar4.cbr"; sourceTree = "<group>"; };
+		63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */ = {isa = PBXFileReference; lastKnownFileType = file; path = "jessie-james-rar5.cbr"; sourceTree = "<group>"; };
 		63BA27052874BEF100E540C0 /* SimpleComic.sdef */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SimpleComic.sdef; sourceTree = SOURCE_ROOT; };
 		63BF686A28590BF6005962F4 /* OCR Unit Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OCR Unit Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5C0000000000000000000B01 /* TSSTArchiveScanEndToEndTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveScanEndToEndTests.m; sourceTree = "<group>"; };
-		63AA7A0151AA0200007F240B /* TSSTTestFixtures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTTestFixtures.h; sourceTree = "<group>"; };
-		63AA7A0151AA0100007F240B /* TSSTTestFixtures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTTestFixtures.m; sourceTree = "<group>"; };
-		63AA7A0151AA0000007F240B /* TSSTRARFixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTRARFixtureTests.m; sourceTree = "<group>"; };
-		5C0000000000000000000B01 /* TSSTPageSizingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPageSizingTests.m; sourceTree = "<group>"; };
-		5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTThumbnailViewTests.m; sourceTree = "<group>"; };
 		63E5A8F62870D1C200A9FFD5 /* OCRRangeEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRRangeEnumerator.h; sourceTree = "<group>"; };
 		63E5A9062870D1C200A9FFD5 /* OCRRangeEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRRangeEnumerator.m; sourceTree = "<group>"; };
 		770B37EC0679A11B001EADE2 /* Sessions_DataModel.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Sessions_DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -827,6 +825,17 @@
 			path = "Touch Bar";
 			sourceTree = "<group>";
 		};
+		55EE451A30858370002482DE /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				63AA00F828610013007F240B /* cb7zoo */,
+				63AA7C0151AA0001007F240B /* rarzoo */,
+				63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */,
+				63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
 		55EE6BB12945CA5B00C1AAE7 /* QuickComic Preview */ = {
 			isa = PBXGroup;
 			children = (
@@ -868,12 +877,9 @@
 		63BF687328590C61005962F4 /* OCR Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
+				55EE451A30858370002482DE /* Fixtures */,
 				63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */,
 				63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */,
-				63AA00F828610013007F240B /* cb7zoo */,
-				63AA7C0151AA0001007F240B /* rarzoo */,
-				63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */,
-				63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */,
 				63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */,
 				63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */,
 				6323E4C228613F83007F240B /* OCR_NSStringTests.m */,
@@ -883,7 +889,6 @@
 				63AA000828610004007F240B /* TSSTPreferencesLayoutTests.m */,
 				63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */,
 				5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */,
-				5C0000000000000000000B01 /* TSSTArchiveScanEndToEndTests.m */,
 				5C0000000000000000000B01 /* TSSTPageSizingTests.m */,
 				63AA7A0151AA0000007F240B /* TSSTRARFixtureTests.m */,
 				63AA7A0151AA0100007F240B /* TSSTTestFixtures.m */,
@@ -1250,6 +1255,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		63AA00F728610013007F240B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63AA00F928610013007F240B /* cb7zoo in Resources */,
+				63AA7C0151AA0002007F240B /* rarzoo in Resources */,
+				63AA7C0151AA0004007F240B /* jessie-james-rar4.cbr in Resources */,
+				63AA7C0151AA0006007F240B /* jessie-james-rar5.cbr in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D1107290486CEB800E47090 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1266,17 +1282,6 @@
 				63A57A152872683F00D0A88B /* OCRFindViewController.xib in Resources */,
 				55F1FA142EE6985A0001CB75 /* TSSTSessionWindowToolbar.xcstrings in Resources */,
 				28A266161285C3A700ED6391 /* TSSTSessionWindow.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		63AA00F728610013007F240B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				63AA00F928610013007F240B /* cb7zoo in Resources */,
-				63AA7C0151AA0002007F240B /* rarzoo in Resources */,
-				63AA7C0151AA0004007F240B /* jessie-james-rar4.cbr in Resources */,
-				63AA7C0151AA0006007F240B /* jessie-james-rar5.cbr in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1335,7 +1340,7 @@
 				63AA000728610004007F240B /* TSSTPreferencesLayoutTests.m in Sources */,
 				63AA000C28610006007F240B /* TSSTHiddenPrefsLayoutTests.m in Sources */,
 				5C0000000000000000000A02 /* TSSTThumbnailViewTests.m in Sources */,
-				5C0000000000000000000B02 /* TSSTArchiveScanEndToEndTests.m in Sources */,
+				5C0000000000000000000B02 /* TSSTPageSizingTests.m in Sources */,
 				5C0000000000000000000B02 /* TSSTPageSizingTests.m in Sources */,
 				63AA7B0151BB0000007F240B /* TSSTRARFixtureTests.m in Sources */,
 				63AA7B0151BB0100007F240B /* TSSTTestFixtures.m in Sources */,
