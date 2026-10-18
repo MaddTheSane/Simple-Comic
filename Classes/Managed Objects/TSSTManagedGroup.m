@@ -69,8 +69,8 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 @implementation TSSTArchiveScanRecord
 @end
 
-/// Runs \c block on the main thread: inline when already there, otherwise
-/// synchronously if \c wait, else asynchronously.
+/// Runs `block` on the main thread: inline when already there, otherwise
+/// synchronously if `wait`, else asynchronously.
 static void TSSTRunOnMainThread(BOOL wait, dispatch_block_t block)
 {
 	if (NSThread.isMainThread) { block(); }
@@ -78,8 +78,8 @@ static void TSSTRunOnMainThread(BOOL wait, dispatch_block_t block)
 	else { dispatch_async(dispatch_get_main_queue(), block); }
 }
 
-/*
- * Lightweight XADArchiveDelegate used only while building an XADArchive on
+/*!
+ * Lightweight `XADArchiveDelegate` used only while building an `XADArchive` on
  * a background scan queue. It must never touch a managed object -- the
  * password prompt itself is bounced to the main thread since it's UI.
  */
@@ -152,7 +152,7 @@ static TSSTArchiveScanRecord *TSSTImageChildRecord(NSString *fileName, NSInteger
 /// directory if \c isDirectory, otherwise an empty file (with any missing
 /// parent folders). Creating it is what claims the name, so scans running on
 /// different threads can never be handed the same path.
-NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *(^candidateName)(NSInteger attempt))
+NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *NS_NOESCAPE (^candidateName)(NSInteger attempt))
 {
 	for (NSInteger attempt = 0; ; ++attempt)
 	{

@@ -120,6 +120,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/// Creates (and returns the path of) the first item in the temp directory,
+/// trying "candidateName(0)", "(1)", ... in turn, that did not exist yet: a
+/// directory if `isDirectory`, otherwise an empty file (with any missing
+/// parent folders). Creating it is what claims the name, so scans running on
+/// different threads can never be handed the same path.
+extern NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *NS_NOESCAPE (^candidateName)(NSInteger attempt));
+
 NS_ASSUME_NONNULL_END
 
 #import "TSSTManagedGroup+CoreDataProperties.h"

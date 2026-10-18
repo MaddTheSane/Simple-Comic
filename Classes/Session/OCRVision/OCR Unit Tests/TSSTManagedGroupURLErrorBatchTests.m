@@ -18,7 +18,7 @@
 
 // Also covers the scan-lifecycle helpers below (in-flight scan counting and
 // temp-file ownership), which need no GUI.
-extern NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *(^candidateName)(NSInteger attempt));
+//extern NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *NS_NOESCAPE (^candidateName)(NSInteger attempt));
 
 
 @interface TSSTManagedGroup (Testing)
