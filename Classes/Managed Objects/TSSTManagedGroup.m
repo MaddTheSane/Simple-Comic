@@ -11,6 +11,7 @@
 #import "SimpleComicAppDelegate.h"
 #import <XADMaster/XADArchive.h>
 #import <Quartz/Quartz.h>
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import <errno.h>
 #import <fcntl.h>
 #import <sys/stat.h>
@@ -310,7 +311,7 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	}
 }
 
-/// Runs \c during inside a begin/end pair. The end is in a \c @finally so an
+/// Runs `during` inside a begin/end pair. The end is in a `@finally` so an
 /// exception thrown by the scan can't leave this thread's batch depth stuck
 /// above zero (which would silently swallow every later error into a batch
 /// that never presents).
@@ -623,8 +624,8 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 		NSArray *archives = self.archiveTypes;
 		NSMutableSet<NSString*> *aimageTypes = [[NSMutableSet alloc] initWithCapacity:archives.count];
 		for (NSString *uti in archives) {
-			NSArray *fileExts =
-			CFBridgingRelease(UTTypeCopyAllTagsWithClass((__bridge CFStringRef)uti, kUTTagClassFilenameExtension));
+			UTType *uti2 = [UTType typeWithIdentifier:uti];
+			NSArray *fileExts = uti2.tags[UTTagClassFilenameExtension];
 			[aimageTypes addObjectsFromArray:fileExts];
 		}
 		extensions = [[aimageTypes allObjects] sortedArrayUsingSelector:@selector(compare:)];
