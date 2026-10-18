@@ -707,7 +707,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 							[TSSTManagedGroup batchURLErrorsForGroupName: scanName during: ^{
 								[archive applyScanRecord: record];
 							}];
-							[[session mutableSetValueForKey: @"images"] unionSet: archive.nestedImages];
+							[session addImages: archive.nestedImages];
 
 							// Last, so observers see the pages before "loading" ends.
 							session.pendingScanCount--;

@@ -19,21 +19,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-#if (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12)
-#define NSCompositingOperationSourceOver NSCompositeSourceOver
-#define NSEventModifierFlagCommand       NSCommandKeyMask
-#define NSEventModifierFlagOption        NSAlternateKeyMask
-#define NSEventModifierFlagShift         NSShiftKeyMask
-#define NSEventTypeKeyDown               NSKeyDown
-#define NSEventTypeLeftMouseUp           NSLeftMouseUp
-#define NSEventTypeLeftMouseDragged      NSLeftMouseDragged
-#endif
-
-#if (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_13)
-#define NSControlStateValueOn            NSOnState
-#define NSControlStateValueOff           NSOffState
-#endif
-
 NS_ASSUME_NONNULL_BEGIN
 
 @class TSSTSessionWindowController;
@@ -104,7 +89,7 @@ extern NSNotificationName const TSSTSessionEndNotification;
 
 
 
-/*! Converts `files` into an array of NSURLs, then passes them
+/*! Converts `files` into an array of `NSURL`s, then passes them
  *  to `-newSessionWithFileURLs:` */
 - (TSSTManagedSession *)newSessionWithFiles:(NSArray<NSString*> *)files NS_RETURNS_NOT_RETAINED;
 
