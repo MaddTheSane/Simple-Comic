@@ -27,9 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isDirectory;
 @property (nonatomic, readonly) unsigned long long size;
 
-/// YES when -spanRange is meaningful: the byte range in the archive file
+/// `YES` when `-spanRange` is meaningful: the byte range in the archive file
 /// covering this entry's input (min offset to max end of its input
-/// parts). NO for entries whose file span can't be determined this way
+/// parts). `NO` for entries whose file span can't be determined this way
 /// (e.g. a 7z solid folder without a computable range) -- callers should
 /// fall back to a single whole-file span in reading order.
 @property (nonatomic, readonly) BOOL hasSpanRange;
@@ -41,26 +41,25 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 extern NSErrorDomain const TSSTXADArchiveSourceErrorDomain;
-
 typedef NS_ERROR_ENUM(TSSTXADArchiveSourceErrorDomain, TSSTXADArchiveSourceError)
 {
 	TSSTXADArchiveSourceErrorCannotOpen = 1,
 	TSSTXADArchiveSourceErrorPasswordRequired,
 	TSSTXADArchiveSourceErrorEntryNotFound,
 	TSSTXADArchiveSourceErrorExtraction,
-	/// A volume of a multi-volume set could not be opened (see +[TSSTManagedArchive openVolumeSourcesForURLs:error:]).
+	/// A volume of a multi-volume set could not be opened (see ``+[TSSTManagedArchive openVolumeSourcesForURLs:error:]``).
 	TSSTXADArchiveSourceErrorMissingVolume,
 };
 
 /// Called on the parsing thread as entries are discovered: roughly every
 /// 16 entries or 100ms, whichever comes first, and once more (possibly
-/// with an empty array) when parsing finishes. isFinal is YES only on
+/// with an empty array) when parsing finishes. `isFinal` is `YES` only on
 /// that last call; error is set there if the parse failed.
 typedef void (^TSSTXADArchiveSourceBatchHandler)(NSArray<TSSTXADArchiveEntry *> *batch, BOOL isFinal, NSError * _Nullable error);
 
 /// Returns the already-known password for an archive at the given path,
 /// prompting the user (on the main thread, synchronously) if necessary.
-/// Mirrors TSSTScanArchiveDelegate's behavior so both backends prompt the
+/// Mirrors `TSSTScanArchiveDelegate`'s behavior so both backends prompt the
 /// same way. Return nil to indicate no password is available.
 typedef NSString * _Nullable (^TSSTXADArchiveSourcePasswordProvider)(NSString *archivePath, NSString * _Nullable knownPassword);
 
@@ -76,13 +75,13 @@ typedef NSString * _Nullable (^TSSTXADArchiveSourcePasswordProvider)(NSString *a
 
 @interface TSSTXADArchiveSource : NSObject
 
-/// The volume files of the multi-volume RAR set that \c fileURL belongs to
-/// (in reading order), or nil when it is a single archive or the set can't
+/// The volume files of the multi-volume RAR set that `fileURL` belongs to
+/// (in reading order), or `nil` when it is a single archive or the set can't
 /// be found. Uses XADMaster's own volume detection and naming rules.
 + (nullable NSArray<NSURL *> *)volumeURLsForFileURL:(NSURL *)fileURL;
 
-/// As below, for a multi-volume set: \c source is the concatenated byte
-/// space (see TSSTVolumeSetByteSource) and \c volumeLengths splits it back
+/// As below, for a multi-volume set: `source` is the concatenated byte
+/// space (see TSSTVolumeSetByteSource) and `volumeLengths` splits it back
 /// into volumes for the parser.
 - (nullable instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source
 								volumeLengths:(nullable NSArray<NSNumber *> *)volumeLengths
@@ -94,7 +93,7 @@ typedef NSString * _Nullable (^TSSTXADArchiveSourcePasswordProvider)(NSString *a
 
 /// Builds a parser over the given byte source. name is used for format
 /// sniffing by extension/heuristics the same way XADArchive uses it.
-/// Returns nil (with an error) when the byte source isn't a recognized
+/// Returns `nil` (with an error) when the byte source isn't a recognized
 /// archive format at all.
 - (nullable instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source
 										name:(NSString *)name
@@ -105,13 +104,13 @@ typedef NSString * _Nullable (^TSSTXADArchiveSourcePasswordProvider)(NSString *a
 
 /// Runs the parse on the calling thread (synchronous, potentially slow --
 /// call this off-main). Delivers entries via handler as described above.
-/// Returns YES on success (even if some individual entries were skipped);
-/// NO if the whole parse failed, in which case the final batch call's
+/// Returns `YES` on success (even if some individual entries were skipped);
+/// `NO` if the whole parse failed, in which case the final batch call's
 /// error is also set.
 - (BOOL)parseWithEntryBatchHandler:(TSSTXADArchiveSourceBatchHandler)handler;
 
-/// The password ultimately used (nil if none was needed/available), valid
-/// after -parseWithEntryBatchHandler: has started.
+/// The password ultimately used (`nil` if none was needed/available), valid
+/// after `-parseWithEntryBatchHandler:` has started.
 @property (atomic, copy, nullable, readonly) NSString *password;
 
 /// Number of entries found so far (thread-safe; grows during the parse).
@@ -124,8 +123,8 @@ typedef NSString * _Nullable (^TSSTXADArchiveSourcePasswordProvider)(NSString *a
 /// which is an error).
 - (nullable NSData *)dataForEntry:(NSUInteger)index error:(NSError **)error;
 
-/// Like -dataForEntry:error:, but only waits for the entry to be found --
-/// no extraction. Returns nil if the parse ends without ever finding it.
+/// Like `-dataForEntry:error:`, but only waits for the entry to be found --
+/// no extraction. Returns `nil` if the parse ends without ever finding it.
 - (nullable NSString *)nameForEntryAtIndex:(NSUInteger)index;
 
 @end

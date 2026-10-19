@@ -20,7 +20,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSErrorDomain const TSSTZipIndexErrorDomain;
-
 typedef NS_ERROR_ENUM(TSSTZipIndexErrorDomain, TSSTZipIndexError)
 {
 	TSSTZipIndexErrorNotAZip = 1,
@@ -35,22 +34,22 @@ typedef NS_ERROR_ENUM(TSSTZipIndexErrorDomain, TSSTZipIndexError)
 
 /**
  A minimal read-only view of a zip file's central directory, built with
- one pread() of the end-of-central-directory tail and one pread() of the
+ one `pread()` of the end-of-central-directory tail and one `pread()` of the
  whole central directory. Entry indices match central-directory order,
- which is the same order XADArchive enumerates zip entries in, so
- existing TSSTPage.index values stay valid whichever backend produced
+ which is the same order `XADArchive` enumerates zip entries in, so
+ existing `TSSTPage.index` values stay valid whichever backend produced
  them.
  */
 @interface TSSTZipIndex : NSObject
 
 #if DEBUG
 /// Test convenience: indexes a local file directly. The app always goes
-/// through -indexWithByteSource:error: (see +[TSSTManagedArchive
-/// buildZipIndexForFileURL:cachingSource:]).
+/// through `-indexWithByteSource:error:` (see ``+[TSSTManagedArchive
+/// buildZipIndexForFileURL:cachingSource:]``).
 + (nullable instancetype)indexWithFileURL:(NSURL *)url error:(NSError * _Nullable * _Nullable)error;
 #endif
 
-/// Returns nil (with *error left informative but not necessarily set)
+/// Returns `nil` (with `*error` left informative but not necessarily set)
 /// when the source isn't a zip this class can fully parse -- callers
 /// should fall back to XADArchive in that case. Reading through a byte
 /// source lets callers substitute a caching/counting/simulated-link
@@ -62,7 +61,7 @@ typedef NS_ERROR_ENUM(TSSTZipIndexErrorDomain, TSSTZipIndexError)
 - (NSString *)nameOfEntry:(NSUInteger)index;
 - (BOOL)entryIsDirectory:(NSUInteger)index;
 
-/// NO for encrypted entries or entries compressed with a method other
+/// `NO` for encrypted entries or entries compressed with a method other
 /// than store (0) or deflate (8).
 - (BOOL)canExtractEntry:(NSUInteger)index;
 
@@ -76,9 +75,9 @@ typedef NS_ERROR_ENUM(TSSTZipIndexErrorDomain, TSSTZipIndexError)
 - (uint64_t)dataOffsetHintForEntry:(NSUInteger)index;
 - (uint64_t)compressedSizeOfEntry:(NSUInteger)index;
 
-/// The XAD encoding name (e.g. "windows-1252", "Shift_JIS") that best
+/// The XAD encoding name (e.g. "windows-1252", "Shift\_JIS") that best
 /// decodes the given file-name byte strings taken together, as
-/// XADArchive's detection does, or nil if `names` is empty. A fresh
+/// XADArchive's detection does, or `nil` if `names` is empty. A fresh
 /// detector is used per call, so the answer depends only on `names`
 /// (and their order), never on earlier calls or other threads. Names
 /// of plain printable ASCII are skipped (every encoding the detector

@@ -19,21 +19,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TSSTArchiveStreamer : NSObject
 
-- (instancetype)initWithCachingByteSource:(TSSTCachingByteSource *)cachingSource spans:(NSArray<NSValue *> *)spans; // NSValue-boxed NSRange, one per page, offset/length within the archive
+/// - parameter spans: `NSValue`-boxed `NSRange`, one per page, offset/length within the archive.
+- (instancetype)initWithCachingByteSource:(TSSTCachingByteSource *)cachingSource spans:(NSArray<NSValue *> *)spans;
 
 /// Convenience: builds spans (local-header-offset, size-hint) for the
 /// given zip entry indices, in the given (reading) order, from a
-/// TSSTZipIndex. Each span is clamped to the archive length.
+/// `TSSTZipIndex`. Each span is clamped to the archive length.
 + (NSArray<NSValue *> *)spansForZipIndex:(TSSTZipIndex *)zipIndex entryIndices:(NSArray<NSNumber *> *)entryIndices;
 
 /// As above, also returning entry index -> span index.
 + (NSArray<NSValue *> *)spansForZipIndex:(TSSTZipIndex *)zipIndex entryIndices:(NSArray<NSNumber *> *)entryIndices spanIndexMap:(NSDictionary<NSNumber *, NSNumber *> * _Nullable * _Nullable)outMap;
 
-/// Generic span builder shared by every backend. Walks \c entryIndices in
-/// reading order; \c rangeProvider yields each entry's byte range in the
+/// Generic span builder shared by every backend. Walks `entryIndices` in
+/// reading order; `rangeProvider` yields each entry's byte range in the
 /// archive (NO: the entry has no known range and stays unmapped). Entries
 /// with an identical range share one span (a solid folder), so the result
-/// has one span per distinct range. \c outMap receives entry index -> span
+/// has one span per distinct range. `outMap` receives entry index -> span
 /// index for the mapped entries.
 + (NSArray<NSValue *> *)spansForEntryIndices:(NSArray<NSNumber *> *)entryIndices
 								rangeProvider:(BOOL (^)(NSUInteger entryIndex, NSRange *outRange))rangeProvider
@@ -48,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// Jumps the reading position and wakes the worker immediately.
 - (void)prioritizeSpanIndex:(NSUInteger)spanIndex;
 
-/// When YES, a span's last chunk is never smaller than the minimum chunk:
+/// When `YES`, a span's last chunk is never smaller than the minimum chunk:
 /// the tail is folded into the previous request. For sets of page-sized
 /// spans (loose image files), where a tail read costs a full round trip.
 /// Off by default, so archive streaming keeps its exact chunking.

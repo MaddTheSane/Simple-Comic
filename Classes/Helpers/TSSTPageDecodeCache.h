@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// A single serial background queue for all decode work. Work on it never
 /// touches a TSSTPage: callers snapshot the page's plain values
-/// (-[TSSTPage dataSnapshot]) on the main thread first. Serializing every
+/// (``-[TSSTPage dataSnapshot]``) on the main thread first. Serializing every
 /// decode (the page the reader is waiting on, or a background pre-decode of
 /// a neighbour) onto one queue keeps decodes from competing with each other
 /// without blocking the main thread.
@@ -31,18 +31,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSImage *)imageForPage:(TSSTPage *)page;
 
 /// Decodes the snapshotted page's bytes and caches the result, keyed by
-/// objectID, cost = pixelsWide * pixelsHigh * 4. Synchronous -- call from
-/// -decodeQueue only. Does nothing (and does not touch the network) unless
+/// objectID, cost = pixelsWide \* pixelsHigh \* 4. Synchronous -- call from
+/// `-decodeQueue` only. Does nothing (and does not touch the network) unless
 /// the caller has already established it's safe to read the page without
-/// blocking, e.g. via -[TSSTManagedArchive isEntryIndexCached:] or a local
+/// blocking, e.g. via ``-[TSSTManagedArchive isEntryIndexCached:]`` or a local
 /// file.
 - (void)decodeAndCacheSnapshot:(TSSTPageDataSnapshot *)snapshot;
 
-/// Queues `work` on -decodeQueue on behalf of a reader who is waiting for
+/// Queues `work` on `-decodeQueue` on behalf of a reader who is waiting for
 /// it (a page turn or jump), then calls `completion` on the main queue.
 /// `isCurrent` is asked (off-main, so it must be thread-safe) right before
-/// `work` would start: if the reader has already moved on it returns NO,
-/// `work` is skipped, and `completion` gets `ran` == NO. The queue is
+/// `work` would start: if the reader has already moved on it returns `NO`,
+/// `work` is skipped, and `completion` gets `ran` == `NO`. The queue is
 /// serial, so without this every page the reader passed through on the way
 /// (dragging the slider, paging quickly, a jump made while an earlier load
 /// is still on the network) would still be fetched, one after another,
@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 								work:(void (^)(void))work
 						  completion:(void (^)(BOOL ran))completion;
 
-/// -runOnDecodeQueueWhileCurrent:work:completion: over decoding each of
+/// `-runOnDecodeQueueWhileCurrent:work:completion:` over decoding each of
 /// `pages`, in order. Snapshots the pages synchronously, so call it on the
 /// pages' context queue (main).
 - (void)decodePages:(NSArray<TSSTPage *> *)pages

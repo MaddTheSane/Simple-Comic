@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const TSSTByteSourceHandleErrorException;
+extern NSExceptionName const TSSTByteSourceHandleErrorException;
 
 @interface TSSTByteSourceHandle : CSHandle
 

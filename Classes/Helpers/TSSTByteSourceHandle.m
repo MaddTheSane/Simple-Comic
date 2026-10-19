@@ -55,10 +55,7 @@ static const NSUInteger kReadAheadGrowth = 16;
 	return self;
 }
 
-- (id<TSSTArchiveByteSource>)byteSource
-{
-	return _source;
-}
+@synthesize byteSource = _source;
 
 - (off_t)fileSize
 {

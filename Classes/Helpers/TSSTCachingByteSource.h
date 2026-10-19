@@ -16,7 +16,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern const NSUInteger TSSTCachingByteSourceBlockSize; // 16 KB
+// 16 KiB
+extern const NSUInteger TSSTCachingByteSourceBlockSize;
 
 extern NSErrorDomain const TSSTCachingByteSourceErrorDomain;
 typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceError) {
@@ -34,7 +35,7 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 
 /// Total bytes this source will keep cached. Defaults to
 /// min(length, 25% of the temp volume's free space). Blocks are evicted
-/// (farthest from -focusOffset first) to stay within budget. Ranges being
+/// (farthest from `-focusOffset` first) to stay within budget. Ranges being
 /// read are pinned against eviction; a demand read larger than the budget
 /// goes straight to upstream uncached, and a prefetch that large fails.
 @property (nonatomic) uint64_t maxCacheBytes;
@@ -42,29 +43,29 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 /// Hint for eviction: blocks far from this offset are evicted first.
 @property (nonatomic) uint64_t focusOffset;
 
-/// Number of demand reads (from -readAtOffset:length:error:) currently
-/// in flight and needing upstream data. TSSTArchiveStreamer checks this
+/// Number of demand reads (from `-readAtOffset:length:error:`) currently
+/// in flight and needing upstream data. `TSSTArchiveStreamer` checks this
 /// before starting its next background chunk, so demand always wins.
 @property (atomic, readonly) NSUInteger pendingDemandCount;
 
 - (BOOL)isRangeCachedAtOffset:(uint64_t)offset length:(NSUInteger)length;
 
-/// NO when the range spans more blocks than the budget keeps, so it could
-/// never be fully cached at once (-prefetchAtOffset:length:error: fails with
-/// TSSTCachingByteSourceErrorOverBudget).
+/// `NO` when the range spans more blocks than the budget keeps, so it could
+/// never be fully cached at once (`-prefetchAtOffset:length:error:` fails with
+/// ``TSSTCachingByteSourceErrorOverBudget``).
 - (BOOL)canCacheRangeAtOffset:(uint64_t)offset length:(NSUInteger)length;
 
-/// The longest range starting at `offset` that -prefetchAtOffset:length:error:
+/// The longest range starting at `offset` that `-prefetchAtOffset:length:error:`
 /// accepts under the current budget (always at least 1; effectively
 /// unlimited when unbudgeted).
 - (NSUInteger)maxPrefetchLengthAtOffset:(uint64_t)offset;
 
-/// Indexes into `ranges` (NSValue-boxed NSRanges) that are fully cached,
+/// Indexes into `ranges` (`NSValue`-boxed `NSRange`s) that are fully cached,
 /// computed under a single lock acquisition.
 - (NSIndexSet *)indexesOfCachedRanges:(NSArray<NSValue *> *)ranges;
 
-/// Blocks until no demand read is pending or `keepWaiting` returns NO.
-/// `keepWaiting` is re-checked whenever -wakeWaiters is called or a
+/// Blocks until no demand read is pending or `keepWaiting` returns `NO`.
+/// `keepWaiting` is re-checked whenever `-wakeWaiters` is called or a
 /// demand read finishes.
 - (void)waitForNoPendingDemandWhile:(BOOL (^)(void))keepWaiting;
 - (void)wakeWaiters;
@@ -74,11 +75,11 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 /// Fetches and caches the given range if not already cached, at the
 /// given priority; used by the streamer for background prefetch. Same
 /// coalescing/wait-for-in-flight behavior as the demand path, but does
-/// not count against -pendingDemandCount.
+/// not count against `-pendingDemandCount`.
 - (BOOL)prefetchAtOffset:(uint64_t)offset length:(NSUInteger)length error:(NSError * _Nullable * _Nullable)error;
 
 /// Closes the backing file and deletes its temp directory. Safe to call
-/// more than once. Also called from -dealloc.
+/// more than once. Also called from `-dealloc`.
 - (void)invalidate;
 
 @end

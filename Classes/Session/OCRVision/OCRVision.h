@@ -12,7 +12,6 @@ extern NSString *const OCRLanguageKey;
 
 /// OCRedTextView use this NSError Domain
 extern NSErrorDomain const OCRVisionDomain;
-
 typedef NS_ERROR_ENUM(OCRVisionDomain, OCRVisionError) {
 	OCRVisionErrorUnrecognized = 1,
 	OCRVisionErrorNoCreate

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSUInteger fileCount;
 
-/// The virtual byte range holding file \c index's bytes (length == its
+/// The virtual byte range holding file `index`'s bytes (length == its
 /// size, which may be 0).
 - (NSRange)rangeOfFileAtIndex:(NSUInteger)index;
 

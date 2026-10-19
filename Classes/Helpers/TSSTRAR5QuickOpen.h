@@ -22,11 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSSTRAR5QuickOpen : NSObject
 
 /// Tries to list the archive behind parser (not yet parsed) via its Quick
-/// Open record. Returns NO, having emitted nothing and left the parser
+/// Open record. Returns `NO`, having emitted nothing and left the parser
 /// ready for a normal -parse, when parser isn't RAR5 or the archive has no
 /// usable record (no QO, solid, multi-volume, encrypted, malformed, ...).
 /// Returns YES once the entries have been delivered to the parser's
-/// delegate; *error is then set only if delivery itself failed.
+/// delegate; `error` is then set only if delivery itself failed.
 + (BOOL)listParser:(XADArchiveParser *)parser error:(NSError * _Nullable * _Nullable)error;
 
 @end

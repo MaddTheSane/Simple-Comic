@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 extern NSErrorDomain const TSSTArchiveByteSourceErrorDomain;
-
 typedef NS_ERROR_ENUM(TSSTArchiveByteSourceErrorDomain, TSSTArchiveByteSourceError)
 {
 	TSSTArchiveByteSourceErrorOffsetPastEOF = 1,
@@ -74,7 +73,7 @@ extern void TSSTWaitOnConditionWhile(NSCondition *condition, BOOL (^waiting)(voi
 @property (atomic, readonly) uint64_t bytesRead;
 @property (atomic, readonly) NSTimeInterval simulatedElapsed;
 
-/// When YES, every read's (offset, length) is appended to -requestLog.
+/// When `YES`, every read's (offset, length) is appended to `-requestLog`.
 @property (nonatomic) BOOL logsRequests;
 @property (nonatomic, readonly) NSArray<NSValue *> *requestLog; // NSRange-ish {offset, length} boxed as NSValue with NSRange
 
