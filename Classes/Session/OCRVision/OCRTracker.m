@@ -73,13 +73,6 @@ static NSIndexSet *WordsBoundariesOfString(NSString *s)
 	return indicies;
 }
 
-/// Given two ranges in order, early before late
-/// @return a continguous range that spans from early to late.
-static NSRange UnionRanges(NSRange early, NSRange late)
-{
-	return NSMakeRange(early.location, late.length+late.location - early.location);
-}
-
 
 static NSSpeechSynthesizer *sSpeechSynthesizer;
 
@@ -737,7 +730,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 					NSValue *rangePtr = previousSelection[piece];
 					if (rangePtr != nil) {
 						NSRange oldRange = [rangePtr rangeValue];
-						r = UnionRanges(r, oldRange);
+						r = NSUnionRange(r, oldRange);
 						previousSelection[piece] = nil;
 					}
 					selectionDict[piece] = [NSValue valueWithRange:r];
@@ -816,7 +809,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 }
 
 /// @param downRect in `VNRecognizedTextObservation` coordinates
-/// @return the range of all of the words of the text of the piece that downRect intersects.
+/// @return the range of all of the words of the text of the piece that `downRect` intersects.
 - (NSRange)rangeOfPiece:(VNRecognizedTextObservation *)piece intersectsRect:(NSRect)downRect API_AVAILABLE(macos(10.15))
 {
 	VNRecognizedText *text1 = [[piece topCandidates:1] firstObject];
@@ -829,7 +822,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	{
 		return NSMakeRange(0, s.length);
 	}
-	return UnionRanges(first, last);
+	return NSUnionRange(first, last);
 }
 
 - (BOOL)didResetCursorRects
