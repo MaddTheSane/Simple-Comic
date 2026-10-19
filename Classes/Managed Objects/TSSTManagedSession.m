@@ -23,8 +23,8 @@
 	return pendingScanCount > 0;
 }
 
-/*	The whole point of this method is to check for files in a session.
-	Making sure they are still there. If not they are deleted. */
+/// The whole point of this method is to check for files in a session.
+/// Making sure they are still there. If not they are deleted.
 - (void)awakeFromFetch
 {
 	[super awakeFromFetch];
@@ -38,10 +38,8 @@
 	}
 }
 
-/**
-  If Simple Comic is set to open at login, and the books to show on launch are on a slow hard disk, this will wait up to five seconds
-  for the slow disk to become available. Trying every second to resolve the bookmark data.
- */
+/// If Simple Comic is set to open at login, and the books to show on launch are on a slow hard disk, this will wait up to five seconds
+/// for the slow disk to become available. Trying every second to resolve the bookmark data.
 - (void) waitForSlowDisks
 {
 	static dispatch_once_t onceToken;

@@ -13,10 +13,10 @@ static NSString *sOCRLanguage;
 
 static NSArray<NSString *> *sOCRLanguages;
 
-// Omit any VNRecognizedTextObservation that have a confidence value below this threshold.
+/// Omit any `VNRecognizedTextObservation` that have a confidence value below this threshold.
 static CGFloat OCRConfidence = 0.5;
 
-// ocrErrors use this NSError Domain
+/// ocrErrors use this NSError Domain.
 NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 
 /// Rather than allocate a new object to pass the results, just make the OCRVision object do double duty.
@@ -38,28 +38,16 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 	[super initialize];
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *defaultOCRLanguage = @"";	// i.e., off.
-		if (@available(macOS 12.0, *))
-		{
-			defaultOCRLanguage = @"en-US";
-		}
+		NSString *defaultOCRLanguage = @"en-US";
 		NSDictionary* standardDefaults =
 		@{
 			OCRLanguageKey: defaultOCRLanguage,
 		};
 		NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 		[defaults registerDefaults: standardDefaults];
-		NSUInteger revision = VNRecognizeTextRequestRevision2;
-		if (@available(macOS 13.0, *)) {
-			revision = VNRecognizeTextRequestRevision3;
-		}
-		if (@available(macOS 12.0, *))
-		{
-			VNRecognizeTextRequest *textRequest = [[VNRecognizeTextRequest alloc] initWithCompletionHandler:^(VNRequest *request, NSError *error){}];
-			sOCRLanguages = [textRequest supportedRecognitionLanguagesAndReturnError:nil];
-		} else {
-			sOCRLanguages = [VNRecognizeTextRequest supportedRecognitionLanguagesForTextRecognitionLevel:VNRequestTextRecognitionLevelAccurate revision:revision error:NULL];
-		}
+		NSUInteger revision = VNRecognizeTextRequestRevision3;
+		VNRecognizeTextRequest *textRequest = [[VNRecognizeTextRequest alloc] initWithCompletionHandler:^(VNRequest *request, NSError *error){}];
+		sOCRLanguages = [textRequest supportedRecognitionLanguagesAndReturnError:nil];
 		sOCRLanguage = sOCRLanguages.firstObject ?: @"";
 	});
 }
@@ -139,7 +127,7 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 	} else {
 		NSString *desc = @"Unrecognized text request";
 		NSError *err = [NSError errorWithDomain:@""
-										   code:OCRVisionErrUnrecognized
+										   code:OCRVisionErrorUnrecognized
 									   userInfo:@{NSLocalizedDescriptionKey : desc}];
 		[self callCompletion:completion observations:@[] error:err];
 	}
@@ -175,7 +163,7 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 	} else {
 		NSString *desc = @"Could not create text request";
 		NSError *err = [NSError errorWithDomain:OCRVisionDomain
-										   code:OCRVisionErrNoCreate
+										   code:OCRVisionErrorNoCreate
 									   userInfo:@{NSLocalizedDescriptionKey : desc}];
 		[self callCompletion:completion observations:@[] error:err];
 	}

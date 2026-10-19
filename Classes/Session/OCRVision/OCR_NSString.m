@@ -39,7 +39,7 @@
 	return NSMakeRange(NSNotFound, 0);
 }
 
-// given a range r, of self, true if it represents the start of a non-alphanumeric delimited word.
+/// Given a range `r`, of `self`, `true` if it represents the start of a non-alphanumeric delimited word.
 - (BOOL)ocr_atStart:(NSRange) r
 {
 	if (r.length == 0) {
@@ -51,7 +51,7 @@
 	return [[[NSCharacterSet letterCharacterSet] invertedSet] characterIsMember:[self characterAtIndex:r.location - 1]];
 }
 
-// given a range r, of self, true if it represents the end of a non-alphanumeric delimited word.
+/// Given a range `r`, of `self`, `true` if it represents the end of a non-alphanumeric delimited word.
 - (BOOL)ocr_atEnd:(NSRange) r
 {
 	if (r.length == 0) {

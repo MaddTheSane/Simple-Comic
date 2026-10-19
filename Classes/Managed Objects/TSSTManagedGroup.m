@@ -95,7 +95,7 @@
 - (void)applyPDFScanRecord:(TSSTArchiveScanRecord *)record;
 @end
 
-// Kinds of children a scan can produce: one per entity type -applyScanRecord: inserts.
+/// Kinds of children a scan can produce: one per entity type `-applyScanRecord:` inserts.
 typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 {
 	TSSTArchiveScanRecordKindImage,
@@ -169,11 +169,11 @@ static void TSSTRunOnMainThread(BOOL wait, dispatch_block_t block)
 	else { dispatch_async(dispatch_get_main_queue(), block); }
 }
 
-/*!
- * Lightweight `XADArchiveDelegate` used only while building an `XADArchive` on
- * a background scan queue. It must never touch a managed object -- the
- * password prompt itself is bounced to the main thread since it's UI.
- */
+/// Lightweight `XADArchiveDelegate` used only while building an `XADArchive` on
+/// a background scan queue.
+///
+/// It must never touch a managed object -- the
+/// password prompt itself is bounced to the main thread since it's UI.
 @interface TSSTScanArchiveDelegate : NSObject <XADArchiveDelegate>
 @property (nonatomic, copy) NSString *path;
 @property (nonatomic, copy, nullable) NSString *password;
@@ -255,11 +255,6 @@ static TSSTArchiveScanRecord *TSSTImageChildRecord(NSString *fileName, NSInteger
 	return child;
 }
 
-/// Creates (and returns the path of) the first item in the temp directory,
-/// trying \c candidateName(0), (1), ... in turn, that did not exist yet: a
-/// directory if \c isDirectory, otherwise an empty file (with any missing
-/// parent folders). Creating it is what claims the name, so scans running on
-/// different threads can never be handed the same path.
 NSString *TSSTCreateUnusedTempPath(BOOL isDirectory, NSString *NS_NOESCAPE (^candidateName)(NSInteger attempt))
 {
 	for (NSInteger attempt = 0; ; ++attempt)
@@ -568,7 +563,7 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	self.pathData = bookmarkData;
 }
 
-/// helper: common code of \c probeFileURL and \c fileURL
+/// helper: common code of `probeFileURL` and `fileURL`
 - (NSURL *)ResolvingURLWithStale:(BOOL *)stalep error:(NSError **)errorp {
 	return self.pathData ? [NSURL URLByResolvingBookmarkData: self.pathData
 												options: NSURLBookmarkResolutionWithoutUI | NSURLBookmarkResolutionWithSecurityScope
@@ -591,7 +586,7 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 		//cache fileURL
 		_url = fileURL;
 	}
-	return fileURL;;
+	return fileURL;
 }
 
 - (NSURL *)fileURL
@@ -2259,8 +2254,8 @@ static void TSSTDiscardScanRecord(TSSTArchiveScanRecord *record, BOOL pathIsTemp
 
 /* Delegates */
 
-/**  Called when Simple Comic encounters a password protected
- archive.  Brings a password dialog forward. */
+/// Called when Simple Comic encounters a password protected
+/// archive.  Brings a password dialog forward.
 - (void)archiveNeedsPassword:(XADArchive *)archive
 {
 	NSString * password = self.password;

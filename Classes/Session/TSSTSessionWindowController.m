@@ -48,16 +48,16 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 @implementation TSSTSessionWindowController
 {
-	/** The session object used to maintain settings */
+	/// The session object used to maintain settings.
 	TSSTManagedSession * session;
 	
-	/** This var is bound to the session window name */
+	/// This var is bound to the session window name.
 	NSInteger pageTurn;
 	
-	/** Exactly what it sounds like */
+	/// Exactly what it sounds like.
 	NSArray<TSSTSortDescriptor*> *pageSortDescriptor;
 	
-	/** Manages the cursor hiding while in fullscreen */
+	/// Manages the cursor hiding while in fullscreen.
 	NSTimer *mouseMovedTimer;
 
 	BOOL newSession;
@@ -65,9 +65,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	PageSelectionMode pageSelectionInProgress;
 	CGFloat savedZoom;
 
-	/** "Loading..." overlay shown over pageScrollView while a background
-	    archive scan hasn't produced any pages yet. Built in code, not the
-	    xib, and lazily added/removed. */
+	/// "Loading..." overlay shown over pageScrollView while a background
+	/// archive scan hasn't produced any pages yet. Built in code, not the
+	/// xib, and lazily added/removed.
 	NSView *loadingOverlayView;
 	NSProgressIndicator *loadingSpinner;
 
@@ -318,11 +318,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 #pragma mark - Loading overlay
 
-/**
- Shows/hides a centered "Loading..." label + indeterminate spinner over
- pageScrollView, depending on whether the session is still being scanned
- in the background and has no pages yet.
- */
+/// Shows/hides a centered "Loading..." label + indeterminate spinner over
+/// pageScrollView, depending on whether the session is still being scanned
+/// in the background and has no pages yet.
 - (void)updateLoadingOverlay
 {
 	BOOL shouldShow = session.isLoading && [[pageController arrangedObjects] count] == 0;
@@ -400,8 +398,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-/*  Observes changes to the page controller.  Changes are reflected by the
-    page view.  */
+/// Observes changes to the page controller.  Changes are reflected by the
+/// page view.
 - (void)observeValueForKeyPath:(NSString *)keyPath
 					  ofObject:(id)object
 						change:(NSDictionary *)change
@@ -2078,8 +2076,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-#pragma mark -
-#pragma mark Binding Methods
+#pragma mark - Binding Methods
 
 @synthesize session;
 

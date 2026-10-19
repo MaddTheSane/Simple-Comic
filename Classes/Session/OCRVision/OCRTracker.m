@@ -23,11 +23,11 @@ NS_ENUM(NSInteger) {
 	SPEEK_TAG = 1906,
 };
 
-// When the menu items that depend on recognized text are hidden, save those items here.
+/// When the menu items that depend on recognized text are hidden, save those items here.
 static NSMutableArray<NSMenuItem *> *sStashedMenuItems = nil;
 
 
-/// @return the quadrilateral of the rect observation as a NSBezierPath/
+/// @return the quadrilateral of the rect observation as a NSBezierPath.
 API_AVAILABLE(macos(10.15))
 static NSBezierPath *OCRBezierPathFromRectObservation(VNRectangleObservation *piece)
 {
@@ -100,8 +100,8 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
 @property(nonatomic) NSArray<VNRecognizedTextObservation *> *textPieces;
 
-// Key is VNRecognizedTextObservation.
-// The value is the NSRange of the underlying string to show as selected.
+/// Key is VNRecognizedTextObservation.
+/// The value is the NSRange of the underlying string to show as selected.
 @property NSMutableDictionary<VNRecognizedTextObservation *, NSValue *> *selectionPieces;
 
 @property(nonatomic, readonly) NSUInteger totalStringLength;
@@ -470,7 +470,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
 /// For a point, find the textPiece
 ///
-/// @param where - a point in View coordinates,
+/// @param where a point in View coordinates,
 /// @return the textPiece that contains that point
 - (nullable VNRecognizedTextObservation *)textPieceForPoint:(CGPoint)where API_AVAILABLE(macos(10.15))
 {
@@ -526,8 +526,8 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 
 /// Housekeeping around being called by the OCR engine.
 ///
-///  Since this will affect the U.I., sets state on the main thread.
-/// @param results -  the OCR's results object.
+/// Since this will affect the U.I., sets state on the main thread.
+/// @param results the OCR's results object.
 - (void)ocrDidFinish:(id<OCRVisionResults>)results image:(NSImage *)image index:(NSInteger)index
 {
 	NSArray *textPieces = @[];
@@ -715,8 +715,8 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	self.isDragging = NO;
 }
 
-/// @param downRect - the rectangle in view coordinates from the start mouse position to the current mouse position.
-/// @param previousSelection - the selection as it was before the call to this. This method will update it.
+/// @param downRect the rectangle in view coordinates from the start mouse position to the current mouse position.
+/// @param previousSelection the selection as it was before the call to this. This method will update it.
 - (void)updateSelectionFromDownRect:(NSRect)downRect previousSelection:(NSMutableDictionary *)previousSelection
 {
 	BOOL needsDisplay = NO;
@@ -758,13 +758,13 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	}
 }
 
-// if the start and end indices delimit a range that intersects r, return the range, else the NotFound range.
-//
-// @param piece - the VNRecognizedTextObservation to examine
-// @param r - The rectangle, in VNRecognizedTextObservation coordinates to intersect against
-// @param start - the start index into the string of the text of the piece
-// @param end - the end index into the string of the text of the piece
-// @return the range of the word of the piece that downRect intersects, else the NotFound range.
+/// If the start and end indices delimit a range that intersects `r`, return the range, else the `NSNotFound` range.
+///
+/// @param piece the `VNRecognizedTextObservation` to examine
+/// @param r The rectangle, in `VNRecognizedTextObservation` coordinates to intersect against
+/// @param start the start index into the string of the text of the piece
+/// @param end the end index into the string of the text of the piece
+/// @return the range of the word of the piece that downRect intersects, else the `NSNotFound` range.
 - (NSRange)rangeOfPiece:(VNRecognizedTextObservation *)piece intersectsRect:(NSRect)r start:(NSUInteger)start end:(NSUInteger)end  API_AVAILABLE(macos(10.15))
 {
 	if (0 < end - start)	// ignore zero length ranges.
@@ -779,8 +779,8 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	return NSMakeRange(NSNotFound, 0);
 }
 
-/// @param downRect - in VNRecognizedTextObservation coordinates
-// @return the first range of the word of the piece that downRect intersects, else the NotFound range.
+/// @param downRect in `VNRecognizedTextObservation` coordinates
+/// @return the first range of the word of the piece that downRect intersects, else the `NSNotFound` range.
 - (NSRange)firstRangeOfPiece:(VNRecognizedTextObservation *)piece intersectsRect:(NSRect)downRect indexSet:(NSIndexSet *)wordStarts  API_AVAILABLE(macos(10.15))
 {
 	NSUInteger endIndex = [wordStarts indexGreaterThanIndex:0];
@@ -797,8 +797,8 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	return NSMakeRange(NSNotFound, 0);
 }
 
-/// @param downRect - in VNRecognizedTextObservation coordinates
-/// @return the last range of the word of the piece that downRect intersects, else the NotFound range.
+/// @param downRect in `VNRecognizedTextObservation` coordinates
+/// @return the last range of the word of the piece that downRect intersects, else the `NSNotFound` range.
 - (NSRange)lastRangeOfPiece:(VNRecognizedTextObservation *)piece intersectsRect:(NSRect)downRect indexSet:(NSIndexSet *)wordStarts  API_AVAILABLE(macos(10.15))
 {
 	NSUInteger endIndex = [wordStarts lastIndex];
@@ -815,7 +815,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	return NSMakeRange(0, NSNotFound);
 }
 
-/// @param downRect - in VNRecognizedTextObservation coordinates
+/// @param downRect in `VNRecognizedTextObservation` coordinates
 /// @return the range of all of the words of the text of the piece that downRect intersects.
 - (NSRange)rangeOfPiece:(VNRecognizedTextObservation *)piece intersectsRect:(NSRect)downRect API_AVAILABLE(macos(10.15))
 {
@@ -862,8 +862,8 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	return NO;
 }
 
-/// @param textPiece - the piece to examine
-/// @return selected range else nil if no part selected
+/// @param textPiece the piece to examine
+/// @return selected range, else `nil` if no part selected
 - (NSValue *)rangeValueOfSelectionOfTextPiece:(VNRecognizedTextObservation *)textPiece {
 	NSInteger i = 0;
 	NSValue *rangeValue = nil;
@@ -1082,7 +1082,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	return s;
 }
 
-/// @return bounding rect, in view coordinates, of the VNRecognizedTextObservation
+/// @return bounding rect, in view coordinates, of the `VNRecognizedTextObservation`
 - (CGRect)rectForPiece:(VNRecognizedTextObservation *)piece datum:(OCRDatum *)datum API_AVAILABLE(macos(10.15)) {
 	CGRect container = [[[self view] enclosingScrollView] documentVisibleRect];
 	CGSize imageSize = datum.selectionLayer.bounds.size;
@@ -1091,7 +1091,7 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 	return CGRectIntersection(r, container);
 }
 
-  /// @return point for the dictionary panel.
+/// @return point for the dictionary panel.
 - (NSPoint)lookUpPoint {
 	for (OCRDatum *datum in self.datums)
 	{
@@ -1117,42 +1117,40 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 /// Show the dictionary panel for the current selection.
 - (void)lookUp:(id)sender
 {
-  NSAttributedString *s =  [[NSAttributedString alloc] initWithString:[self lookUpString]];
-  [self.view showDefinitionForAttributedString:s atPoint:[self lookUpPoint]];
+	NSAttributedString *s =  [[NSAttributedString alloc] initWithString:[self lookUpString]];
+	[self.view showDefinitionForAttributedString:s atPoint:[self lookUpPoint]];
 }
 
 - (void)copy:(id)sender
 {
-  NSPasteboard *pboard = [NSPasteboard generalPasteboard];
-  [self copyToPasteboard:pboard];
+	NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+	[self copyToPasteboard:pboard];
 }
 
 - (void)copyToPasteboard:(NSPasteboard *)pboard
 {
-  NSString *s = [self selection];
-  [pboard clearContents];
-  [pboard setString:s forType:NSPasteboardTypeString];
+	NSString *s = [self selection];
+	[pboard clearContents];
+	[pboard setString:s forType:NSPasteboardTypeString];
 }
 
 #pragma mark Services
 
 - (id)validRequestorForSendType:(NSString *)sendType returnType:(NSString *)returnType
 {
-  if (sIsEnabled && (([sendType isEqual:NSPasteboardTypeString] || [sendType isEqual:NSStringPboardType]) && self.isAnySelected))
-	{
-    return self;
-  }
-  return [[self nextResponder] validRequestorForSendType:sendType returnType:returnType];
+	if (sIsEnabled && (([sendType isEqual:NSPasteboardTypeString]) && self.isAnySelected)) {
+		return self;
+	}
+	return [[self nextResponder] validRequestorForSendType:sendType returnType:returnType];
 }
 
 - (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard types:(NSArray *)types
 {
-  if (sIsEnabled && (([types containsObject:NSPasteboardTypeString] || [types containsObject:NSStringPboardType]) && self.isAnySelected))
-	{
-    [self copyToPasteboard:pboard];
-    return YES;
-  }
-  return NO;
+	if (sIsEnabled && (([types containsObject:NSPasteboardTypeString]) && self.isAnySelected)) {
+		[self copyToPasteboard:pboard];
+		return YES;
+	}
+	return NO;
 }
 
 @end

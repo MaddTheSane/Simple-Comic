@@ -157,10 +157,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	/** Auto-save timer */
 	NSTimer * autoSave;
 	
-	/**  Window controller for preferences. */
+	/// Window controller for preferences.
 	DTPreferencesController      * preferences;
 	
-	/**  This is the array that maintains all of the session window managers. */
+	/// This is the array that maintains all of the session window managers.
 	NSMutableArray<TSSTSessionWindowController*> * sessions;
 	
 	/*	Vars to delay the loading of files from an app launch until the core data store
@@ -191,7 +191,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 
 
 
-/**  Sets up the user defaults and arrays of compatible file types. */
+/// Sets up the user defaults and arrays of compatible file types.
 + (void)initialize
 {
 	static dispatch_once_t onceToken;
@@ -255,8 +255,8 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 #pragma mark - Application Delegate Methods
 
 
-/**	Stores any files that were opened on launch till applicationDidFinishLaunching:
-	is called. */
+/// Stores any files that were opened on launch till applicationDidFinishLaunching:
+/// is called.
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
 	autoSave = nil;
@@ -409,7 +409,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 }
 
 
-/** Used to watch and react to pref changes */
+/// Used to watch and react to pref changes.
 - (void)observeValueForKeyPath:(NSString *)keyPath
 					  ofObject:(id)object
 						change:(NSDictionary *)change
@@ -484,10 +484,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 }
 
 
-/**	Returns the persistent store coordinator for the application.  This
-	implementation will create and return a coordinator, having added the 
-	store for the application to it.  (The folder for the store is created, 
-	if necessary.) */
+/// Returns the persistent store coordinator for the application.  This
+/// implementation will create and return a coordinator, having added the
+/// store for the application to it.  (The folder for the store is created,
+/// if necessary.)
 - (NSPersistentStoreCoordinator *) persistentStoreCoordinator
 {
 	if (persistentStoreCoordinator != nil)
@@ -558,10 +558,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 }
 
 
-/**  Method creates an application support directory for Simple Comic if one
-    does not already exist.
-    @return The absolute path to Simple Comic's application support directory
-	as a string.  */
+/// Method creates an application support directory for Simple Comic if one
+/// does not already exist.
+/// @return The absolute path to Simple Comic's application support directory
+/// as a string.
 - (NSString *)applicationSupportFolder
 {
 #if DEBUG
