@@ -57,65 +57,68 @@ typedef NS_ENUM(NSInteger, DTPageScaling) {
 
 
 
-/*!
-	Composites one or two images to the screen, making sure that they
-	are horizontally alligned.
-	None of the logic involving the aspect ratios of the images is
-	in this class.
- */
+/// Composites one or two images to the screen, making sure that they
+/// are horizontally alligned.
+///
+/// None of the logic involving the aspect ratios of the images is
+/// in this class.
 @interface TSSTPageView : NSView
 
 @property (nonatomic, assign) NSInteger rotation;
 @property (weak) IBOutlet TSSTSessionWindowController * sessionController;
 
 
-/*!  This is where it all begins sets the two pages.
-    Starts any animations
-    Calls resize view
-    Calls `correctViewPoint` */
+/// This is where it all begins sets the two pages.
+///
+/// - Starts any animations
+/// - Calls resize view
+/// - Calls `correctViewPoint`
 - (void)setFirstPage:(nullable NSImage *)first secondPageImage:(nullable NSImage *)second;
 
 
-/*!  Finds the size of the pages that are to be renedered.
-    This includes minor scaling to equalize the height of facing pages. */
+/// Finds the size of the pages that are to be renedered.
+///
+/// This includes minor scaling to equalize the height of facing pages.
 - (NSSize)combinedImageSizeForZoom:(CGFloat)level;
 
 
-/*!  If the view are is larger than the display area
-    then drag scrolling is available. */
+/// If the view are is larger than the display area
+/// then drag scrolling is available.
 @property (readonly) BOOL dragIsPossible;
 
 
-/*!  This is used by the image loupe.  Grabs the portion of the pages
-    displayed that fall within "rect." The origin of the argument
-    is centered instead of at the bottom left. */
+/// This is used by the image loupe.  Grabs the portion of the pages
+/// displayed that fall within `rect`. The origin of the argument
+/// is centered instead of at the bottom left.
 - (nullable NSImage *)imageInRect:(NSRect)rect;
 
 
-/*!  This is the actual rectangle within which the pages are rendered.
-    Handy to know for various reasons. */
+/// This is the actual rectangle within which the pages are rendered.
+/// Handy to know for various reasons.
 @property (readonly) NSRect imageBounds;
 
 
-/*! This method scrolls the views so that the proper
-    corner is displayed if the pages rendered are
-    larger than the display area. */
+/// This method scrolls the views so that the proper
+/// corner is displayed if the pages rendered are
+/// larger than the display area.
 - (void)correctViewPoint;
 
 
-/*!  Resizes the view based on the current scaling method and the
-    selected images. */
+/// Resizes the view based on the current scaling method and the
+/// selected images.
 - (void)resizeView;
 
-/*! Used to find the click area for page selection */
+/// Used to find the click area for page selection.
 - (NSRect)pageSelectionRect:(NSInteger)selection;
 
-/*!	Concatinates an affine transform to the context.
-	This is what enables the page rotation. */
+/// Concatinates an affine transform to the context.
+///
+/// This is what enables the page rotation.
 - (NSAffineTransform *)rotationTransformWithFrame:(NSRect)rect;
 
-/*!	Returns an affine transform to apply to a `CALayer`.
-This is what enables the page rotation. */
+/// Returns an affine transform to apply to a `CALayer`.
+///
+/// This is what enables the page rotation.
 - (CGAffineTransform)rotationCGTransformWithFrame:(NSRect)rect;
 
 @property (readonly) BOOL horizontalScrollIsPossible;
@@ -125,8 +128,9 @@ This is what enables the page rotation. */
 - (void)startAnimationForImage:(nullable NSImage *)image;
 - (void)animateImage:(NSTimer *)timer;
 
-/*!	My rather crappy smooth scrolling timer.
-	It does allow for multi axis keyboard scrolling though which is pretty cool. */
+/// My rather crappy smooth scrolling timer.
+///
+/// It does allow for multi axis keyboard scrolling though which is pretty cool.
 - (void)scroll:(NSTimer *)timer;
 
 - (void)pageUp;

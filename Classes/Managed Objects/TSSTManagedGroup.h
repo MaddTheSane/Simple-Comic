@@ -23,7 +23,7 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 NS_ASSUME_NONNULL_BEGIN
 
 /// Value-only result of scanning an archive off the main thread (see
-/// +[TSSTManagedArchive scanRecordForFileURL:name:password:]); the rest of its
+/// `+[TSSTManagedArchive scanRecordForFileURL:name:password:]`); the rest of its
 /// state is private to TSSTManagedGroup.m.
 @interface TSSTArchiveScanRecord : NSObject
 @property (nonatomic, readonly, strong, nullable) NSArray<TSSTArchiveScanRecord *> *children;
@@ -41,81 +41,71 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy) NSString *path;
 @property (copy, nullable) NSURL *fileURL;
 
-/**
- Runs \c during inside a URL-error batch: bookmark errors raised meanwhile are
- presented as one summary alert for \c groupName. Joins an enclosing batch on
- this thread if there is one. The batch is always closed, even if \c during
- throws. Call on the main thread.
- */
+/// Runs `during` inside a URL-error batch: bookmark errors raised meanwhile are
+/// presented as one summary alert for `groupName`. Joins an enclosing batch on
+/// this thread if there is one. The batch is always closed, even if `during`
+/// throws. Call on the main thread.
 + (void)batchURLErrorsForGroupName:(NSString *)groupName during:(dispatch_block_t)during;
 
 - (void)requestDataForPageIndex:(NSInteger)index completionHandler:(void(^)(NSData *_Nullable pageData, NSError *_Nullable error))callback;
 @property (readonly, strong, nullable) NSManagedObject *topLevelGroup;
 
-/**
- Returns a set with all the images found in the key in union with the ones from other groups.
- 
- @return NSSet with all images found in context.
- */
+/// Returns a set with all the images found in the key in union with the ones from other groups.
+///
+/// @return NSSet with all images found in context.
 @property (readonly, copy) NSSet<TSSTPage*> *nestedImages;
 
-/**
- Goes through various files like pdfs, images, text files
- from the path folder and it's subfolders and add these
- to the Core Data for the managedObjectContext
- with the info needed to deal with the files.
- */
+/// Goes through various files, like pdfs, images, text files
+/// from the path folder and its subfolders and add these
+/// to the Core Data for the `managedObjectContext`
+/// with the info needed to deal with the files.
 - (void)nestedFolderContents;
 
-/**
-  Attempts to resolve the filleURL, but doesn't alter self on failure. Note: If it fails, always call fileURL to truly update the state.
- */
+/// Attempts to resolve the filleURL, but doesn't alter self on failure.
+///
+/// Note: If it fails, always call fileURL to truly update the state.
 - (nullable NSURL *)probeFileURL;
 
 @end
 
 @interface TSSTManagedArchive : TSSTManagedGroup
 
-//! An `NSArray` with archive file extensions which the software supports.
+/// An `NSArray` with archive file extensions which the software supports.
 @property (class, readonly, copy) NSArray<NSString*> *archiveExtensions;
-//! An `NSArray` with archive UTIs which the software supports.
+/// An `NSArray` with archive UTIs which the software supports.
 @property (class, readonly, copy) NSArray<NSString*> *archiveTypes;
-//! An `NSArray` with file extensions for which software support QuickLook for.
+/// An `NSArray` with file extensions for which software support QuickLook for.
 @property (class, readonly, copy) NSArray<NSString*> *quicklookExtensions;
-/**  Recurses through archives looking for archives and images */
+/// Recurses through archives looking for archives and images */
 - (void)nestedArchiveContents;
 @property (readonly) BOOL quicklookCompatible;
 
-/**
- Background-safe scan of the archive at `fileURL`. Opens the archive
- (XADArchive) itself and returns a record describing every entry, without
- touching any `NSManagedObject` / MOC. Safe to call from any thread.
- `password` may be nil; if the archive needs one and none is supplied, the
- password prompt is bounced to the main thread.
- */
+/// Background-safe scan of the archive at `fileURL`. Opens the archive
+/// (XADArchive) itself and returns a record describing every entry, without
+/// touching any `NSManagedObject` / MOC. Safe to call from any thread.
+/// `password` may be `nil`; if the archive needs one and none is supplied, the
+/// password prompt is bounced to the main thread.
 + (nullable TSSTArchiveScanRecord *)scanRecordForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password;
 
-/**
- Applies a scan record produced by `+scanRecordForFileURL:name:password:`
- to this (already-inserted) managed object: inserts the child entities,
- reuses the record's already-opened archive (no re-parsing), and sets
- password / solidDirectory as needed. Must be called on the MOC's queue.
- */
+/// Applies a scan record produced by `+scanRecordForFileURL:name:password:`
+/// to this (already-inserted) managed object: inserts the child entities,
+/// reuses the record's already-opened archive (no re-parsing), and sets
+/// password / solidDirectory as needed. Must be called on the MOC's queue.
 - (void)applyScanRecord:(TSSTArchiveScanRecord *)record;
 
-/**
- Removes the temp files and directories a scan record (and, recursively, its
- nested archives/PDFs) created. Use when a record is dropped without being
- applied; applied records are cleaned up by their managed objects instead.
- */
+
+/// Removes the temp files and directories a scan record (and, recursively, its
+/// nested archives/PDFs) created. Use when a record is dropped without being
+/// applied; applied records are cleaned up by their managed objects instead.
 + (void)discardScanRecord:(TSSTArchiveScanRecord *)record;
 
 @end
 
 @interface TSSTManagedPDF : TSSTManagedGroup
 
-/**  Parses PDFs into something Simple Comic can use.
- *  Creates an image `NSManagedObject` for every "page" in a pdf. */
+/// Parses PDFs into something Simple Comic can use.
+///
+/// Creates an image `NSManagedObject` for every "page" in a pdf.
 - (void)pdfContents;
 
 @end

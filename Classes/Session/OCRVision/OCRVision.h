@@ -10,12 +10,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// Live text recognition language. Set to empty string to disable live text recognition. in User Defaults.
 extern NSString *const OCRLanguageKey;
 
-// OCRedTextView use this NSError Domain
+/// OCRedTextView use this NSError Domain
 extern NSErrorDomain const OCRVisionDomain;
 
 typedef NS_ERROR_ENUM(OCRVisionDomain, OCRVisionError) {
-	OCRVisionErrUnrecognized = 1,
-	OCRVisionErrNoCreate
+	OCRVisionErrorUnrecognized = 1,
+	OCRVisionErrorNoCreate
 };
 
 @class VNRecognizedTextObservation;
@@ -38,27 +38,27 @@ typedef NS_ERROR_ENUM(OCRVisionDomain, OCRVisionError) {
 API_AVAILABLE(macos(10.15))
 @interface OCRVision : NSObject
 
-/// The list of languages the VisionFramework will accept. en_US is the default. Empty array means the VisionFramework is not available.
+/// The list of languages the VisionFramework will accept. en\_US is the default. Empty array means the VisionFramework is not available.
 @property(class, readonly) NSArray<NSString *> *ocrLanguages;
 
-/// The language the VisionFramework will use. from the ocrLanguage in UserDefaults
+/// The language the VisionFramework will use. from the `ocrLanguage` in UserDefaults
 @property(class, readonly) NSString *ocrLanguage;
 
 
-/// Run the ocr engine on the image in the default language. When it's done, call the completion passing an object that implements the OCRVisionResults protocol
+/// Run the ocr engine on the image in the default language. When it's done, call the completion passing an object that implements the `OCRVisionResults` protocol
 ///
-///  Note: does its work on a background concurrent GCD queue. Completion is called on that queue.
+/// @note does its work on a background concurrent GCD queue. Completion is called on that queue.
 ///
-/// @param image - the image to OCR
-/// @param completion - a block passed an object that corresponds to the OCRVision protocol.
+/// @param image the image to OCR
+/// @param completion a block passed an object that corresponds to the OCRVision protocol.
 - (void)ocrImage:(NSImage *)image completion:(void (^)(id<OCRVisionResults> _Nonnull ocrResults))completion;
 
 /// Run the ocr engine on the image in the default language. When it's done, call the completion passing an object that implements the OCRVisionResults protocol
 ///
-///  Note: does its work on a background concurrent GCD queue. Completion is called on that queue.
+/// Note: does its work on a background concurrent GCD queue. Completion is called on that queue.
 ///
-/// @param cgImage - the image to OCR
-/// @param completion - a block passed an object that corresponds to the OCRVision protocol.
+/// @param cgImage the image to OCR
+/// @param completion a block passed an object that corresponds to the OCRVision protocol.
 - (void)ocrCGImage:(CGImageRef)cgImage completion:(void (^)(id<OCRVisionResults> _Nonnull ocrResults))completion;
 
 /// if a OCR task is currently running, attempt to cancel it. Always safe to call.

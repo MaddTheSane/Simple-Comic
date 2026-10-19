@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol OCRFindDelegate;
 
-/// Does the actual finding. The controller of this owns this. This implements the OCRFindEngine protocol.
+/// Does the actual finding. The controller of this owns this. This implements the `OCRFindEngine` protocol.
 @interface OCRFind : NSObject
 
 /// The delegate owns this and the tracker.
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// OCRFind can set this to move the U.I. to a different page.
 @property NSInteger findIndex;
 
-///  Ask the document to cancel any OCR operation in progress and call the observationsForFindIndex: completion.
+/// Ask the document to cancel any OCR operation in progress and call the `observationsForFindIndex:` completion.
 - (void)cancelObservations;
 
 /// Ask the document for the text observtions for the page at index.

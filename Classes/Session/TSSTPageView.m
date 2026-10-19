@@ -55,22 +55,24 @@ typedef struct {
 	NSImage	* firstPageImage;
 	NSImage	* secondPageImage;
 	
-	TSSTArrowKeys scrollKeys;	//!< Stores which arrow keys are currently depressed. This enables multi axis keyboard scrolling.
-	NSTimer * scrollTimer;		//!< Timer that fires in between each keydown event to smooth out the scrolling.
+	/// Stores which arrow keys are currently depressed. This enables multi axis keyboard scrolling.
+	TSSTArrowKeys scrollKeys;
+	/// Timer that fires in between each keydown event to smooth out the scrolling.
+	NSTimer * scrollTimer;
 	NSDate * interfaceDelay;
 	
 	PageViewDirection scrollwheel;
 	
-	//! This controls the drawing of the accepting drag-drop border highlighting
+	/// This controls the drawing of the accepting drag-drop border highlighting
 	BOOL acceptingDrag;
 
 	/// YES while we are actively dragging
 	BOOL isInDrag;
 	
-	/*!	While page selection is in progress this method has a value of 1 or 2.
-	 The selection number coresponds to a highlighted page. */
+	///	While page selection is in progress this method has a value of 1 or 2.
+	/// The selection number coresponds to a highlighted page.
 	int pageSelection;
-	/*! This is the rect describing the users page selection. */
+	/// This is the rect describing the users page selection.
 	NSRect cropRect;
 }
 @synthesize imageBounds;
@@ -546,8 +548,7 @@ typedef struct {
 }
 
 
-#pragma mark -
-#pragma mark Geometry handling
+#pragma mark - Geometry handling
 
 
 - (void)setRotation:(NSInteger)rot
@@ -846,8 +847,7 @@ typedef struct {
 }
 
 
-#pragma mark -
-#pragma mark Event handling
+#pragma mark - Event handling
 
 
 - (void)scrollWheel:(NSEvent *)theEvent

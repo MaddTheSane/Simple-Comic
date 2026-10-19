@@ -139,7 +139,7 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 	} else {
 		NSString *desc = @"Unrecognized text request";
 		NSError *err = [NSError errorWithDomain:@""
-										   code:OCRVisionErrUnrecognized
+										   code:OCRVisionErrorUnrecognized
 									   userInfo:@{NSLocalizedDescriptionKey : desc}];
 		[self callCompletion:completion observations:@[] error:err];
 	}
@@ -175,7 +175,7 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 	} else {
 		NSString *desc = @"Could not create text request";
 		NSError *err = [NSError errorWithDomain:OCRVisionDomain
-										   code:OCRVisionErrNoCreate
+										   code:OCRVisionErrorNoCreate
 									   userInfo:@{NSLocalizedDescriptionKey : desc}];
 		[self callCompletion:completion observations:@[] error:err];
 	}

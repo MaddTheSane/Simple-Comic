@@ -10,10 +10,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol OCRFindEngine;
 
-/// UI for \c OCRFind
+/// UI for `OCRFind`.
 @interface OCRFindViewController : NSViewController <NSMenuItemValidation>
 
-/// Provides requirements of the \c OCRFindViewController
+/// Provides requirements of the `OCRFindViewController`.
 @property (nullable, weak) id <OCRFindEngine> engine;
 
 /// setting findPageIndex shows it in the find progress panel.
@@ -39,22 +39,22 @@ typedef NS_OPTIONS(NSUInteger, OCRFindState) {
 	OCRFindStateCanceling
 };
 
-/// Provides requirements of the OCRFindViewController
+/// Provides requirements of the `OCRFindViewController`.
 @protocol OCRFindEngine <NSObject>
 
 /// Search options, shown in the OCRFindViewController's popup menu on the magnifying glass.
 @property(nonatomic) OCRStringCompareOptions options;
 
-/// YES, then the search wrap around the whole document. (In the OCRFindViewController's popup menu)
+/// YES, then the search wrap around the whole document. (In the `OCRFindViewController`'s popup menu)
 @property(nonatomic) BOOL wrap;
 
-/// OCRFindStateInProgress, then already doing one find operation. Changes must wait. Calls OCRFindViewController's updateFindState
+/// OCRFindStateInProgress, then already doing one find operation. Changes must wait. Calls `OCRFindViewController`'s `updateFindState`
 @property(nonatomic) OCRFindState findState;
 
-/// The view that will hold the OCRFindViewController's view. (NSScrollViews implement this protocol)
+/// The view that will hold the `OCRFindViewController`'s view. (`NSScrollViews` implement this protocol)
 @property(readonly) id <NSTextFinderBarContainer> findBarContainer;
 
-/// The string that we'll find. OCRFindViewController both gets and sets this
+/// The string that we'll find. `OCRFindViewController` both gets and sets this
 @property(nonatomic) NSString *findString;
 
 /// The selected text in the current page.
