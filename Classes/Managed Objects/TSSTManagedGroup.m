@@ -438,6 +438,8 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 	{
 		return;
 	}
+	// A modal alert would hang a hosted test run waiting for a click.
+	if (NSClassFromString(@"XCTestCase") != Nil) { return; }
 	NSString *detail = batch.errors.firstObject.localizedDescription ?: @"";
 	// Alerts belong on the main thread; don't block the scan thread on the user.
 	dispatch_block_t present = ^{
