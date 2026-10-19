@@ -1117,42 +1117,40 @@ static NSSpeechSynthesizer *sSpeechSynthesizer;
 /// Show the dictionary panel for the current selection.
 - (void)lookUp:(id)sender
 {
-  NSAttributedString *s =  [[NSAttributedString alloc] initWithString:[self lookUpString]];
-  [self.view showDefinitionForAttributedString:s atPoint:[self lookUpPoint]];
+	NSAttributedString *s =  [[NSAttributedString alloc] initWithString:[self lookUpString]];
+	[self.view showDefinitionForAttributedString:s atPoint:[self lookUpPoint]];
 }
 
 - (void)copy:(id)sender
 {
-  NSPasteboard *pboard = [NSPasteboard generalPasteboard];
-  [self copyToPasteboard:pboard];
+	NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+	[self copyToPasteboard:pboard];
 }
 
 - (void)copyToPasteboard:(NSPasteboard *)pboard
 {
-  NSString *s = [self selection];
-  [pboard clearContents];
-  [pboard setString:s forType:NSPasteboardTypeString];
+	NSString *s = [self selection];
+	[pboard clearContents];
+	[pboard setString:s forType:NSPasteboardTypeString];
 }
 
 #pragma mark Services
 
 - (id)validRequestorForSendType:(NSString *)sendType returnType:(NSString *)returnType
 {
-  if (sIsEnabled && (([sendType isEqual:NSPasteboardTypeString] || [sendType isEqual:NSStringPboardType]) && self.isAnySelected))
-	{
-    return self;
-  }
-  return [[self nextResponder] validRequestorForSendType:sendType returnType:returnType];
+	if (sIsEnabled && (([sendType isEqual:NSPasteboardTypeString]) && self.isAnySelected)) {
+		return self;
+	}
+	return [[self nextResponder] validRequestorForSendType:sendType returnType:returnType];
 }
 
 - (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard types:(NSArray *)types
 {
-  if (sIsEnabled && (([types containsObject:NSPasteboardTypeString] || [types containsObject:NSStringPboardType]) && self.isAnySelected))
-	{
-    [self copyToPasteboard:pboard];
-    return YES;
-  }
-  return NO;
+	if (sIsEnabled && (([types containsObject:NSPasteboardTypeString]) && self.isAnySelected)) {
+		[self copyToPasteboard:pboard];
+		return YES;
+	}
+	return NO;
 }
 
 @end
