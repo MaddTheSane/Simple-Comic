@@ -227,6 +227,17 @@
         }
       }
     },
+    "A volume of this multi-volume archive could not be opened: “%@”. Keep all of its parts together in one folder." : {
+      "comment" : "missing RAR volume",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A volume of this multi-volume archive could not be opened: “%@”. Keep all of its parts together in one folder."
+          }
+        }
+      }
+    },
     "Cancel" : {
       "localizations" : {
         "de" : {
@@ -722,6 +733,17 @@
         }
       }
     },
+    "Grant Access" : {
+      "comment" : "folder access panel button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grant Access"
+          }
+        }
+      }
+    },
     "invalid Selection" : {
       "comment" : "test - Do not localize",
       "shouldTranslate" : false
@@ -787,6 +809,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "由左到右"
+          }
+        }
+      }
+    },
+    "Loading page %lu…" : {
+      "comment" : "HUD shown while a page is fetched over a slow network volume",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading page %lu…"
           }
         }
       }
@@ -1577,6 +1610,17 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "洗滌器"
+          }
+        }
+      }
+    },
+    "Simple Comic needs access to this folder to read the other volumes of the multi-part archive “%@”." : {
+      "comment" : "folder access panel message",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simple Comic needs access to this folder to read the other volumes of the multi-part archive “%@”."
           }
         }
       }
