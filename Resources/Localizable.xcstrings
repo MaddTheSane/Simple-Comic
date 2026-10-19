@@ -230,10 +230,40 @@
     "A volume of this multi-volume archive could not be opened: “%@”. Keep all of its parts together in one folder." : {
       "comment" : "missing RAR volume",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ein Volumen dieses Mehrfacharchivs konnte nicht geöffnet werden: „%@“. Halten Sie alle seine Teile in einem Ordner zusammen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A volume of this multi-volume archive could not be opened: “%@”. Keep all of its parts together in one folder."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A volume of this multi-volume archive could not be opened: “%@”. Keep all of its parts together in one folder."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Un volume de cet archive multivolet n'a pas pu être ouvert : « %@ ». Conservez toutes ses parties dans un seul dossier."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "无法打开这个多卷档案的某个卷：%@。将所有部分放在一个文件夹中。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "無法打開此多卷檔案的某個卷：%@。將所有部分放在一個資料夾中。"
           }
         }
       }
@@ -438,6 +468,12 @@
             "value" : "Copie"
           }
         },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "cópia"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -477,6 +513,12 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Copier le texte"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Copiar texto"
           }
         },
         "zh-Hans" : {
@@ -581,7 +623,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract"
+            "value" : "extrait"
           }
         },
         "it" : {
@@ -645,7 +687,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract Page"
+            "value" : "Page d'extraction"
           }
         },
         "it" : {
@@ -736,10 +778,46 @@
     "Grant Access" : {
       "comment" : "folder access panel button",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zugriff gewähren"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Grant Access"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grant Access"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Accorder l'accès"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Conceder Acesso"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "授予访问权限"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "授予訪問權限"
           }
         }
       }
@@ -816,10 +894,40 @@
     "Loading page %lu…" : {
       "comment" : "HUD shown while a page is fetched over a slow network volume",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ladeseite %lu…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Loading page %lu…"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading page %lu…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Chargement de la page %lu…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "加载页面%lu..."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "載入頁面 %lu…"
           }
         }
       }
@@ -827,7 +935,19 @@
     "Loading…" : {
       "comment" : "loading overlay message shown while a background archive scan is in progress",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Laden..."
+          }
+        },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading…"
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Loading…"
@@ -837,6 +957,18 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Chargement..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "加载中......"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "正在載入..."
           }
         }
       }
@@ -860,6 +992,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Look Up"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Regarde"
           }
         },
         "ja" : {
@@ -944,7 +1082,19 @@
     "No pages could be found in “%@”." : {
       "comment" : "empty session alert",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "In \"%@\" konnten keine Seiten gefunden werden."
+          }
+        },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No pages could be found in “%@”."
+          }
+        },
+        "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No pages could be found in “%@”."
@@ -954,6 +1104,18 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Aucune page n'a pu être trouvée dans \"%@\"."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "在“%@”中找不到任何页面。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "在「%@」中找不到任何頁面。"
           }
         }
       }
@@ -1617,10 +1779,40 @@
     "Simple Comic needs access to this folder to read the other volumes of the multi-part archive “%@”." : {
       "comment" : "folder access panel message",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Simple Comic benötigt Zugriff auf dieses Ordner, um die anderen Bände des mehrteiligen Archivs \"%@\" zu lesen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Simple Comic needs access to this folder to read the other volumes of the multi-part archive “%@”."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simple Comic needs access to this folder to read the other volumes of the multi-part archive “%@”."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Simple Comic a besoin d'un accès à ce dossier pour lire les autres volumes de l'archive multi-parties « %@ »."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Simple Comic需要访问这个文件夹来阅读多部分档案“%@”的其他卷。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Simple Comic需要訪問此資料夾以閱讀多部分檔案「%@」的其他卷。"
           }
         }
       }
