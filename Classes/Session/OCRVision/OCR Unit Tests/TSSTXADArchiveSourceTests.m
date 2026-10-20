@@ -675,8 +675,8 @@ static NSString * const k7zzPath = @"/opt/homebrew/bin/7zz";
 }
 
 /// A plain-header RAR with encrypted data and no stored password: the
-/// parse thread asks for the password with dispatch_sync(main) while the
-/// main thread is itself waiting in -dataForEntry:. The wait must keep
+/// parse thread asks for the password with `dispatch_sync(main)` while the
+/// main thread is itself waiting in `-dataForEntry:`. The wait must keep
 /// servicing the main queue or the two deadlock.
 - (void)testMainThreadWaitingForEntryDoesNotDeadlockThePasswordPrompt
 {

@@ -82,11 +82,15 @@ static const NSTimeInterval kBatchInterval = 0.1;
 
 - (instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source offset:(uint64_t)offset length:(uint64_t)length
 {
-	if ((self = [super init])) { _source = source; _offset = offset; _length = length; }
+	if ((self = [super init])) {
+		_source = source;
+		_offset = offset;
+		_length = length;
+	}
 	return self;
 }
 
-- (uint64_t)length { return _length; }
+@synthesize length = _length;
 
 - (NSData *)readAtOffset:(uint64_t)offset length:(NSUInteger)length error:(NSError **)error
 {
@@ -125,7 +129,7 @@ static const NSTimeInterval kBatchInterval = 0.1;
 
 @end
 
-/// One in-flight -dataForEntry: request being serviced by the parse
+/// One in-flight `-dataForEntry:` request being serviced by the parse
 /// thread. Waited on via the owner's condition.
 @interface TSSTXADPendingRequest : NSObject
 @property (nonatomic) NSUInteger index;
@@ -153,11 +157,13 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	BOOL _parseFinished;
 	NSError *_parseError;
 
-	// Serializes direct (post-parse) extraction, since the parser itself
-	// isn't reentrant.
+	/// Serializes direct (post-parse) extraction, since the parser itself
+	/// isn't reentrant.
 	NSLock *_extractionLock;
-	BOOL _servicesRequestsWhileParsing; // parsing thread only; set by -parseWithEntryBatchHandler:
-	NSTimeInterval _inlineServiceSpent; // parsing thread only; wall time spent extracting mid-walk
+	/// parsing thread only; set by `-parseWithEntryBatchHandler:`.
+	BOOL _servicesRequestsWhileParsing;
+	/// parsing thread only; wall time spent extracting mid-walk.
+	NSTimeInterval _inlineServiceSpent;
 
 	// Batch bookkeeping; touched only from the parsing thread.
 	NSMutableArray<TSSTXADArchiveEntry *> *_currentBatch;
@@ -174,15 +180,23 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	NSString *path = fileURL.path;
 	@try {
 		id<TSSTArchiveByteSource> fileSource = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
-		if (!fileSource) return nil;
+		if (!fileSource) {
+			return nil;
+		}
 		CSHandle *handle = [[TSSTByteSourceHandle alloc] initWithByteSource: fileSource];
 		NSData *header = [handle readDataOfLengthAtMost: 4096];
 		XADArchiveParser *probe = [XADArchiveParser archiveParserForHandle: handle firstBytes: header resourceFork: nil name: path];
-		if (!probe) return nil;
+		if (!probe) {
+			return nil;
+		}
 		NSArray<NSString *> *paths = [[probe class] volumesForHandle: handle firstBytes: header name: path];
-		if (paths.count < 2) return nil;
+		if (paths.count < 2) {
+			return nil;
+		}
 		NSMutableArray<NSURL *> *urls = [NSMutableArray arrayWithCapacity: paths.count];
-		for (NSString *volumePath in paths) { [urls addObject: [NSURL fileURLWithPath: volumePath]]; }
+		for (NSString *volumePath in paths) {
+			[urls addObject: [NSURL fileURLWithPath: volumePath]];
+		}
 		return urls;
 	} @catch (id exception) {
 		return nil;
@@ -362,7 +376,7 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	parser.password = password;
 }
 
-/// Must be called with _condition held. Services every pending request
+/// Must be called with `_condition` held. Services every pending request
 /// whose entry has now been found, saving and restoring the parser's
 /// handle position around the extractions (XAD's delegate callback runs
 /// with the handle wherever the header walk left it).
@@ -528,8 +542,11 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	if (![folderIndex isKindOfClass: [NSNumber class]] || ![NSStringFromClass([_parser class]) isEqualToString: @"XAD7ZipParser"]) return NO;
 
 	NSDictionary *mainStreams = nil;
-	@try { mainStreams = [_parser valueForKey: @"mainstreams"]; }
-	@catch (id exception) { return NO; }
+	@try {
+		mainStreams = [_parser valueForKey: @"mainstreams"];
+	} @catch (id exception) {
+		return NO;
+	}
 	NSArray *folders = [mainStreams isKindOfClass: [NSDictionary class]] ? mainStreams[@"Folders"] : nil;
 	if (![folders isKindOfClass: [NSArray class]] || folderIndex.unsignedIntegerValue >= folders.count) return NO;
 
@@ -567,14 +584,16 @@ static const NSTimeInterval kBatchInterval = 0.1;
 		return data;
 	}
 	@catch (id exception) {
-		if (error) *error = [XADException parseExceptionReturningNSError: exception];
+		if (error) {
+			*error = [XADException parseExceptionReturningNSError: exception];
+		}
 		return nil;
 	}
 }
 
-/// Waits (with _condition held) while `waiting` is true. The parsing
-/// thread may be blocked in dispatch_sync(main) for a password prompt
-/// (-archiveParserNeedsPassword:), which TSSTWaitOnConditionWhile keeps
+/// Waits (with `_condition` held) while `waiting` is `true`. The parsing
+/// thread may be blocked in `dispatch_sync(main)` for a password prompt
+/// (`-archiveParserNeedsPassword:`), which `TSSTWaitOnConditionWhile` keeps
 /// serviceable from a main-thread waiter.
 - (void)waitLockedWhile:(BOOL (^)(void))waiting
 {
@@ -601,7 +620,9 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	if (index >= _entryDicts.count) {
 		// Parse finished without ever finding this entry.
 		[_condition unlock];
-		if (error) *error = [NSError errorWithDomain: TSSTXADArchiveSourceErrorDomain code: TSSTXADArchiveSourceErrorEntryNotFound userInfo: nil];
+		if (error) {
+			*error = [NSError errorWithDomain: TSSTXADArchiveSourceErrorDomain code: TSSTXADArchiveSourceErrorEntryNotFound userInfo: nil];
+		}
 		return nil;
 	}
 

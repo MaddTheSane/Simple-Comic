@@ -45,7 +45,6 @@ NSErrorDomain const OCRVisionDomain = @"OCRVisionDomain";
 		};
 		NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 		[defaults registerDefaults: standardDefaults];
-		NSUInteger revision = VNRecognizeTextRequestRevision3;
 		VNRecognizeTextRequest *textRequest = [[VNRecognizeTextRequest alloc] initWithCompletionHandler:^(VNRequest *request, NSError *error){}];
 		sOCRLanguages = [textRequest supportedRecognitionLanguagesAndReturnError:nil];
 		sOCRLanguage = sOCRLanguages.firstObject ?: @"";

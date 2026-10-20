@@ -812,12 +812,12 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 									if (batchError) { [errors addObject: batchError]; }
 									if (isFinal && [headerRecord respondsToSelector: @selector(scanErrors)])
 									{
-										[errors addObjectsFromArray: [headerRecord valueForKey: @"scanErrors"]];
+										[errors addObjectsFromArray: [headerRecord scanErrors]];
 									}
 								}, ^{
 									if ([headerRecord respondsToSelector: @selector(xadAllEntriesForStreamer)])
 									{
-										[archive startXADStreamerWithAllEntries: [headerRecord valueForKey: @"xadAllEntriesForStreamer"]];
+										[archive startXADStreamerWithAllEntries: [headerRecord xadAllEntriesForStreamer]];
 									}
 								});
 								if (!landed)

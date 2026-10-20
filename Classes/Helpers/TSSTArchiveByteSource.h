@@ -35,10 +35,10 @@ typedef NS_ERROR_ENUM(TSSTArchiveByteSourceErrorDomain, TSSTArchiveByteSourceErr
 };
 
 /// Waits on `condition` (which the caller holds locked) for as long as
-/// `waiting` returns YES. Off the main thread this is a plain
+/// `waiting` returns `YES`. Off the main thread this is a plain
 /// `-[NSCondition wait]` loop. On the main thread it pumps the run loop
 /// instead (with the lock dropped while it does), because the thread being
-/// waited on may be blocked in dispatch_sync(main) for a password prompt.
+/// waited on may be blocked in `dispatch_sync(main)` for a password prompt.
 /// Whoever changes the state `waiting` reads must broadcast `condition`.
 extern void TSSTWaitOnConditionWhile(NSCondition *condition, BOOL (^waiting)(void));
 

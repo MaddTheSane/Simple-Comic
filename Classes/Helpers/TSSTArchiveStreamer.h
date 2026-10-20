@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 								 spanIndexMap:(NSDictionary<NSNumber *, NSNumber *> * _Nullable * _Nullable)outMap;
 
 @property (nonatomic, readonly) NSArray<NSValue *> *spans;
-@property (atomic) NSUInteger currentSpanIndex;
+@property (nonatomic) NSUInteger currentSpanIndex;
 
 - (void)start;
 - (void)cancel;

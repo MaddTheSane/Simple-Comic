@@ -131,12 +131,12 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 @property (nonatomic, strong, readwrite, nullable) NSArray<TSSTArchiveScanRecord *> *children;
 @property (nonatomic, copy, nullable) NSString *backendDescription; // which backend listed it (e.g. "zip-index", "XAD"); tests assert on it
 
-// Progressive XAD (RAR/7z) top-level scan fields:
+/// Progressive XAD (RAR/7z) top-level scan fields:
 @property (nonatomic, strong, nullable) TSSTXADArchiveSource *builtXADSource;
-// Set only on the final progressive batch: every entry found, in the
-// order XAD reported them, used to build the streamer's reading-order
-// spans once the whole parse is done.
-@property (nonatomic, copy, nullable) NSArray<TSSTXADArchiveEntry *> *xadAllEntriesForStreamer;
+/// Set only on the final progressive batch: every entry found, in the
+/// order XAD reported them, used to build the streamer's reading-order
+/// spans once the whole parse is done.
+@property (nonatomic, readwrite, copy, nullable) NSArray<TSSTXADArchiveEntry *> *xadAllEntriesForStreamer;
 
 // PDF kind:
 @property (nonatomic) NSInteger pdfPageCount;
@@ -145,10 +145,10 @@ typedef NS_ENUM(NSInteger, TSSTArchiveScanRecordKind)
 @property (nonatomic, strong, nullable) TSSTFileSetByteSource *builtFileSet;
 @property (nonatomic, copy, nullable) NSArray<NSNumber *> *folderReadingOrder; // file indices, in display order
 
-// Set only on the final batch: every non-fatal error collected across the
-// whole scan (nested-archive/PDF extraction failures), to be reported
-// individually by the caller.
-@property (nonatomic, copy, nullable) NSArray<NSError *> *scanErrors;
+/// Set only on the final batch: every non-fatal error collected across the
+/// whole scan (nested-archive/PDF extraction failures), to be reported
+/// individually by the caller.
+@property (nonatomic, readwrite, copy, nullable) NSArray<NSError *> *scanErrors;
 
 @end
 
@@ -1602,11 +1602,11 @@ static BOOL TSSTFileIsPermissionBlocked(NSURL *url)
 	return zi;
 }
 
-/// Build-once gate for the lazy accessors. Returns YES to exactly one
-/// caller (the builder), which must build with NO lock held and then call
-/// TSSTFinishBuild. Every other caller waits until the build is done and
-/// gets NO. A main-thread waiter keeps servicing the main run loop, because
-/// the builder may be blocked in dispatch_sync(main) for a password prompt.
+/// Build-once gate for the lazy accessors. Returns `YES` to exactly one
+/// caller (the builder), which must build with `NO` lock held and then call
+/// `TSSTFinishBuild`. Every other caller waits until the build is done and
+/// gets `NO`. A main-thread waiter keeps servicing the main run loop, because
+/// the builder may be blocked in `dispatch_sync(main)` for a password prompt.
 static BOOL TSSTBeginBuild(NSCondition *lock, BOOL *attempted, BOOL *building)
 {
 	[lock lock];

@@ -30,6 +30,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// state is private to TSSTManagedGroup.m.
 @interface TSSTArchiveScanRecord : NSObject
 @property (nonatomic, readonly, strong, nullable) NSArray<TSSTArchiveScanRecord *> *children;
+/// Set only on the final progressive batch: every entry found, in the
+/// order XAD reported them, used to build the streamer's reading-order
+/// spans once the whole parse is done.
+@property (nonatomic, readonly, copy, nullable) NSArray<TSSTXADArchiveEntry *> *xadAllEntriesForStreamer;
+/// Set only on the final batch: every non-fatal error collected across the
+/// whole scan (nested-archive/PDF extraction failures), to be reported
+/// individually by the caller.
+@property (nonatomic, readonly, copy, nullable) NSArray<NSError *> *scanErrors;
 @end
 
 /// Asks the user for access to a folder the sandbox hides (see
