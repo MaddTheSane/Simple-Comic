@@ -1124,7 +1124,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				CLASSPREFIX = TSST;
+				CLASSPREFIX = DTSC;
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1620;
 				ORGANIZATIONNAME = "Dancing Tortoise Software";

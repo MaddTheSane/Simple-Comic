@@ -447,6 +447,8 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSignature</key>
+	<string>dtsc</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -801,10 +803,10 @@
 				<string>public.data</string>
 				<string>public.image</string>
 			</array>
-			<key>UTTypeIdentifier</key>
-			<string>com.microsoft.cur</string>
 			<key>UTTypeDescription</key>
 			<string>Windows Cursor</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.microsoft.cur</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
