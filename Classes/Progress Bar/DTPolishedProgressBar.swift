@@ -23,50 +23,22 @@
 import Cocoa
 
 private var backgroundColor: NSColor {
-	if #available(OSX 10.14, *) {
-		return NSColor.clear
-	} else {
-		return NSColor(calibratedRed: 1, green: 1, blue: 1, alpha: 0.55)
-	}
+	return NSColor.clear
 }
 private var barBackgroundColor: NSColor {
-	if #available(OSX 10.14, *) {
-		return NSColor.controlColor
-	} else {
-		return NSColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1)
-	}
+	return NSColor.controlColor
 }
 private var barProgressColor: NSColor {
-	if #available(OSX 10.15, *) {
-		// The stock selected-control colour is nearly white-on-white in
-		// light mode, so darken it there; dark mode is unchanged.
-		return NSColor(name: nil) { appearance in
-			let base = NSColor.selectedControlColor
-			guard appearance.bestMatch(from: [.darkAqua, .aqua]) == .aqua else { return base }
-			return base.blended(withFraction: 0.4, of: .black) ?? base
-		}
-	} else if #available(OSX 10.14, *) {
-		return NSColor.selectedControlColor
-	} else {
-		return NSColor(deviceRed: 0.44, green: 0.44, blue: 0.44, alpha: 1)
-	}
+	return NSColor.keyboardFocusIndicatorColor
 }
 private var borderColor: NSColor {
-	if #available(OSX 10.14, *) {
-		return NSColor.systemGray.withAlphaComponent(0.25)
-	} else {
-		return NSColor(red:0, green: 0, blue: 0, alpha: 0.25)
-	}
+	return NSColor.systemGray.withAlphaComponent(0.25)
 }
 
 /// The font attributes of the progress numbers.
 nonisolated(unsafe) private let numberStyle: [NSAttributedString.Key: Any] = {
-	var theKeys: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 10)]
-	if #available(OSX 10.14, *) {
-		theKeys[.foregroundColor] = NSColor.controlTextColor
-	} else {
-		theKeys[.foregroundColor] = NSColor(deviceWhite: 0.2, alpha: 1)
-	}
+	let theKeys: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 10),
+												  .foregroundColor: NSColor.controlTextColor]
 	
 	return theKeys
 }()
@@ -94,9 +66,7 @@ class DTPolishedProgressBar: NSView {
 	}
 	
 	private func setupObserver() {
-		if #available(OSX 10.14, *) {
-			DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged), name: .interfaceThemeChanged, object: nil)
-		}
+		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged), name: .interfaceThemeChanged, object: nil)
 	}
 	
 	@objc private func interfaceModeChanged() {
@@ -241,11 +211,7 @@ textStyle: Dictionary of string attributes.
 		let rightSize = rightString.size(withAttributes: numberStyle)
 		
 		// Draw indicator
-		if #available(OSX 10.14, *) {
-			NSColor.controlAccentColor.set()
-		} else {
-			NSColor.black.set()
-		}
+		NSColor.controlAccentColor.set()
 		indicatorRect.fill()
 		
 		// Draw labels
