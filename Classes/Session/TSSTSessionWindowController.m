@@ -652,7 +652,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-/// YES when -[TSSTPage thumbnail] can be produced without a network read:
+/// `YES` when `-[TSSTPage thumbnail]` can be produced without a network read:
 /// the thumbnail is already stored, or the page is text / not in a
 /// streaming archive / its bytes are already cached.
 - (BOOL)thumbnailIsAvailableWithoutNetwork:(TSSTPage *)page

@@ -24,15 +24,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Immutable plain-value copy of what's needed to read a page's bytes, so
 /// background queues never touch the NSManagedObject (whose properties may
-/// only be read on its context's queue). Take it with -[TSSTPage dataSnapshot]
+/// only be read on its context's queue). Take it with ``-[TSSTPage dataSnapshot]``
 /// on that queue, then hand it to any thread.
 @interface TSSTPageDataSnapshot : NSObject
 @property (nonatomic, readonly) NSManagedObjectID *pageID;
 @property (nonatomic, readonly) BOOL isText;
-/// The group is only messaged through -requestDataForPageIndex:completionHandler:,
+/// The group is only messaged through `-requestDataForPageIndex:completionHandler:`,
 /// which is safe from any thread.
 @property (nonatomic, readonly, nullable) TSSTManagedGroup *group;
-@property (nonatomic, readonly) NSInteger entryIndex; // NSNotFound for loose files
+@property (nonatomic, readonly) NSInteger entryIndex; //!< `NSNotFound` for loose files
 @property (nonatomic, readonly, copy, nullable) NSString *imagePath;
 - (instancetype)initWithPageID:(NSManagedObjectID *)pageID isText:(BOOL)isText group:(nullable TSSTManagedGroup *)group entryIndex:(NSInteger)entryIndex imagePath:(nullable NSString *)imagePath;
 /// The page's bytes; blocks while an archive entry is fetched.

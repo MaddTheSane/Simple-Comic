@@ -254,6 +254,12 @@
             "value" : "Un volume de cet archive multivolet n'a pas pu être ouvert : « %@ ». Conservez toutes ses parties dans un seul dossier."
           }
         },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Um volume deste arquivo multivolume não pôde ser aberto: “%@”. Guarde todas as suas partes juntas num único folder."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -583,7 +589,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Could not save changes while quitting. Quit anyway?"
+            "value" : "Não foi possível guardar as alterações ao sair. Sair de qualquer forma?"
           }
         },
         "zh-Hans" : {
@@ -1504,7 +1510,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit anyway"
+            "value" : "Desista de qualquer forma"
           }
         },
         "zh-Hans" : {
@@ -1569,7 +1575,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Quit without saving session?"
+            "value" : "Desistir sem guardar a sessão?"
           }
         },
         "zh-Hans" : {

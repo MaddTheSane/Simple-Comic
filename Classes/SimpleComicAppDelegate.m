@@ -718,7 +718,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 				[newPages minusSet: session.images];
 				if (newPages.count > 0)
 				{
-					[[session mutableSetValueForKey: @"images"] unionSet: newPages];
+					[session addImages:newPages];
 				}
 				hadErrors = errors.count > 0;
 			}];

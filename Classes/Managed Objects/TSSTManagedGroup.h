@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /// Asks the user for access to a folder the sandbox hides (see
-/// +[TSSTManagedArchive openVolumeSourcesForURLs:error:]). Called on the main
+/// `+[TSSTManagedArchive openVolumeSourcesForURLs:error:]`). Called on the main
 /// thread. Return the granted (security-scoped) folder URL, or nil if declined.
 @protocol TSSTFolderAccessProvider <NSObject>
 - (nullable NSURL *)folderAccessGrantForFolderURL:(NSURL *)folderURL message:(NSString *)message;
@@ -59,12 +59,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy) NSString *path;
 @property (copy, nullable) NSURL *fileURL;
 
-/**
- Runs \c during inside a URL-error batch and presents any errors it appends to
- \c errors, plus bookmark errors raised meanwhile, as one summary alert for
- \c groupName. Joins an enclosing batch on this thread if there is one. The
- batch is always closed, even if \c during throws. Call on the main thread.
- */
+/// Runs `during` inside a URL-error batch and presents any errors it appends to
+/// `errors`, plus bookmark errors raised meanwhile, as one summary alert for
+/// `groupName`. Joins an enclosing batch on this thread if there is one. The
+/// batch is always closed, even if `during` throws. Call on the main thread.
 + (void)batchURLErrorsForGroupName:(NSString *)groupName during:(void (^)(NSMutableArray<NSError *> *errors))during;
 
 - (void)requestDataForPageIndex:(NSInteger)index completionHandler:(void(^)(NSData *_Nullable pageData, NSError *_Nullable error))callback;
@@ -83,60 +81,56 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Attempts to resolve the filleURL, but doesn't alter self on failure.
 ///
-/// Note: If it fails, always call fileURL to truly update the state.
+/// Note: If it fails, always call ``fileURL`` to truly update the state.
 - (nullable NSURL *)probeFileURL;
 
-/**
- Main-thread only: inserts the Core Data entities for newChildren (a
- subset of some record's children) and returns the new TSSTPage/-derived
- image pages to union into session.images. Safe to call multiple times
- as more children arrive from -scanArchiveProgressivelyForFileURL:name:password:perBatch:.
- */
+/// Main-thread only: inserts the Core Data entities for newChildren (a
+/// subset of some record's children) and returns the new TSSTPage/-derived
+/// image pages to union into session.images. Safe to call multiple times
+/// as more children arrive from `-scanArchiveProgressivelyForFileURL:name:password:perBatch:`.
 - (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<id> *)newChildren;
 
-/**
- Background-safe scan of a folder of loose files: one directory enumeration
- (with the properties needed, so no per-file stat) per folder level, recursing
- into subfolders and building nested archive/PDF records. Returns a scan
- record without touching any \c NSManagedObject. When \c streaming is YES
- (non-local volume, or DEBUG SC_SIMULATE_LINK) every image/text page also gets
- an entry index and the record carries the caching byte source that streams
- the whole tree.
- */
+/// Background-safe scan of a folder of loose files: one directory enumeration
+/// (with the properties needed, so no per-file stat) per folder level, recursing
+/// into subfolders and building nested archive/PDF records. Returns a scan
+/// record without touching any `NSManagedObject`. When `streaming` is `YES`
+/// (non-local volume, or `DEBUG SC_SIMULATE_LINK`) every image/text page also gets
+/// an entry index and the record carries the caching byte source that streams
+/// the whole tree.
 + (nullable TSSTArchiveScanRecord *)scanRecordForFolderURL:(NSURL *)folderURL name:(nullable NSString *)name streaming:(BOOL)streaming;
 
 /// Main-thread only: applies a folder record's backend (file set, cache and
 /// streamer) to this folder, then inserts its children.
 - (void)applyFolderScanRecord:(TSSTArchiveScanRecord *)record;
 
-/// YES when the file is worth caching/streaming: a non-local volume (e.g.
-/// SMB), or DEBUG SC_SIMULATE_LINK is set.
+/// `YES` when the file is worth caching/streaming: a non-local volume (e.g.
+/// SMB), or `DEBUG SC_SIMULATE_LINK` is set.
 + (BOOL)shouldUseCacheForFileURL:(NSURL *)fileURL;
 
 #if DEBUG
 /**
  The background prefetcher for this archive or folder, when a caching byte source
- was built for it (non-local volume, or DEBUG SC_SIMULATE_LINK). nil on
+ was built for it (non-local volume, or `DEBUG SC_SIMULATE_LINK`). `nil` on
  local volumes, where reads go straight to disk.
  */
 @property (nonatomic, readonly, nullable) TSSTArchiveStreamer *streamer;
 #endif
 
-/// Maps \c entryIndex to its reading-order span and moves the streamer's
+/// Maps `entryIndex` to its reading-order span and moves the streamer's
 /// current position there, without forcing it to the front of the queue.
 - (void)noteReadingEntryIndex:(NSInteger)entryIndex;
 
-/// Like -noteReadingEntryIndex:, but also wakes the streamer immediately
+/// Like ``noteReadingEntryIndex:``, but also wakes the streamer immediately
 /// (used when the user jumps to a page far from the current position).
 - (void)prioritizeEntryIndex:(NSInteger)entryIndex;
 
-/// YES when reading this entry's bytes won't have to wait on the network:
+/// `YES` when reading this entry's bytes won't have to wait on the network:
 /// there's no streaming cache at all (local file, or no zip index), or the
 /// entry's whole span is already cached. Used to decide whether displaying
 /// a page can happen synchronously on main.
 - (BOOL)isEntryIndexCached:(NSInteger)entryIndex;
 
-/// Batch form of -isEntryIndexCached: under one cache lock acquisition:
+/// Batch form of ``isEntryIndexCached:`` under one cache lock acquisition:
 /// the positions within `entryIndexes` (NSNumbers) that are cached.
 - (NSIndexSet *)indexesOfCachedEntries:(NSArray<NSNumber *> *)entryIndexes;
 
@@ -146,9 +140,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// nil when the page should just read its own file.
 - (nullable TSSTManagedGroup *)groupForOffQueueReads;
 
-/// YES only when this archive actually streams through a caching byte
-/// source (non-local volume or SC_SIMULATE_LINK). Unlike
-/// -isEntryIndexCached:, this is NO for ordinary local files, so callers
+/// `YES` only when this archive actually streams through a caching byte
+/// source (non-local volume or `SC_SIMULATE_LINK`). Unlike
+/// ``isEntryIndexCached:``, this is `NO` for ordinary local files, so callers
 /// can tell "nothing to wait for" apart from "nothing to show progress for".
 @property (nonatomic, readonly) BOOL isStreamingArchive;
 
@@ -173,82 +167,68 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)nestedArchiveContents;
 @property (readonly) BOOL quicklookCompatible;
 
-/**
- Name of an entry by index, preferring the fast zip index (when this
- archive is a zip and one has been built) over -instance. Safe to call
- whichever backend is in use.
- */
+/// Name of an entry by index, preferring the fast zip index (when this
+/// archive is a zip and one has been built) over `-instance`. Safe to call
+/// whichever backend is in use.
 - (nullable NSString *)nameOfEntryAtIndex:(NSInteger)index;
 
-/**
- Background-safe scan of the archive at `fileURL`. Builds the backend
- (TSSTZipIndex or XADArchive) itself and returns a record describing every
- entry, without touching any `NSManagedObject` / MOC. Safe to call from
- any thread. `password` may be nil; if the archive needs one and none is
- supplied, the password prompt is bounced to the main thread.
- */
+/// Background-safe scan of the archive at `fileURL`. Builds the backend
+/// (TSSTZipIndex or XADArchive) itself and returns a record describing every
+/// entry, without touching any `NSManagedObject` / MOC. Safe to call from
+/// any thread. `password` may be `nil`; if the archive needs one and none is
+/// supplied, the password prompt is bounced to the main thread.
 + (nullable TSSTArchiveScanRecord *)scanRecordForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password;
 
-/**
- Applies a scan record produced by `+scanRecordForFileURL:name:password:`
- to this (already-inserted) managed object: inserts the child entities,
- reuses the record's already-built backend (no re-parsing), and sets
- password / solidDirectory as needed. Must be called on the MOC's queue.
- */
+/// Applies a scan record produced by ``scanRecordForFileURL:name:password:``
+/// to this (already-inserted) managed object: inserts the child entities,
+/// reuses the record's already-built backend (no re-parsing), and sets
+/// `password` / `solidDirectory` as needed. Must be called on the MOC's queue.
 - (void)applyScanRecord:(TSSTArchiveScanRecord *)record;
 
-/**
- Removes the temp files and directories that scan records (and, recursively,
- their nested archives/PDFs) created. \c records are either top-level records
- or the children of an archive record. Use when a scan result is dropped
- without being applied; applied records are cleaned up by their managed
- objects instead. Never touches a folder scan's own source files.
- */
+/// Removes the temp files and directories that scan records (and, recursively,
+/// their nested archives/PDFs) created. `records` are either top-level records
+/// or the children of an archive record. Use when a scan result is dropped
+/// without being applied; applied records are cleaned up by their managed
+/// objects instead. Never touches a folder scan's own source files.
 + (void)discardScanRecords:(NSArray<TSSTArchiveScanRecord *> *)records;
 
-/**
- Progressive counterpart to +scanRecordForFileURL:.../-applyScanRecord:,
- used for top-level RAR/7z archives (and zips under SC_FORCE_XAD). Runs on
- the calling thread (background); calls perBatch possibly many times as
- entries are discovered, so pages can be inserted while the header walk
- is still running. Zip archives still take the single-batch fast
- path internally (one call, isFinal YES) since building the zip index is
- already fast and synchronous.
-
- \c fileURL, \c name and \c password are plain values captured by the
- caller on the main thread: the scan runs off-main and never reads the
- managed object's attributes. A multi-volume RAR set with an unreadable
- volume is listed through XADArchive from the file itself, and a
- missing-volume error is delivered in the final record's scanErrors.
-
- On the first call, the caller must apply the returned record's header
- (backend/password/streamer) via -applyScanRecordHeader: on the MOC's
- queue before inserting children. Every call's newChildren (a subset of
- the eventual full child list, not cumulative) should be applied via
- -insertChildRecords:, also on the MOC's queue.
- */
+/// Progressive counterpart to `+scanRecordForFileURL:...`/``applyScanRecord:``,
+/// used for top-level RAR/7z archives (and zips under `SC_FORCE_XAD`). Runs on
+/// the calling thread (background); calls perBatch possibly many times as
+/// entries are discovered, so pages can be inserted while the header walk
+/// is still running. Zip archives still take the single-batch fast
+/// path internally (one call, `isFinal` `YES`) since building the zip index is
+/// already fast and synchronous.
+///
+/// `fileURL`, `name` and `password` are plain values captured by the
+/// caller on the main thread: the scan runs off-main and never reads the
+/// managed object's attributes. A multi-volume RAR set with an unreadable
+/// volume is listed through XADArchive from the file itself, and a
+/// missing-volume error is delivered in the final record's scanErrors.
+///
+/// On the first call, the caller must apply the returned record's header
+/// (backend/password/streamer) via ``applyScanRecordHeader:`` on the MOC's
+/// queue before inserting children. Every call's newChildren (a subset of
+/// the eventual full child list, not cumulative) should be applied via
+/// `-insertChildRecords:`, also on the MOC's queue.
 - (void)scanArchiveProgressivelyForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password perBatch:(void (^)(id _Nullable recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError * _Nullable error))perBatch;
 
-/**
- Main-thread only: applies just the header fields of a scan record
- (backend/password/solidDirectory, starts the streamer for a zip's
- caching source) without touching children. Called once, on the first
- batch/call.
- */
+/// Main-thread only: applies just the header fields of a scan record
+/// (`backend`/`password`/`solidDirectory`, starts the streamer for a zip's
+/// caching source) without touching children. Called once, on the first
+/// batch/call.
 - (void)applyScanRecordHeader:(id)record;
 
-/**
- Main-thread only: called once the progressive XAD parse (from
- -scanArchiveProgressivelyForFileURL:name:password:perBatch:) has fully finished, with every entry
- it found, in discovery order. Builds the prefetcher's reading-order
- spans. No-op if this archive isn't streaming through a caching byte
- source (local volume, no SC_SIMULATE_LINK).
- */
+/// Main-thread only: called once the progressive XAD parse (from
+/// ``scanArchiveProgressivelyForFileURL:name:password:perBatch:``) has fully finished, with every entry
+/// it found, in discovery order. Builds the prefetcher's reading-order
+/// spans. No-op if this archive isn't streaming through a caching byte
+/// source (local volume, no `SC_SIMULATE_LINK`).
 - (void)startXADStreamerWithAllEntries:(NSArray<TSSTXADArchiveEntry *> *)entries;
 
 #pragma mark Folder access (sandbox)
 
-/// nil (the default) uses the open panel.
+/// `nil` (the default) uses the open panel.
 + (nullable id<TSSTFolderAccessProvider>)folderAccessProvider;
 + (void)setFolderAccessProvider:(nullable id<TSSTFolderAccessProvider>)provider;
 + (void)setFolderBookmarkDefaults:(nullable NSUserDefaults *)defaults;
