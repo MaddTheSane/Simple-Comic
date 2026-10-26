@@ -508,8 +508,8 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		}
 	}
 	
-	NSDictionary * storeOptions = @{NSMigratePersistentStoresAutomaticallyOption: @YES,
-									NSPersistentStoreOSCompatibility: @(MAC_OS_X_VERSION_10_9)};
+	NSDictionary *storeOptions = @{NSMigratePersistentStoresAutomaticallyOption: @YES,
+								   NSPersistentStoreOSCompatibility: @(MAC_OS_VERSION_11_6)};
 	url = [[NSURL fileURLWithPath:applicationSupportFolder] URLByAppendingPathComponent: @"SimpleComic.sql"];
 	
 	error = nil;
@@ -809,9 +809,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 										[archive applyScanRecordHeader: recordSoFar];
 									}
 									[archive insertChildRecords: newChildren];
-									if (batchError) { [errors addObject: batchError]; }
-									if (isFinal && [headerRecord respondsToSelector: @selector(scanErrors)])
-									{
+									if (batchError) {
+										[errors addObject: batchError];
+									}
+									if (isFinal && [headerRecord respondsToSelector: @selector(scanErrors)]) {
 										[errors addObjectsFromArray: [headerRecord scanErrors]];
 									}
 								}, ^{

@@ -188,8 +188,10 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			item.label = NSLocalizedString("575.label", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Loupe label")
 			item.paletteLabel = NSLocalizedString("575.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Loupe palette label")
 			item.toolTip = NSLocalizedString("573.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Magnifying Glass", comment: "Magnifying Glass tool tip")
+			item.action = #selector(self.toggleLoupe(_:))
+			item.target = self
 			if flag {
-				item.bind(.value, to: self, withKeyPath: "session.loupe")
+				item.view?.bind(.value, to: self, withKeyPath: "session.loupe")
 			}
 
 			return item

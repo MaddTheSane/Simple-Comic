@@ -966,7 +966,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-/* Zoom method for the zoom segmented control. Each segment has its own tag. */
+/// Zoom method for the zoom segmented control. Each segment has its own tag.
 - (IBAction)zoom:(id)sender
 {
 	NSInteger segmentTag = [(NSToolbarItem*)[[sender subitems] objectAtIndex: [sender selectedIndex]] tag];
@@ -1130,9 +1130,10 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-/*  Method that allows the user to select an icon for comic archives.
-	Calls pageView and verifies that the images selected are from an
-	archive. */
+/// Method that allows the user to select an icon for comic archives.
+///
+/// Calls `pageView` and verifies that the images selected are from an
+/// archive.
 - (IBAction)setArchiveIcon:(id)sender
 {
 	pageSelectionInProgress = PageSelectionModeIcon;
@@ -1140,7 +1141,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-/*	Saves the selected page to a user specified location. */
+/// Saves the selected page to a user specified location. */
 - (IBAction)extractPage:(id)sender
 {
 	pageSelectionInProgress = PageSelectionModeExtract;
@@ -1154,8 +1155,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-/*! Used by all of the page selection methods to make both pages visible.  Also adds a small
-	gutter around the images for cropping. */
+/// Used by all of the page selection methods to make both pages visible.  Also adds a small
+/// gutter around the images for cropping.
 - (void)changeViewForSelection
 {
 	savedZoom = session.zoomLevel;
@@ -1269,9 +1270,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		[savePanel setTitle: NSLocalizedString(@"Extract Page", @"")];
 		[savePanel setPrompt: NSLocalizedString(@"Extract", @"")];
 		[savePanel setNameFieldStringValue:[selectedPage name]];
-		if(NSModalResponseOK == [savePanel runModal])
-		{
-			[[selectedPage pageData] writeToFile: [[savePanel URL] path] atomically: YES];
+		if (NSModalResponseOK == [savePanel runModal]) {
+			[[selectedPage pageData] writeToURL: [savePanel URL] atomically: YES];
 		}
 	}
 }
@@ -1544,12 +1544,12 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	return [(TSSTManagedGroup *)group isEntryIndexCached: page.index.integerValue];
 }
 
-/// -shouldDisplayAlone, but safe to call from anywhere (including
+/// `-shouldDisplayAlone`, but safe to call from anywhere (including
 /// navigation logic run on the main thread): never fetches over the
 /// network. When the real answer isn't known without a network read, this
-/// guesses YES (display alone). A page-turn that could go either way then
+/// guesses `YES` (display alone). A page-turn that could go either way then
 /// re-shows the mispredicted page as a single instead of skipping a page
-/// outright -- -changeViewImages self-corrects once the page is actually
+/// outright -- `-changeViewImages` self-corrects once the page is actually
 /// loaded and the real aspect ratio is known.
 - (BOOL)navigationShouldDisplayAlonePage:(nullable TSSTPage *)page
 {
@@ -1728,7 +1728,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		pageTwo = nil;
 	}
 	
-	NSURL *representationURL = pageOne.group ? [pageOne valueForKeyPath: @"group.topLevelGroup.fileURL"] : [NSURL fileURLWithPath:pageOne.imagePath];
+	NSURL *representationURL = pageOne.group ? [pageOne.group.topLevelGroup valueForKeyPath: @"fileURL"] : [NSURL fileURLWithPath:pageOne.imagePath];
 	[[self window] setRepresentedURL: representationURL];
 	
 	NSString *fileName = nil;
@@ -2252,8 +2252,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 }
 
 
-#pragma mark -
-#pragma mark Delegates
+#pragma mark - Delegates
 
 
 - (BOOL)control:(NSTextField *)control didFailToFormatString:(NSString *)string errorDescription:(NSString *)error
@@ -2372,8 +2371,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 }
 
-/*	This method deals with window resizing.  It is called every time the user clicks
-	the nice little plus button in the upper left of the window. */
+/// This method deals with window resizing.  It is called every time the user clicks
+/// the nice little plus button in the upper left of the window.
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
 {
 	if(sender == [self window])
@@ -2442,29 +2441,6 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
 	TSSTPage * page = [pageController selectedObjects].firstObject;
 	return page.text;
-}
-
-
-- (void)toolbarWillAddItem:(NSNotification *)notification
-{
-	NSToolbarItem * item = [notification userInfo][@"item"];
-	
-	if([[item label] isEqualToString: @"Page Scaling"])
-	{
-		[[item view] bind: @"selectedIndex" toObject: self withKeyPath: @"session.scaleOptions" options: nil];
-	}
-	else if([[item label] isEqualToString: @"Page Order"])
-	{
-		[[item view] bind: @"selectedIndex" toObject: self withKeyPath: @"session.pageOrder" options: nil];
-	}
-	else if([[item label] isEqualToString: @"Page Layout"])
-	{
-		[[item view] bind: @"selectedIndex" toObject: self withKeyPath: @"session.twoPageSpread" options: nil];
-	}
-	else if([[item label] isEqualToString: @"Loupe"])
-	{
-		[[item view] bind: @"value" toObject: self withKeyPath: @"session.loupe" options: nil];
-	}
 }
 
 
