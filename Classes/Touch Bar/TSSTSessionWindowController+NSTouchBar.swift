@@ -47,7 +47,7 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 			let item = NSCustomTouchBarItem(identifier: .pageOrder)
 			item.customizationLabel = NSLocalizedString("Page Order", value: "Page Order", comment: "Page Order")
 
-			let prevNext = NSSegmentedControl(images: [NSImage(named: "rightLeftOrderTemplate")!, NSImage(named: "leftRightOrderTemplate")!], trackingMode: .selectOne, target: nil, action: nil)
+			let prevNext = NSSegmentedControl(images: [NSImage(resource: .rightLeftOrderTemplate), NSImage(resource: .leftRightOrderTemplate)], trackingMode: .selectOne, target: nil, action: nil)
 			prevNext.bind(.selectedIndex, to: self, withKeyPath: "session.pageOrder", options: nil)
 			
 			item.view = prevNext
@@ -58,7 +58,7 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 			let item = NSCustomTouchBarItem(identifier: .pageLayout)
 			item.customizationLabel = NSLocalizedString("Page Layout", value: "Page Layout", comment: "Page Layout")
 
-			let prevNext = NSSegmentedControl(images: [NSImage(named: "onePageTemplate")!, NSImage(named: "twoPageTemplate")!], trackingMode: .selectOne, target: nil, action: nil)
+			let prevNext = NSSegmentedControl(images: [NSImage(resource: .onePageTemplate), NSImage(resource: .twoPageTemplate)], trackingMode: .selectOne, target: nil, action: nil)
 			prevNext.bind(.selectedIndex, to: self, withKeyPath: "session.twoPageSpread", options: nil)
 			
 			item.view = prevNext
@@ -69,7 +69,7 @@ extension TSSTSessionWindowController: NSTouchBarDelegate, NSScrubberDataSource 
 			let item = NSCustomTouchBarItem(identifier: .pageScaling)
 			item.customizationLabel = NSLocalizedString("Page Scaling", value: "Page Scaling", comment: "Page Scaling")
 
-			let prevNext = NSSegmentedControl(images: [NSImage(named: "equalTemplate")!, NSImage(named: "winScaleTemplate")!, NSImage(named: "horScaleTemplate")!], trackingMode: .selectOne, target: nil, action: nil)
+			let prevNext = NSSegmentedControl(images: [NSImage(resource: .equalTemplate), NSImage(resource: .winScaleTemplate), NSImage(resource: .horScaleTemplate)], trackingMode: .selectOne, target: nil, action: nil)
 			prevNext.bind(.selectedIndex, to: self, withKeyPath: "session.scaleOptions", options: nil)
 			
 			item.view = prevNext
