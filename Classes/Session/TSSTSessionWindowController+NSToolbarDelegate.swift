@@ -183,6 +183,7 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			return item
 			
 		case .loupe:
+			//FIXME: The loupe toolbar item doesn't reflect the current loupe value.
 			let item = DTToolbarItem(itemIdentifier: .loupe)
 			item.image = NSImage(systemSymbolName: "loupe", accessibilityDescription: nil)
 			item.label = NSLocalizedString("575.label", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Loupe label")
@@ -230,35 +231,36 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			return item
 			
 		case .imageZoom:
-			let images = [NSImage(named: NSImage.removeTemplateName)!,
-						  NSImage(named: NSImage.addTemplateName)!]
+			let images = [NSImage(systemSymbolName: "plus.magnifyingglass", accessibilityDescription: nil)!,
+						  NSImage(systemSymbolName: "minus.magnifyingglass", accessibilityDescription: nil)!]
 			
-			let labels = [NSLocalizedString("558.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Out", comment: "Zoom Out"),
-						  NSLocalizedString("558.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Zoom In", comment: "Zoom In")]
+			let labels = [NSLocalizedString("cCY-vp-GHz.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Zoom In", comment: "Zoom In"),
+						  NSLocalizedString("cCY-vp-GHz.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Out", comment: "Zoom Out")]
 			
 			let item = NSToolbarItemGroup(itemIdentifier: .imageZoom, images: images, selectionMode: .momentary, labels: labels, target: self, action: #selector(self.zoom(_:)))
-			item.label = NSLocalizedString("559.label", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" label")
-			item.paletteLabel = NSLocalizedString("559.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" Palette Label")
-			item.subitems[0].tag = 802
-			item.subitems[1].tag = 801
+			item.label = NSLocalizedString("fTI-g2-r3b.label", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" label")
+			item.paletteLabel = NSLocalizedString("fTI-g2-r3b.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" Palette Label")
+			item.subitems[0].tag = 801
+			item.subitems[1].tag = 802
 			item.selectionMode = .momentary
 			return item
 
 		case .zoom:
-			let images = [NSImage(named: NSImage.removeTemplateName)!,
-						  NSImage(named: NSImage.addTemplateName)!,
-						  NSImage(resource: .equalTemplate)]
+			//FIXME: fix the icon if the window isn't big enough.
+			let images = [NSImage(systemSymbolName: "plus.magnifyingglass", accessibilityDescription: nil)!,
+						  NSImage(systemSymbolName: "1.magnifyingglass", accessibilityDescription: nil)!,
+						  NSImage(systemSymbolName: "minus.magnifyingglass", accessibilityDescription: nil)!]
 			
-			let labels = [NSLocalizedString("558.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Out", comment: "Zoom Out"),
-						  NSLocalizedString("558.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Zoom In", comment: "Zoom In"),
-						  NSLocalizedString("558.ibShadowedToolTips[2]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Reset", comment: "Zoom Reset")]
+			let labels = [NSLocalizedString("558.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Zoom In", comment: "Zoom In"),
+						  NSLocalizedString("558.ibShadowedToolTips[2]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Reset", comment: "Zoom Reset"),
+						  NSLocalizedString("558.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Zoom Out", comment: "Zoom Out")]
 			
 			let item = NSToolbarItemGroup(itemIdentifier: .zoom, images: images, selectionMode: .momentary, labels: labels, target: self, action: #selector(self.zoom(_:)))
 			item.label = NSLocalizedString("559.label", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" label")
 			item.paletteLabel = NSLocalizedString("559.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Zoom", comment: "\"Zoom\" Palette Label")
-			item.subitems[0].tag = 802
-			item.subitems[1].tag = 801
-			item.subitems[2].tag = 803
+			item.subitems[0].tag = 801
+			item.subitems[1].tag = 803
+			item.subitems[2].tag = 802
 			item.selectionMode = .momentary
 			return item
 			
