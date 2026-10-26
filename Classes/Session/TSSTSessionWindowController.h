@@ -194,7 +194,6 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 /// The session object used to maintain settings
 @property (readonly, strong) TSSTManagedSession *session;
 @property (readonly, strong) NSManagedObjectContext *managedObjectContext;
-- (void)toolbarWillAddItem:(NSNotification *)notification;
 
 
 /// Methods that kill page expose, the loupe, and fullscreen.
