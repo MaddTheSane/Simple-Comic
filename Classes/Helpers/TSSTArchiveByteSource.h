@@ -63,8 +63,8 @@ extern void TSSTWaitOnConditionWhile(NSCondition *condition, BOOL (^waiting)(voi
 @property (nonatomic, readonly) NSTimeInterval latency;
 @property (nonatomic, readonly) double bytesPerSecond; // 0 == unlimited
 
-/// YES (the default) sleeps in real time for each read's latency +
-/// transfer time. NO ("timeless mode") skips sleeping and instead
+/// `YES` (the default) sleeps in real time for each read's latency +
+/// transfer time. `NO` ("timeless mode") skips sleeping and instead
 /// accumulates the modeled time into -simulatedElapsed, for fast,
 /// deterministic tests.
 @property (nonatomic) BOOL simulateTime;

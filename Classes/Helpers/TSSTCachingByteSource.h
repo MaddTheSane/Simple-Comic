@@ -27,6 +27,13 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 	TSSTCachingByteSourceErrorOverBudget = 1,
 };
 
+/// Wraps an upstream ``TSSTArchiveByteSource`` with a local disk cache, so
+/// repeated reads of the same range (typical when re-paging, or when a
+/// background streamer has already pulled a block) don't cost another
+/// round trip over a slow link. Demand reads (`-readAtOffset:length:error:`)
+/// fetch and cache whatever they need, coalescing missing blocks into as
+/// few upstream reads as possible; ``TSSTArchiveStreamer-class`` drives background
+/// prefetch through the same cache.
 @interface TSSTCachingByteSource : NSObject <TSSTArchiveByteSource>
 
 - (instancetype)initWithUpstream:(id<TSSTArchiveByteSource>)upstream;
@@ -35,7 +42,7 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 
 /// Total bytes this source will keep cached. Defaults to
 /// min(length, 25% of the temp volume's free space). Blocks are evicted
-/// (farthest from `-focusOffset` first) to stay within budget. Ranges being
+/// (farthest from ``focusOffset`` first) to stay within budget. Ranges being
 /// read are pinned against eviction; a demand read larger than the budget
 /// goes straight to upstream uncached, and a prefetch that large fails.
 @property (nonatomic) uint64_t maxCacheBytes;

@@ -18,6 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSExceptionName const TSSTByteSourceHandleErrorException;
 
+/// A `CSHandle` over a ``TSSTArchiveByteSource``, so XADMaster's parsers (which
+/// only know how to read through a `CSHandle`) can read archives that live
+/// behind our byte-source stack (caching, simulated-link, plain file).
+/// Keeps a small read-ahead buffer so XAD's many small reads don't each
+/// turn into an upstream request.
 @interface TSSTByteSourceHandle : CSHandle
 
 - (instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source;

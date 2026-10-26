@@ -12,8 +12,8 @@
 NSErrorDomain const TSSTXADArchiveSourceErrorDomain = @"TSSTXADArchiveSourceErrorDomain";
 
 static const NSUInteger kBatchEntryCount = 16;
-// Wall-clock a header walk may spend extracting entries for waiting readers
-// (see -serviceRequestsLocked) before it just finishes listing.
+/// Wall-clock a header walk may spend extracting entries for waiting readers
+/// (see `-serviceRequestsLocked`) before it just finishes listing.
 static const NSTimeInterval kInlineServiceBudget = 1.5;
 static const NSTimeInterval kBatchInterval = 0.1;
 
@@ -38,8 +38,8 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	return self;
 }
 
-- (uint64_t)length { return _length; }
-- (NSArray<NSNumber *> *)volumeLengths { return _lengths; }
+@synthesize length=_length;
+@synthesize volumeLengths=_lengths;
 
 - (NSData *)readAtOffset:(uint64_t)offset length:(NSUInteger)length error:(NSError **)error
 {
@@ -106,13 +106,13 @@ static const NSTimeInterval kBatchInterval = 0.1;
 @implementation TSSTXADArchiveEntry
 
 - (instancetype)initWithIndex:(NSUInteger)index
-						  name:(NSString *)name
-				   isDirectory:(BOOL)isDirectory
-						  size:(unsigned long long)size
-				  hasSpanRange:(BOOL)hasSpanRange
-					 spanRange:(NSRange)spanRange
-						 solid:(BOOL)solid
-					 encrypted:(BOOL)encrypted
+						 name:(NSString *)name
+				  isDirectory:(BOOL)isDirectory
+						 size:(unsigned long long)size
+				 hasSpanRange:(BOOL)hasSpanRange
+					spanRange:(NSRange)spanRange
+						solid:(BOOL)solid
+					encrypted:(BOOL)encrypted
 {
 	if (self = [super init]) {
 		_index = index;
@@ -179,11 +179,11 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	if (![extension isEqualToString: @"rar"] && !(extension.length == 3 && [extension characterAtIndex: 0] >= 'r' && [extension characterAtIndex: 0] <= 'z' && isdigit([extension characterAtIndex: 1]) && isdigit([extension characterAtIndex: 2]))) return nil;
 	NSString *path = fileURL.path;
 	@try {
-		id<TSSTArchiveByteSource> fileSource = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
+		TSSTFileByteSource *fileSource = [TSSTFileByteSource sourceWithFileURL: fileURL error: NULL];
 		if (!fileSource) {
 			return nil;
 		}
-		CSHandle *handle = [[TSSTByteSourceHandle alloc] initWithByteSource: fileSource];
+		TSSTByteSourceHandle *handle = [[TSSTByteSourceHandle alloc] initWithByteSource: fileSource];
 		NSData *header = [handle readDataOfLengthAtMost: 4096];
 		XADArchiveParser *probe = [XADArchiveParser archiveParserForHandle: handle firstBytes: header resourceFork: nil name: path];
 		if (!probe) {
@@ -204,22 +204,22 @@ static const NSTimeInterval kBatchInterval = 0.1;
 }
 
 - (nullable instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source
-										name:(NSString *)name
-										path:(NSString *)path
-									password:(nullable NSString *)password
-								   passwordProvider:(nullable TSSTXADArchiveSourcePasswordProvider)passwordProvider
-									   error:(NSError **)error
+									   name:(NSString *)name
+									   path:(NSString *)path
+								   password:(nullable NSString *)password
+						   passwordProvider:(nullable TSSTXADArchiveSourcePasswordProvider)passwordProvider
+									  error:(NSError **)error
 {
 	return [self initWithByteSource: source volumeLengths: nil name: name path: path password: password passwordProvider: passwordProvider error: error];
 }
 
 - (nullable instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source
-								volumeLengths:(nullable NSArray<NSNumber *> *)volumeLengths
-										name:(NSString *)name
-										path:(NSString *)path
-									password:(nullable NSString *)password
-								   passwordProvider:(nullable TSSTXADArchiveSourcePasswordProvider)passwordProvider
-									   error:(NSError **)error
+							  volumeLengths:(nullable NSArray<NSNumber *> *)volumeLengths
+									   name:(NSString *)name
+									   path:(NSString *)path
+								   password:(nullable NSString *)password
+						   passwordProvider:(nullable TSSTXADArchiveSourcePasswordProvider)passwordProvider
+									  error:(NSError **)error
 {
 	if (self = [super init]) {
 		_archivePath = [path copy];
@@ -236,7 +236,7 @@ static const NSTimeInterval kBatchInterval = 0.1;
 			NSMutableArray<CSHandle *> *segments = [NSMutableArray arrayWithCapacity: volumeLengths.count];
 			uint64_t start = 0;
 			for (NSNumber *length in volumeLengths) {
-				id<TSSTArchiveByteSource> slice = [[TSSTVolumeSliceByteSource alloc] initWithByteSource: source offset: start length: length.unsignedLongLongValue];
+				TSSTVolumeSliceByteSource *slice = [[TSSTVolumeSliceByteSource alloc] initWithByteSource: source offset: start length: length.unsignedLongLongValue];
 				[segments addObject: [[TSSTByteSourceHandle alloc] initWithByteSource: slice]];
 				start += length.unsignedLongLongValue;
 			}
@@ -391,13 +391,18 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	while (YES) {
 		TSSTXADPendingRequest *next = nil;
 		for (TSSTXADPendingRequest *request in _pendingRequests) {
-			if (!request.completed && request.index < _entryDicts.count) { next = request; break; }
+			if (!request.completed && request.index < _entryDicts.count) {
+				next = request;
+				break;
+			}
 		}
 		// Past the budget, requests wait for the walk to finish and are then
 		// extracted by their own callers: on a slow link each extraction here
 		// would otherwise delay every remaining header by about as long as
 		// the page takes to fetch, stretching the walk from seconds to minutes.
-		if (!next || _inlineServiceSpent >= kInlineServiceBudget) break;
+		if (!next || _inlineServiceSpent >= kInlineServiceBudget) {
+			break;
+		}
 
 		// Extract without holding the lock (slow on a network volume), so
 		// callers of -entryCount / -nameForEntryAtIndex: etc. aren't stuck
@@ -416,7 +421,9 @@ static const NSTimeInterval kBatchInterval = 0.1;
 		// Every caller waiting on this same entry (e.g. the visible page and
 		// its pre-decode) shares the one extraction.
 		for (TSSTXADPendingRequest *request in _pendingRequests) {
-			if (request.completed || request.index != index) continue;
+			if (request.completed || request.index != index) {
+				continue;
+			}
 			request.result = data;
 			request.error = extractError;
 			request.completed = YES;
@@ -456,7 +463,9 @@ static const NSTimeInterval kBatchInterval = 0.1;
 - (nullable NSString *)nameForDictionary:(NSDictionary *)dict
 {
 	XADPath *xadName = dict[XADFileNameKey];
-	if (xadName.encodingIsKnown) return xadName.sanitizedPathString;
+	if (xadName.encodingIsKnown) {
+		return xadName.sanitizedPathString;
+	}
 	// Detect the encoding from this name's own bytes (as XADArchive's
 	// -nameOfEntry: does with UniversalDetector) rather than forcing Latin-1.
 	// The helper uses a private detector per call, so it's deterministic per
@@ -469,7 +478,9 @@ static const NSTimeInterval kBatchInterval = 0.1;
 - (TSSTXADArchiveEntry *)recordForDictionary:(NSDictionary *)dict index:(NSUInteger *)outIndex
 {
 	NSUInteger index = [dict[XADIndexKey] unsignedIntegerValue];
-	if (outIndex) *outIndex = index;
+	if (outIndex) {
+		*outIndex = index;
+	}
 
 	NSString *name = [self nameForDictionary: dict];
 
@@ -509,21 +520,33 @@ static const NSTimeInterval kBatchInterval = 0.1;
 			}
 		}
 	}
-	if (!parts) return [self spanForSevenZipDictionary: dict range: outRange];
-	if (![parts isKindOfClass: [NSArray class]] || parts.count == 0) return NO;
+	if (!parts) {
+		return [self spanForSevenZipDictionary: dict range: outRange];
+	}
+	if (![parts isKindOfClass: [NSArray class]] || parts.count == 0) {
+		return NO;
+	}
 
 	unsigned long long minOffset = ULLONG_MAX;
 	unsigned long long maxEnd = 0;
 	for (NSDictionary *part in parts) {
 		id offsetValue = part[@"Offset"] ?: part[@"InputOffset"];
 		id lengthValue = part[@"InputLength"] ?: part[@"Length"];
-		if (!offsetValue || !lengthValue) return NO;
+		if (!offsetValue || !lengthValue) {
+			return NO;
+		}
 		unsigned long long offset = [offsetValue unsignedLongLongValue];
 		unsigned long long length = [lengthValue unsignedLongLongValue];
-		if (offset < minOffset) minOffset = offset;
-		if (offset + length > maxEnd) maxEnd = offset + length;
+		if (offset < minOffset) {
+			minOffset = offset;
+		}
+		if (offset + length > maxEnd) {
+			maxEnd = offset + length;
+		}
 	}
-	if (minOffset == ULLONG_MAX || maxEnd <= minOffset) return NO;
+	if (minOffset == ULLONG_MAX || maxEnd <= minOffset) {
+		return NO;
+	}
 
 	outRange->location = (NSUInteger)minOffset;
 	outRange->length = (NSUInteger)(maxEnd - minOffset);
@@ -539,7 +562,9 @@ static const NSTimeInterval kBatchInterval = 0.1;
 - (BOOL)spanForSevenZipDictionary:(NSDictionary *)dict range:(NSRange *)outRange
 {
 	NSNumber *folderIndex = dict[XADSolidObjectKey];
-	if (![folderIndex isKindOfClass: [NSNumber class]] || ![NSStringFromClass([_parser class]) isEqualToString: @"XAD7ZipParser"]) return NO;
+	if (![folderIndex isKindOfClass: [NSNumber class]] || ![NSStringFromClass([_parser class]) isEqualToString: @"XAD7ZipParser"]) {
+		return NO;
+	}
 
 	NSDictionary *mainStreams = nil;
 	@try {
@@ -548,19 +573,29 @@ static const NSTimeInterval kBatchInterval = 0.1;
 		return NO;
 	}
 	NSArray *folders = [mainStreams isKindOfClass: [NSDictionary class]] ? mainStreams[@"Folders"] : nil;
-	if (![folders isKindOfClass: [NSArray class]] || folderIndex.unsignedIntegerValue >= folders.count) return NO;
+	if (![folders isKindOfClass: [NSArray class]] || folderIndex.unsignedIntegerValue >= folders.count) {
+		return NO;
+	}
 
 	unsigned long long minOffset = ULLONG_MAX;
 	unsigned long long maxEnd = 0;
 	for (NSDictionary *inStream in folders[folderIndex.unsignedIntegerValue][@"InStreams"]) {
 		NSDictionary *packed = inStream[@"PackedStream"];
-		if (!packed) continue;
+		if (!packed) {
+			continue;
+		}
 		unsigned long long offset = [packed[@"Offset"] unsignedLongLongValue];
 		unsigned long long length = [packed[@"Size"] unsignedLongLongValue];
-		if (offset < minOffset) minOffset = offset;
-		if (offset + length > maxEnd) maxEnd = offset + length;
+		if (offset < minOffset) {
+			minOffset = offset;
+		}
+		if (offset + length > maxEnd) {
+			maxEnd = offset + length;
+		}
 	}
-	if (minOffset == ULLONG_MAX || maxEnd <= minOffset) return NO;
+	if (minOffset == ULLONG_MAX || maxEnd <= minOffset) {
+		return NO;
+	}
 
 	outRange->location = (NSUInteger)minOffset;
 	outRange->length = (NSUInteger)(maxEnd - minOffset);
@@ -570,14 +605,16 @@ static const NSTimeInterval kBatchInterval = 0.1;
 #pragma mark - Extraction
 
 /// Not thread-safe on its own -- caller must ensure only one thread ever
-/// touches _parser at a time (either the parsing thread mid-parse, or
-/// under _extractionLock post-parse).
+/// touches `_parser` at a time (either the parsing thread mid-parse, or
+/// under `_extractionLock` post-parse).
 - (nullable NSData *)extractDictionary:(NSDictionary *)dict error:(NSError **)error
 {
 	@try {
 		CSHandle *handle = [_parser handleForEntryWithDictionary: dict wantChecksum: YES];
 		if (!handle) {
-			if (error) *error = [NSError errorWithDomain: TSSTXADArchiveSourceErrorDomain code: TSSTXADArchiveSourceErrorExtraction userInfo: nil];
+			if (error) {
+				*error = [NSError errorWithDomain: TSSTXADArchiveSourceErrorDomain code: TSSTXADArchiveSourceErrorExtraction userInfo: nil];
+			}
 			return nil;
 		}
 		NSData *data = [handle remainingFileContents];
@@ -606,7 +643,9 @@ static const NSTimeInterval kBatchInterval = 0.1;
 	[self waitLockedWhile:^BOOL{ return index >= self->_entryDicts.count && !self->_parseFinished; }];
 	NSDictionary *dict = index < _entryDicts.count ? _entryDicts[index] : nil;
 	[_condition unlock];
-	if (!dict) return nil;
+	if (!dict) {
+		return nil;
+	}
 
 	return [self nameForDictionary: dict] ?: @"";
 }
@@ -639,7 +678,9 @@ static const NSTimeInterval kBatchInterval = 0.1;
 		if (request.completed) {
 			[_condition unlock];
 			if (request.error) {
-				if (error) *error = request.error;
+				if (error) {
+					*error = request.error;
+				}
 				return nil;
 			}
 			return request.result;

@@ -21,7 +21,7 @@ static Class TSSTRAR5ParserClass(void)
 
 /// Reads the main header's locator extra record and returns the archive
 /// offset of the QO header, or -1, and where the first file header must
-/// start (*firstFile). Leaves the handle wherever it ends up.
+/// start (`*firstFile`). Leaves the handle wherever it ends up.
 static off_t QuickOpenHeaderOffset(XADRAR5Parser *parser, CSHandle *handle, off_t *firstFile)
 {
 	static const uint8_t kSignature[8] = { 'R', 'a', 'r', '!', 0x1a, 0x07, 0x01, 0x00 };

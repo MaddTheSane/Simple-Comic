@@ -33,7 +33,7 @@ class TSSTImageView: NSImageView {
 		if let imageName = imageName {
 			imageRect = imageRect.insetBy(dx: 10, dy: 10)
 			var stringRect = imageName.boundingRect(with: imageRect.size, attributes: stringAttributes)
-			stringRect = rectCentered(with: stringRect.size, in: imageRect);
+			stringRect = rectCentered(with: stringRect.size, in: imageRect)
 			NSColor(calibratedWhite: 0, alpha: 0.8).set()
 			NSBezierPath(roundedRect: stringRect.insetBy(dx: -5, dy: -5), cornerRadius: 10).fill()
 			imageName.draw(in: stringRect, withAttributes: stringAttributes)

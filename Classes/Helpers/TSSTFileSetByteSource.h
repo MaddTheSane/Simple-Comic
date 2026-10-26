@@ -17,6 +17,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// The folder-of-loose-images backend for the streaming plumbing. A set of
+/// files is presented as one virtual byte space -- file i occupies its own
+/// block-aligned range -- so the same ``TSSTCachingByteSource-class`` /
+/// ``TSSTArchiveStreamer-class`` / simulated-link stack that streams an archive can
+/// stream a folder: each image is simply one span. Files are opened only for
+/// the duration of a read (one request per file, like a network volume
+/// sees), and the padding between files is never read, so a cache block
+/// never straddles two files.
 @interface TSSTFileSetByteSource : NSObject <TSSTArchiveByteSource>
 
 /// urls and sizes are parallel; sizes come from the directory listing so

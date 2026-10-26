@@ -17,6 +17,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Background prefetcher that walks an ordered list of byte ranges
+/// ("spans", one per page in reading order) into a ``TSSTCachingByteSource-class``
+/// on a single utility-QoS thread, so paging never has to wait on the
+/// network once the streamer gets ahead of the reader. Demand reads
+/// (UI paging) go straight to the caching source and always take
+/// priority: see ``TSSTCachingByteSource-class``'s `-pendingDemandCount`.
 @interface TSSTArchiveStreamer : NSObject
 
 /// - parameter spans: `NSValue`-boxed `NSRange`, one per page, offset/length within the archive.
@@ -24,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Convenience: builds spans (local-header-offset, size-hint) for the
 /// given zip entry indices, in the given (reading) order, from a
-/// `TSSTZipIndex`. Each span is clamped to the archive length.
+/// ``TSSTZipIndex-class``. Each span is clamped to the archive length.
 + (NSArray<NSValue *> *)spansForZipIndex:(TSSTZipIndex *)zipIndex entryIndices:(NSArray<NSNumber *> *)entryIndices;
 
 /// As above, also returning entry index -> span index.
@@ -37,8 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// has one span per distinct range. `outMap` receives entry index -> span
 /// index for the mapped entries.
 + (NSArray<NSValue *> *)spansForEntryIndices:(NSArray<NSNumber *> *)entryIndices
-								rangeProvider:(BOOL (^)(NSUInteger entryIndex, NSRange *outRange))rangeProvider
-								 spanIndexMap:(NSDictionary<NSNumber *, NSNumber *> * _Nullable * _Nullable)outMap;
+							   rangeProvider:(BOOL (^)(NSUInteger entryIndex, NSRange *outRange))rangeProvider
+								spanIndexMap:(NSDictionary<NSNumber *, NSNumber *> * _Nullable * _Nullable)outMap;
 
 @property (nonatomic, readonly) NSArray<NSValue *> *spans;
 @property (nonatomic) NSUInteger currentSpanIndex;

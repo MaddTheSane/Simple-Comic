@@ -15,6 +15,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Holds fully-decoded `NSImage`s for pages neighbouring the one currently on
+/// screen, so paging into them (once their bytes are locally cached) is a
+/// cache hit instead of a decode. Bounded by total decoded pixel bytes, not
+/// image count -- large single pages (e.g. 24 MB JPEG XL) must not evict
+/// each other out from under a size-based cache the way a count limit would.
 @interface TSSTPageDecodeCache : NSObject
 
 + (instancetype)sharedCache;
@@ -52,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 								work:(void (^)(void))work
 						  completion:(void (^)(BOOL ran))completion;
 
-/// `-runOnDecodeQueueWhileCurrent:work:completion:` over decoding each of
+/// ``runOnDecodeQueueWhileCurrent:work:completion:`` over decoding each of
 /// `pages`, in order. Snapshots the pages synchronously, so call it on the
 /// pages' context queue (main).
 - (void)decodePages:(NSArray<TSSTPage *> *)pages
