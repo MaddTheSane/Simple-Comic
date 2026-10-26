@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24412" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="25098" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24412"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="25098"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -226,17 +225,17 @@ CA
                             <menuItem title="Image Scaling" tag="304" id="984">
                                 <menu key="submenu" title="Image Scaling" id="985">
                                     <items>
-                                        <menuItem title="Original Size" image="equalTemplate" tag="400" keyEquivalent="1" id="987">
+                                        <menuItem title="Original Size" secondaryImage="equalTemplate" tag="400" keyEquivalent="1" id="987">
                                             <connections>
                                                 <action selector="changeScaling:" target="-1" id="989"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Scale to Window" image="winScaleTemplate" tag="401" keyEquivalent="2" id="988">
+                                        <menuItem title="Scale to Window" secondaryImage="winScaleTemplate" tag="401" keyEquivalent="2" id="988">
                                             <connections>
                                                 <action selector="changeScaling:" target="-1" id="990"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Scale to Width" image="horScaleTemplate" tag="402" keyEquivalent="3" id="986">
+                                        <menuItem title="Scale to Width" secondaryImage="horScaleTemplate" tag="402" keyEquivalent="3" id="986">
                                             <connections>
                                                 <action selector="changeScaling:" target="-1" id="991"/>
                                             </connections>
@@ -257,7 +256,7 @@ CA
                                     <action selector="zoomOut:" target="-1" id="903"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Reset Zoom" secondaryImage="arrow.up.left.and.down.right.magnifyingglass" catalog="system" tag="307" keyEquivalent="0" id="672">
+                            <menuItem title="Reset Zoom" secondaryImage="1.magnifyingglass" catalog="system" tag="307" keyEquivalent="0" id="672">
                                 <connections>
                                     <action selector="zoomReset:" target="-1" id="904"/>
                                 </connections>
@@ -346,13 +345,13 @@ CA
                                     <action selector="skipLeft:" target="-1" id="1163"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="First Page" image="firstPageTemplate" keyEquivalent="" id="1065">
+                            <menuItem title="First Page" secondaryImage="firstPageTemplate" keyEquivalent="" id="1065">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                                 <connections>
                                     <action selector="firstPage:" target="-1" id="1069"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Last Page" image="lastPageTemplate" keyEquivalent="" id="1067">
+                            <menuItem title="Last Page" secondaryImage="lastPageTemplate" keyEquivalent="" id="1067">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                                 <connections>
                                     <action selector="lastPage:" target="-1" id="1070"/>
@@ -427,7 +426,7 @@ DQ
             <windowStyleMask key="styleMask" titled="YES" nonactivatingPanel="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="292" y="425" width="289" height="138"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="948"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="949"/>
             <value key="minSize" type="size" width="213" height="90"/>
             <view key="contentView" id="469">
                 <rect key="frame" x="0.0" y="0.0" width="289" height="142"/>
@@ -520,7 +519,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="323" y="210" width="346" height="122"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="948"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="949"/>
             <value key="minSize" type="size" width="213" height="90"/>
             <view key="contentView" id="1081">
                 <rect key="frame" x="0.0" y="0.0" width="346" height="125"/>
@@ -616,10 +615,10 @@ Gw
         </window>
     </objects>
     <resources>
+        <image name="1.magnifyingglass" catalog="system" width="16" height="15"/>
         <image name="NSGoLeftTemplate" width="12" height="17"/>
         <image name="NSGoRightTemplate" width="12" height="17"/>
         <image name="arrow.right.square" catalog="system" width="15" height="14"/>
-        <image name="arrow.up.left.and.down.right.magnifyingglass" catalog="system" width="16" height="15"/>
         <image name="arrow.up.right.square" catalog="system" width="15" height="14"/>
         <image name="arrowshape.left" catalog="system" width="17" height="14"/>
         <image name="arrowshape.right" catalog="system" width="17" height="14"/>
@@ -629,7 +628,7 @@ Gw
         <image name="equalTemplate" width="11" height="6"/>
         <image name="eye.slash" catalog="system" width="21" height="16"/>
         <image name="firstPageTemplate" width="16" height="15"/>
-        <image name="gear" catalog="system" width="17" height="16"/>
+        <image name="gear" catalog="system" width="17" height="17"/>
         <image name="horScaleTemplate" width="15" height="14"/>
         <image name="lastPageTemplate" width="16" height="15"/>
         <image name="loupe" catalog="system" width="14" height="15"/>

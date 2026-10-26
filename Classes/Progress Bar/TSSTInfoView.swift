@@ -39,7 +39,7 @@ final class TSSTInfoView: NSView {
 						  radius: 5)
 		outline.close()
 		if #available(OSX 10.13, *) {
-			NSColor(named: "InfoBackground")?.set()
+			NSColor(resource: .infoBackground).set()
 		} else {
 			NSColor.white.set()
 		}
