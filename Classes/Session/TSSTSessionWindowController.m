@@ -127,7 +127,6 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 @synthesize exposeBezel;
 @synthesize exposeView;
 @synthesize thumbnailPanel;
-@synthesize loupeButton;
 
 - (instancetype)initWithSession:(TSSTManagedSession *)aSession
 {
@@ -544,9 +543,6 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	else if([keyPath isEqualToString: @"loupe"])
 	{
 		[self refreshLoupePanel];
-		/* The session is the source of truth for the loupe: keep the toolbar
-		   button's state in sync with it. */
-		self.loupeButton.state = session.loupe ? NSControlStateValueOn : NSControlStateValueOff;
 	}
 	else if([keyPath isEqualToString: TSSTLoupePower])
 	{

@@ -195,10 +195,6 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 @property (readonly, strong) TSSTManagedSession *session;
 @property (readonly, strong) NSManagedObjectContext *managedObjectContext;
 
-/// The toolbar's loupe toggle button. Its state is kept in sync with the
-/// session's `loupe` value via KVO rather than through a Cocoa binding.
-@property (strong) NSButton *loupeButton;
-
 
 /// Methods that kill page expose, the loupe, and fullscreen.
 /// In that order.
