@@ -183,7 +183,6 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			return item
 			
 		case .loupe:
-			//FIXME: The loupe toolbar item doesn't reflect the current loupe value.
 			let item = DTToolbarItem(itemIdentifier: .loupe)
 			let button = NSButton(frame: NSRect(x: 7, y: 14, width: 26, height: 23))
 			button.setButtonType(.onOff)
@@ -193,11 +192,14 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			item.label = NSLocalizedString("575.label", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Loupe label")
 			item.paletteLabel = NSLocalizedString("575.paletteLabel", tableName: "TSSTSessionWindowToolbar", value: "Loupe", comment: "Loupe palette label")
 			item.toolTip = NSLocalizedString("573.ibShadowedToolTip", tableName: "TSSTSessionWindowToolbar", value: "Magnifying Glass", comment: "Magnifying Glass tool tip")
-			item.action = #selector(self.falseToggleLoupe(_:))
+			item.action = #selector(self.toggleLoupe(_:))
 			item.target = self
 			if flag {
-				//TODO: only observe, not bind.
-				item.view?.bind(.value, to: self, withKeyPath: "session.loupe")
+				// Observe the session's loupe state instead of binding to it.
+				// The session is the source of truth: the button mirrors its state,
+				// and -toggleLoupe: flips the session when the user clicks the button.
+				self.loupeButton = button
+				button.state = session.loupe ? NSControl.StateValue.on : NSControl.StateValue.off
 			}
 
 			return item
@@ -288,9 +290,5 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 		default:
 			return nil
 		}
-	}
-	
-	@IBAction func falseToggleLoupe(_ sender: Any?) {
-		
 	}
 }
