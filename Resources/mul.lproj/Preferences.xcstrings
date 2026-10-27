@@ -28,6 +28,18 @@
             "state" : "needs_review",
             "value" : "페이지는 실제 해상도를 초과하여 자동으로 확장되지 않습니다."
           }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "As páginas nunca são dimensionadas automaticamente além de sua resolução real."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "页面永远不会自动超过其实际分辨率进行缩放。"
+          }
         }
       }
     },
@@ -57,6 +69,18 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "윈도우는 페이지 뷰와 화면에 맞게 동적으로 크기가 조정됩니다."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "As janelas são redimensionadas dinamicamente para se ajustar à visualização da página e à tela."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Windows会动态调整大小，以适应页面视图和屏幕。"
           }
         }
       }
@@ -93,6 +117,12 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "해상도에 의해 제한된 페이지 스케일링"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Escalonamento de página restrito pela resolução"
           }
         },
         "zh-Hans" : {
@@ -141,6 +171,12 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "자동으로 창의 크기를 조정합니다."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Redimensionar automaticamente as janelas"
           }
         },
         "zh-Hans" : {
@@ -367,8 +403,8 @@
         },
         "en-GB" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Preferences"
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
         "ja" : {
@@ -550,6 +586,18 @@
             "state" : "new",
             "value" : "Blurred page edges"
           }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blurred page edges"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "页面边缘模糊"
+          }
         }
       }
     },
@@ -561,6 +609,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Solid color"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solid colour"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "单色"
           }
         }
       }
@@ -574,6 +634,18 @@
             "state" : "new",
             "value" : "Choose how the empty area around the page is filled"
           }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose how the empty area around the page is filled"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "选择页面周围空白区域的填充方式"
+          }
         }
       }
     },
@@ -585,6 +657,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Background style"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background style"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "背景风格"
           }
         }
       }
@@ -604,6 +688,12 @@
             "state" : "translated",
             "value" : "Use a two-finger trackpad swipe to turn pages"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "使用两指触控板滑动来翻页"
+          }
         }
       }
     },
@@ -621,6 +711,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable two-finger swipe to turn pages"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "启用两指滑动来翻页"
           }
         }
       }
@@ -664,6 +760,12 @@
             "state" : "translated",
             "value" : "Preserve file modification date"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "保留文件修改日期"
+          }
         }
       }
     },
@@ -681,6 +783,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Merge the toolbar into the title bar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "将工具栏合并到标题栏中"
           }
         }
       }
@@ -700,6 +808,12 @@
             "state" : "translated",
             "value" : "Unified toolbar and title bar"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "统一工具栏和标题栏"
+          }
         }
       }
     },
@@ -717,6 +831,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Only affects the file's date when using Set Archive Icon to tag a QuickLook cover page."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "只有在使用 Set Archive Icon 来标记 QuickLook 封面页时，才会影响文件的日期。"
           }
         }
       }
@@ -736,6 +856,18 @@
             "state" : "translated",
             "value" : "Use a two-finger trackpad swipe to turn pages."
           }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Use um deslizar no touchpad com dois dedos para virar as páginas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "使用两指触控板滑动来翻页。"
+          }
         }
       }
     },
@@ -753,6 +885,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Merge the toolbar into the title bar."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mescle a barra de ferramentas na barra de título."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "将工具栏合并到标题栏中。"
           }
         }
       }
@@ -772,6 +916,18 @@
             "state" : "translated",
             "value" : "Applies only when Two-Page Spread is enabled"
           }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Aplica-se apenas quando a Página Dupla está habilitada"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "仅在启用两页布局时适用"
+          }
         }
       }
     },
@@ -790,6 +946,18 @@
             "state" : "translated",
             "value" : "Show first page alone"
           }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mostrar a primeira página sozinha"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "只显示第一页"
+          }
         }
       }
     },
@@ -807,6 +975,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The first page is not paired with a second page in Two-Page Spread mode."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "A primeira página não está emparelhada com uma segunda página no modo de Folha Dupla."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "在双页布局模式下，第一页与第二页不配对。"
           }
         }
       }
