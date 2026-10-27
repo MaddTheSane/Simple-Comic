@@ -21,7 +21,7 @@ class TSSTThumbnailView: NSView {
 	private var limit = 0
 	
 	private var thumbLock = NSLock()
-	/// Generation counter for -processThumbs: bumping it makes any running loop
+	/// Generation counter for ``processThumbs()``: bumping it makes any running loop
 	/// stop. Touched from the main thread and the background loop, so access
 	/// goes through the lock.
 	private var _threadIdent: UInt32 = 0
@@ -60,8 +60,7 @@ class TSSTThumbnailView: NSView {
 		let thumbRect: NSRect
 		if dataSource!.session.pageOrder {
 			thumbRect = NSRect(x: CGFloat(horGridPos) * horSide, y: bounds.maxY - side - CGFloat(vertGridPos) * side, width: horSide, height: side)
-		}
-		else {
+		} else {
 			thumbRect = NSRect(x: bounds.maxX - horSide - CGFloat(horGridPos) * horSide, y: bounds.maxY - side - CGFloat(vertGridPos) * side, width: horSide, height: side)
 		}
 		return thumbRect
@@ -93,7 +92,7 @@ class TSSTThumbnailView: NSView {
 		needsDisplay = true
 	}
 	
-	/// Stops a running -processThumbs loop (e.g. the window is closing).
+	/// Stops a running ``processThumbs()`` loop (e.g. the window is closing).
 	@objc func cancelThumbnailProcessing() {
 		bumpThreadIdent()
 	}
