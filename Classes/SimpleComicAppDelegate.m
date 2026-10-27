@@ -257,7 +257,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 #pragma mark - Application Delegate Methods
 
 
-/// Stores any files that were opened on launch till applicationDidFinishLaunching:
+/// Stores any files that were opened on launch till ``applicationDidFinishLaunching:``
 /// is called.
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
@@ -283,10 +283,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 	return YES;
 }
 
-/// Removes SimpleComic-cache-* directories (see TSSTCachingByteSource) and
+/// Removes SimpleComic-cache-* directories (see ``TSSTCachingByteSource``) and
 /// SC-images-* solid-archive extraction directories (see
 /// TSSTManagedArchive's scan) left behind by a previous run that crashed or
-/// was force-quit before -invalidate/-willTurnIntoFault could run. Only
+/// was force-quit before `-invalidate`/`-willTurnIntoFault` could run. Only
 /// sweeps directories older than a day, so a directory in active use by
 /// another running instance is never touched.
 - (void)sweepStaleArchiveCacheDirectories
@@ -486,10 +486,6 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 }
 
 
-/// Returns the persistent store coordinator for the application.  This
-/// implementation will create and return a coordinator, having added the
-/// store for the application to it.  (The folder for the store is created,
-/// if necessary.)
 - (NSPersistentStoreCoordinator *) persistentStoreCoordinator
 {
 	if (persistentStoreCoordinator != nil)
@@ -560,10 +556,6 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 }
 
 
-/// Method creates an application support directory for Simple Comic if one
-/// does not already exist.
-/// @return The absolute path to Simple Comic's application support directory
-/// as a string.
 - (NSString *)applicationSupportFolder
 {
 #if DEBUG

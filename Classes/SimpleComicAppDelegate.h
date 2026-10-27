@@ -86,22 +86,33 @@ extern NSNotificationName const TSSTSessionEndNotification;
 /// Used by Simple Comic to keep track of store versioning.
 + (void)setMetadata:(NSString *)value forKey:(NSString *)key onStoreWithURL:(NSURL *)url managedBy:(NSPersistentStoreCoordinator *)coordinator;
 
-/// Core Data methods, slightly altered boilerplate.
+// Core Data methods, slightly altered boilerplate.
+
+/// Returns the persistent store coordinator for the application.
+///
+/// This implementation will create and return a coordinator, having added the
+/// store for the application to it.  (The folder for the store is created,
+/// if necessary.)
 @property (readonly, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (readonly, strong) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong) NSManagedObjectContext *managedObjectContext;
+/// Method creates an application support directory for Simple Comic if one
+/// does not already exist.
+/// @return The absolute path to Simple Comic's application support directory
+/// as a string.
 @property (readonly, copy) NSString *applicationSupportFolder;
+/// This is the array that maintains all of the session window managers.
 @property (readonly) NSArray<TSSTSessionWindowController *> *sessions;
 - (BOOL) saveContext;
 
 
 
 /// Converts `files` into an array of `NSURL`s, then passes them
-/// to `-newSessionWithFileURLs:`
+/// to ``newSessionWithFileURLs:``
 - (TSSTManagedSession *)newSessionWithFiles:(NSArray<NSString*> *)files NS_RETURNS_NOT_RETAINED;
 
 /// Creates a new Session object based on user prefs and then
-/// passes the files array to `-addFileURLs:toSesion:`.
+/// passes the files array to ``addFileURLs:toSesion:``.
 - (TSSTManagedSession *)newSessionWithFileURLs:(NSArray<NSURL*> *)files NS_RETURNS_NOT_RETAINED;
 
 /// This method is called every time an existing session needs
@@ -113,7 +124,7 @@ extern NSNotificationName const TSSTSessionEndNotification;
 - (void)endSession:(NSNotification *)notification;
 
 /// This method is called at launch, it iterates through all of the saved
-/// sessions calling `-windowForSession:` for each in turn.
+/// sessions calling ``windowForSession:`` for each in turn.
 - (void)sessionRelaunch;
 
 /// This method adds any file URLs passed to it to a session.  This includes recursive

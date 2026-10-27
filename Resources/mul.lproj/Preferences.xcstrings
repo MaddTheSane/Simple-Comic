@@ -17,6 +17,12 @@
             "value" : "Pages are never automatically scaled past their actual resolution"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Les pages ne sont jamais automatiquement agrandies au-delà de leur résolution réelle."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -57,6 +63,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Windows are dynamically resized to fit the page-view and screen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Les fenêtres sont redimensionnées dynamiquement pour s'adapter à la vue de la page et à l'écran."
           }
         },
         "ja" : {
@@ -105,6 +117,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Page scaling constrained by resolution"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Le mise à l'échelle des pages est contrainte par la résolution."
           }
         },
         "ja" : {
@@ -161,6 +179,12 @@
             "value" : "Automatically resize windows"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Redimensionner automatiquement les fenêtres"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -215,6 +239,12 @@
             "value" : "Images will not exceed their actual resolution in \"fit to window\" scaling modes."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Les images ne dépasseront pas leur résolution réelle dans les modes de mise à l'échelle « s'adapter à la fenêtre »."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -261,6 +291,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Windows automatically resize to maximise viewing area."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Windows s'agrandit automatiquement pour maximiser la zone de visualisation."
           }
         },
         "ja" : {
@@ -311,6 +347,12 @@
             "value" : "Background colour"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Couleur d'arrière-plan"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -357,6 +399,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This colour is displayed around pages in fullscreen mode."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Cette couleur est affichée autour des pages en mode plein écran."
           }
         },
         "ja" : {
@@ -407,6 +455,12 @@
             "value" : "Settings"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Paramètres"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -449,6 +503,12 @@
             "value" : "Recognise Text so you can select and copy it."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Reconnaître le texte afin de pouvoir le sélectionner et le copier."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -483,6 +543,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recognise Text so you can select and copy it. Requires macOS 11 or newer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Reconnaître le texte afin de pouvoir le sélectionner et le copier. Nécessite macOS 11 ou version ultérieure."
           }
         },
         "ja" : {
@@ -521,6 +587,12 @@
             "value" : "Recognise Text"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Reconnaître le texte"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -555,6 +627,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Windows automatically resize to maximise viewing area."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Windows s'agrandit automatiquement pour maximiser la zone de visualisation."
           }
         },
         "ja" : {
@@ -593,6 +671,24 @@
             "value" : "Blurred page edges"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Contours de la page flous"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ぼやけたページのエッジ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "흐릿한 페이지 가장자리"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -615,6 +711,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Solid colour"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Couleur solide"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ソリッドカラー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "단색"
           }
         },
         "zh-Hans" : {
@@ -641,6 +755,24 @@
             "value" : "Choose how the empty area around the page is filled"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Choisissez la façon dont l'espace vide autour de la page est rempli"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ページの周りの空の領域をどのように埋めるかを選択してください"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "페이지 주변의 빈 영역이 채워지는 방식을 선택하세요"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -663,6 +795,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Background style"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Style d'arrière-plan"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "背景スタイル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "배경 스타일"
           }
         },
         "zh-Hans" : {
@@ -689,6 +839,24 @@
             "value" : "Use a two-finger trackpad swipe to turn pages"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Utilisez un balayage sur la molette de défilement à deux doigts pour faire défiler les pages."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "2本の指でトラックパッドをスワイプしてページをめくります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "페이지를 전환하려면 두 손가락 트랙패드 스와이프를 사용하세요."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -711,6 +879,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable two-finger swipe to turn pages"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Activez le balayage à deux doigts pour faire défiler les pages"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ページをめくるために2指スワイプを有効にする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "페이지를 전환하려면 두 손가락 스와이프를 활성화하세요"
           }
         },
         "zh-Hans" : {
@@ -737,6 +923,24 @@
             "value" : "Keep a file's modification date unchanged when using Set Archive Icon to tag a QuickLook cover page; no other action in Simple Comic touches the source file's date"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Conservez la date de modification d'un fichier inchangée lorsque vous utilisez l'icône de Récupérer pour étiqueter la page de couverture QuickLook ; aucune autre action dans Simple Comic n'affecte la date du fichier source."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "QuickLookのカバーページにSet Archive Iconを使用してタグを付けるときは、ファイルの変更日を変更しないようにしてください。Simple Comicでの他の操作は、ソースファイルの日付には影響しません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Set Archive Icon을 사용하여 QuickLook 커버 페이지에 태그할 때 파일 수정 날짜를 변경하지 않은 상태로 유지하세요; Simple Comic에서 다른 작업은 소스 파일의 날짜에 영향을 미치지 않습니다."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -759,6 +963,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Preserve file modification date"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Préserver la date de modification du fichier"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ファイルの変更日を保持する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "파일 수정 날짜 보존"
           }
         },
         "zh-Hans" : {
@@ -785,6 +1007,24 @@
             "value" : "Merge the toolbar into the title bar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fusionnez la barre d'outils dans la barre de titre"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ツールバーをタイトルバーにマージする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "툴바를 제목 바와 병합하세요"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -807,6 +1047,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unified toolbar and title bar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Barres d'outils et barre de titre unifiées"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "統一されたツールバーとタイトルバー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "통합된 도구바 및 제목바"
           }
         },
         "zh-Hans" : {
@@ -833,6 +1091,24 @@
             "value" : "Only affects the file's date when using Set Archive Icon to tag a QuickLook cover page."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "N'affecte que la date du fichier lorsque vous utilisez l'icône de dossier pour étiqueter une page de couverture QuickLook."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "QuickLookのカバーページにSet Archive Iconを使用してタグ付けするときに、ファイルの日付のみに影響します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "QuickLook 커버 페이지에 태그할 때 Set Archive Icon을 사용할 때 파일의 날짜에만 영향을 미칩니다."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -855,6 +1131,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Use a two-finger trackpad swipe to turn pages."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Utilisez un balayage sur la molette de défilement à deux doigts pour faire défiler les pages."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "2本の指でトラックパッドをスワイプしてページをめくります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "페이지를 넘기려면 두 손가락 트랙패드 스와이프를 사용하세요."
           }
         },
         "pt" : {
@@ -887,6 +1181,24 @@
             "value" : "Merge the toolbar into the title bar."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fusionnez la barre d'outils dans la barre de titre."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ツールバーをタイトルバーにマージします。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "툴바를 제목 바와 병합합니다."
+          }
+        },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -915,6 +1227,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Applies only when Two-Page Spread is enabled"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "S'applique uniquement lorsque le format à deux pages est activé"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ツーページスプレッドが有効になっている場合にのみ適用されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "두 페이지 스프레드가 활성화된 경우에만 적용됩니다."
           }
         },
         "pt" : {
@@ -947,6 +1277,24 @@
             "value" : "Show first page alone"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Afficher la première page seule"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "最初のページだけを表示する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "첫 페이지만 표시하세요"
+          }
+        },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -975,6 +1323,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The first page is not paired with a second page in Two-Page Spread mode."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "La première page n'est pas jumelée avec une deuxième page en mode mise en page sur deux pages."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Two-Page Spreadモードでは、最初のページは2番目のページとペアになっていません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "두 페이지 스프레드 모드에서 첫 번째 페이지는 두 번째 페이지와 쌍을 이루지 않습니다."
           }
         },
         "pt" : {

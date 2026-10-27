@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// subset of some record's children) and returns the new TSSTPage/-derived
 /// image pages to union into session.images. Safe to call multiple times
 /// as more children arrive from `-scanArchiveProgressivelyForFileURL:name:password:perBatch:`.
-- (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<id> *)newChildren;
+- (NSSet<TSSTPage *> *)insertChildRecords:(NSArray<TSSTArchiveScanRecord*> *)newChildren;
 
 /// Background-safe scan of a folder of loose files: one directory enumeration
 /// (with the properties needed, so no per-file stat) per folder level, recursing
