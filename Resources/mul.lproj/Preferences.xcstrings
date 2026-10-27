@@ -541,6 +541,54 @@
         }
       }
     },
+    "Bgm-item-blur.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Blurred page edges\"; ObjectID = \"Bgm-item-blur\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Blurred page edges"
+          }
+        }
+      }
+    },
+    "Bgm-item-solid.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Solid color\"; ObjectID = \"Bgm-item-solid\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Solid color"
+          }
+        }
+      }
+    },
+    "Bgm-pop.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSPopUpButton\"; ibShadowedToolTip = \"Choose how the empty area around the page is filled\"; ObjectID = \"Bgm-pop\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Choose how the empty area around the page is filled"
+          }
+        }
+      }
+    },
+    "Bgm-txt-cel.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Background style\"; ObjectID = \"Bgm-txt-cel\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Background style"
+          }
+        }
+      }
+    },
     "Hp-01-swp.ibShadowedToolTip" : {
       "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Use a two-finger trackpad swipe to turn pages\"; ObjectID = \"Hp-01-swp\";",
       "extractionState" : "extracted_with_value",
