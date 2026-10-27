@@ -92,8 +92,8 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 	public func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
 		switch itemIdentifier {
 		case .turnPage:
-			let images = [NSImage(named: NSImage.leftFacingTriangleTemplateName)!,
-						  NSImage(named: NSImage.rightFacingTriangleTemplateName)!]
+			let images = [NSImage(systemSymbolName: "chevron.left", accessibilityDescription: nil)!,
+						  NSImage(systemSymbolName: "chevron.right", accessibilityDescription: nil)!]
 			
 			let labels = [NSLocalizedString("555.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Left Page Turn", comment: "Left Page Turn"),
 						  NSLocalizedString("555.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Right Page Turn", comment: "Right Page Turn")]
@@ -111,8 +111,8 @@ extension TSSTSessionWindowController: NSToolbarDelegate, NSToolbarItemValidatio
 			return item
 
 		case .turnPageEnd:
-			let images = [NSImage(resource: .firstPageTemplate),
-						  NSImage(resource: .lastPageTemplate)]
+			let images = [NSImage(systemSymbolName: "chevron.left.2", accessibilityDescription: nil)!,
+						  NSImage(systemSymbolName: "chevron.right.2", accessibilityDescription: nil)!]
 			
 			let labels = [NSLocalizedString("msg-5l-0tY.ibShadowedToolTips[0]", tableName: "TSSTSessionWindowToolbar", value: "Left End Page", comment: "Left End Page"),
 						  NSLocalizedString("msg-5l-0tY.ibShadowedToolTips[1]", tableName: "TSSTSessionWindowToolbar", value: "Right End Page", comment: "Right End Page")]

@@ -333,25 +333,25 @@ CA
                             <menuItem isSeparatorItem="YES" id="1161">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Skip Right" secondaryImage="NSGoRightTemplate" keyEquivalent="" id="1157">
+                            <menuItem title="Skip Right" secondaryImage="chevron.right" catalog="system" keyEquivalent="" id="1157">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="skipRight:" target="-1" id="1162"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Skip Left" secondaryImage="NSGoLeftTemplate" keyEquivalent="" id="1158">
+                            <menuItem title="Skip Left" secondaryImage="chevron.left" catalog="system" keyEquivalent="" id="1158">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="skipLeft:" target="-1" id="1163"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="First Page" secondaryImage="firstPageTemplate" keyEquivalent="" id="1065">
+                            <menuItem title="First Page" secondaryImage="chevron.left.2" catalog="system" keyEquivalent="" id="1065">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                                 <connections>
                                     <action selector="firstPage:" target="-1" id="1069"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Last Page" secondaryImage="lastPageTemplate" keyEquivalent="" id="1067">
+                            <menuItem title="Last Page" secondaryImage="chevron.right.2" catalog="system" keyEquivalent="" id="1067">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                                 <connections>
                                     <action selector="lastPage:" target="-1" id="1070"/>
@@ -616,21 +616,21 @@ Gw
     </objects>
     <resources>
         <image name="1.magnifyingglass" catalog="system" width="16" height="15"/>
-        <image name="NSGoLeftTemplate" width="12" height="17"/>
-        <image name="NSGoRightTemplate" width="12" height="17"/>
         <image name="arrow.right.square" catalog="system" width="15" height="14"/>
         <image name="arrow.up.right.square" catalog="system" width="15" height="14"/>
         <image name="arrowshape.left" catalog="system" width="17" height="14"/>
         <image name="arrowshape.right" catalog="system" width="17" height="14"/>
         <image name="camera" catalog="system" width="19" height="15"/>
         <image name="camera.viewfinder" catalog="system" width="16" height="15"/>
+        <image name="chevron.left" catalog="system" width="10" height="14"/>
+        <image name="chevron.left.2" catalog="system" width="16" height="14"/>
+        <image name="chevron.right" catalog="system" width="10" height="14"/>
+        <image name="chevron.right.2" catalog="system" width="16" height="14"/>
         <image name="clock" catalog="system" width="15" height="15"/>
         <image name="equalTemplate" width="11" height="6"/>
         <image name="eye.slash" catalog="system" width="21" height="16"/>
-        <image name="firstPageTemplate" width="16" height="15"/>
         <image name="gear" catalog="system" width="17" height="17"/>
         <image name="horScaleTemplate" width="15" height="14"/>
-        <image name="lastPageTemplate" width="16" height="15"/>
         <image name="loupe" catalog="system" width="14" height="15"/>
         <image name="rectangle.grid.2x2" catalog="system" width="18" height="14"/>
         <image name="rotate.left" catalog="system" width="15" height="17"/>
