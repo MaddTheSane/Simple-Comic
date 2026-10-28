@@ -62,7 +62,9 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	NSTimer *mouseMovedTimer;
 
 	BOOL newSession;
-	
+	/// A new session's window is zoomed to fit once its first page is displayed.
+	BOOL awaitingInitialZoom;
+
 	PageSelectionMode pageSelectionInProgress;
 	CGFloat savedZoom;
 
@@ -1508,17 +1510,33 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	else
 	{
 		newSession = YES;
+		awaitingInitialZoom = YES;
 		[self setShouldCascadeWindows: YES];
-		
-		if (![[self window] isZoomed])
-		{
-			[[self window] zoom: self];
-		} else {
-			NSLog(@"Window is already zoomed – zoom not toggled");
-		}
-		
-		[pageView correctViewPoint];
+		[self zoomNewSessionWindowIfDisplayed];
 	}
+}
+
+/*!	Sizes a new session's window to its first page. The zoom needs the page
+	images, which arrive asynchronously for archives, so this runs once the
+	first display has finished (and from -restoreSession in case it already
+	has). Zooming earlier sizes the window to the minimum, and with
+	"Automatically resize windows" off nothing corrects it afterwards. */
+- (void)zoomNewSessionWindowIfDisplayed
+{
+	if (!awaitingInitialZoom || displayedGeneration == 0)
+	{
+		return;
+	}
+	awaitingInitialZoom = NO;
+
+	if (![[self window] isZoomed])
+	{
+		[[self window] zoom: self];
+	} else {
+		NSLog(@"Window is already zoomed – zoom not toggled");
+	}
+
+	[pageView correctViewPoint];
 }
 
 
@@ -1773,6 +1791,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 	[self scaleToWindow];
 	[pageView correctViewPoint];
+	[self zoomNewSessionWindowIfDisplayed];
 	[self refreshLoupePanel];
 
 	[self predecodeNeighborsAroundIndex: index twoPageMode: (pageTwo != nil)];
