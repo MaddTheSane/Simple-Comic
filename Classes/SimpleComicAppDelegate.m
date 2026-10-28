@@ -697,8 +697,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		BOOL (^landScanResult)(TSSTManagedGroup *, BOOL, void (^)(NSMutableArray<NSError *> *), void (^)(void)) =
 		^(TSSTManagedGroup *group, BOOL isFinal, void (^apply)(NSMutableArray<NSError *> *), void (^onFinal)(void)) {
 			if (group.managedObjectContext == nil || group.isDeleted ||
-				session.managedObjectContext == nil || session.isDeleted)
-			{
+				session.managedObjectContext == nil || session.isDeleted) {
 				if (isFinal) { session.pendingScanCount--; }
 				return NO;
 			}
@@ -710,19 +709,18 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 				// relationship for pages it doesn't already hold.
 				NSMutableSet<TSSTPage *> *newPages = [group.nestedImages mutableCopy];
 				[newPages minusSet: session.images];
-				if (newPages.count > 0)
-				{
+				if (newPages.count > 0) {
 					[session addImages:newPages];
 				}
 				hadErrors = errors.count > 0;
 			}];
-			if (hadErrors)
-			{
+			if (hadErrors) {
 				session.lastOpenHadErrors = YES;
 			}
-			if (isFinal)
-			{
-				if (onFinal) { onFinal(); }
+			if (isFinal) {
+				if (onFinal) {
+					onFinal();
+				}
 				// Last, so observers see the pages before "loading" ends.
 				session.pendingScanCount--;
 			}
@@ -732,22 +730,18 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		NSFileManager * fileManager = [NSFileManager defaultManager];
 		BOOL isDirectory;
 		NSMutableSet<TSSTPage *> * pageSet = [session.images mutableCopy];
-		for (NSURL *path in paths)
-		{
+		for (NSURL *path in paths) {
 			NSString *fileExtension = [[path pathExtension] lowercaseString];
 			BOOL exists = [fileManager fileExistsAtPath: path.path isDirectory: &isDirectory];
-			if(exists && ![[[path lastPathComponent] substringToIndex: 1] isEqualToString: @"."])
-			{
+			if(exists && ![[[path lastPathComponent] substringToIndex: 1] isEqualToString: @"."]) {
 				TSSTPage * fileDescription = nil;
 				TSSTManagedGroup* mgroup = nil;
 				BOOL scanAsync = NO;
-				if(isDirectory)
-				{
+				if(isDirectory) {
 					mgroup = [NSEntityDescription insertNewObjectForEntityForName: @"ImageGroup" inManagedObjectContext: [self managedObjectContext]];
 					mgroup.fileURL = path;
 					mgroup.name = path.lastPathComponent;
-					if ([TSSTManagedGroup shouldUseCacheForFileURL: path])
-					{
+					if ([TSSTManagedGroup shouldUseCacheForFileURL: path]) {
 						mgroup.session = session;
 						scanAsync = YES;
 						session.pendingScanCount++;
@@ -765,14 +759,10 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 								if (!landed) { [TSSTManagedArchive discardScanRecords: @[record]]; }
 							}];
 						});
-					}
-					else
-					{
+					} else {
 						[mgroup nestedFolderContents];
 					}
-				}
-				else if([[TSSTManagedArchive archiveExtensions] containsObject: fileExtension])
-				{
+				} else if([[TSSTManagedArchive archiveExtensions] containsObject: fileExtension]) {
 					mgroup = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
 					mgroup.fileURL = path;
 					mgroup.name = path.lastPathComponent;
@@ -791,7 +781,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 						// appear while a slow header walk is still running.
 						// Zips take the single-batch path (one call).
 						__block id headerRecord = nil;
-						[archive scanArchiveProgressivelyForFileURL: path name: scanName password: scanPassword perBatch: ^(id _Nullable recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError * _Nullable batchError) {
+						[archive scanArchiveProgressivelyForFileURL: path name: scanName password: scanPassword perBatch: ^(TSSTArchiveScanRecord * _Nullable recordSoFar, NSArray<TSSTArchiveScanRecord*> *newChildren, BOOL isFinal, NSError * _Nullable batchError) {
 							// Async, not performBlockAndWait: the main thread
 							// must never block on this queue (the password
 							// prompt may itself dispatch_sync back to main).

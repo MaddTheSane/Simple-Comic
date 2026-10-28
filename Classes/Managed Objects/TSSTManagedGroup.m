@@ -2063,11 +2063,11 @@ static void TSSTDiscardScanRecord(TSSTArchiveScanRecord *record, BOOL pathIsTemp
 }
 
 /// Progressive counterpart of +scanRecordForFileURL:...: for RAR/7z (or a
-/// zip under SC_FORCE_XAD) the listing is delivered in batches as entries
+/// zip under `SC_FORCE_XAD`) the listing is delivered in batches as entries
 /// are found. Takes the file's URL, name and password as plain values (the
 /// caller captures them on the main thread): this runs on the scan queue
 /// and must not read managed-object attributes.
-- (void)scanArchiveProgressivelyForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password perBatch:(void (^)(id _Nullable recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError * _Nullable error))perBatch
+- (void)scanArchiveProgressivelyForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password perBatch:(void (^)(TSSTArchiveScanRecord* _Nullable recordSoFar, NSArray<TSSTArchiveScanRecord*> *newChildren, BOOL isFinal, NSError * _Nullable error))perBatch
 {
 	// Build the zip index once; a scannable one goes straight to the
 	// single-shot scan, which reuses it (and its cache).
@@ -2191,9 +2191,8 @@ static void TSSTDiscardScanRecord(TSSTArchiveScanRecord *record, BOOL pathIsTemp
 	[self insertChildRecords: record.children];
 }
 
-- (void)applyScanRecordHeader:(id)recordObject
+- (void)applyScanRecordHeader:(TSSTArchiveScanRecord *)record
 {
-	TSSTArchiveScanRecord *record = (TSSTArchiveScanRecord *)recordObject;
 	if (!record)
 	{
 		return;
@@ -2343,7 +2342,7 @@ static void TSSTDiscardScanRecord(TSSTArchiveScanRecord *record, BOOL pathIsTemp
 	for (NSInteger pageNumber = 0; pageNumber < imageCount; ++pageNumber)
 	{
 		imageDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
-		imageDescription.imagePath = [NSString stringWithFormat: NSLocalizedString(@"PDF page %li", @"PDF page number"), (long)(pageNumber + 1)];
+		imageDescription.imagePath = [NSString localizedStringWithFormat: NSLocalizedString(@"PDF page %li", @"PDF page number"), (long)(pageNumber + 1)];
 		imageDescription.index = @(pageNumber);
 		[pageSet addObject: imageDescription];
 	}

@@ -211,13 +211,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// queue before inserting children. Every call's newChildren (a subset of
 /// the eventual full child list, not cumulative) should be applied via
 /// `-insertChildRecords:`, also on the MOC's queue.
-- (void)scanArchiveProgressivelyForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password perBatch:(void (^)(id _Nullable recordSoFar, NSArray<id> *newChildren, BOOL isFinal, NSError * _Nullable error))perBatch;
+- (void)scanArchiveProgressivelyForFileURL:(NSURL *)fileURL name:(nullable NSString *)name password:(nullable NSString *)password perBatch:(void (^)(TSSTArchiveScanRecord* _Nullable recordSoFar, NSArray<TSSTArchiveScanRecord*> *newChildren, BOOL isFinal, NSError * _Nullable error))perBatch;
 
 /// Main-thread only: applies just the header fields of a scan record
 /// (`backend`/`password`/`solidDirectory`, starts the streamer for a zip's
 /// caching source) without touching children. Called once, on the first
 /// batch/call.
-- (void)applyScanRecordHeader:(id)record;
+- (void)applyScanRecordHeader:(TSSTArchiveScanRecord*)record;
 
 /// Main-thread only: called once the progressive XAD parse (from
 /// ``scanArchiveProgressivelyForFileURL:name:password:perBatch:``) has fully finished, with every entry
@@ -231,6 +231,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// `nil` (the default) uses the open panel.
 + (nullable id<TSSTFolderAccessProvider>)folderAccessProvider;
 + (void)setFolderAccessProvider:(nullable id<TSSTFolderAccessProvider>)provider;
+@property (class, nullable, strong) id<TSSTFolderAccessProvider> folderAccessProvider;
 + (void)setFolderBookmarkDefaults:(nullable NSUserDefaults *)defaults;
 + (void)resetFolderAccessSessionState;
 + (BOOL)storeAccessBookmarkForFolderURL:(NSURL *)folderURL;
