@@ -27,6 +27,7 @@
 @class DTPolishedProgressBar;
 @class TSSTInfoWindow;
 @class TSSTManagedSession;
+@class TSSTThumbnailView;
 @class OCRTracker;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -82,7 +83,7 @@ typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 
 /* Panel and view for the page expose method */
 @property (weak) IBOutlet NSPanel * exposeBezel;
-@property (weak) IBOutlet NSView * exposeView;
+@property (weak) IBOutlet TSSTThumbnailView * exposeView;
 @property (weak) IBOutlet TSSTInfoWindow * thumbnailPanel;
 
 @property (copy) NSArray<NSSortDescriptor*> * pageSortDescriptor;

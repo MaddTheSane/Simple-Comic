@@ -44,7 +44,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 @interface TSSTSessionWindowController()<OCRFindDelegate, OCRTrackerDelegate>
 @property(nonatomic, readonly) OCRFind *find;
-@property OCRVision *ocrVision API_AVAILABLE(macos(10.15));
+@property OCRVision *ocrVision;
 @end
 
 @implementation TSSTSessionWindowController
@@ -112,7 +112,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	NSMutableSet<NSManagedObjectID *> * infoPanelThumbnailsInFlight;
 }
 
-@synthesize pageTurn, pageSortDescriptor;
+@synthesize pageTurn;
+@synthesize pageSortDescriptor;
 @synthesize find = _find;
 @synthesize pageController;
 @synthesize pageView;
@@ -275,8 +276,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 /// Recomputes the progress bar's buffered band from arrangedObjects. Hides
 /// the band entirely (nil: every page counts as loaded) unless at least one
 /// archive backing a page in this session actually streams (non-local
-/// volume, or SC_SIMULATE_LINK) -- a purely local session leaves every
-/// -isEntryIndexCached: answer YES, which would otherwise show a
+/// volume, or `SC_SIMULATE_LINK`) -- a purely local session leaves every
+/// `-isEntryIndexCached:` answer `YES`, which would otherwise show a
 /// misleadingly full band.
 - (void)refreshBufferedIndexes
 {
@@ -376,7 +377,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)dealloc
 {
-	[(TSSTThumbnailView *)exposeView setDataSource: nil];
+	[exposeView setDataSource: nil];
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 	
 	[defaults removeObserver: self forKeyPath: TSSTStatusbarVisible];
@@ -508,8 +509,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	else if([keyPath isEqualToString: TSSTPageOrder])
 	{
 		[defaults setBool: session.pageOrder forKey: TSSTPageOrder];
-		[(TSSTThumbnailView *)exposeView setNeedsDisplay: YES];
-		[(TSSTThumbnailView *)exposeView buildTrackingRects];
+		[exposeView setNeedsDisplay: YES];
+		[exposeView buildTrackingRects];
 		[self changeViewImages];
 	}
 	else if([keyPath isEqualToString: TSSTPageScaleOptions])
@@ -1095,7 +1096,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	else
 	{
 		[NSCursor unhide];
-		[(TSSTThumbnailView *)exposeView buildTrackingRects];
+		[exposeView buildTrackingRects];
 		[exposeBezel setFrame: [[[self window] screen] frame] display: NO];
 		[exposeBezel makeKeyAndOrderFront: self];
 		[NSThread detachNewThreadSelector: @selector(processThumbs) toTarget: exposeView withObject: nil];
@@ -1458,7 +1459,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 {
     NSUInteger index = [pageController selectionIndex];
     TSSTPage * pageOne = [pageController arrangedObjects][index];
-    return pageOne.group ? [pageOne valueForKeyPath: @"group.topLevelGroup.fileURL"] : [NSURL fileURLWithPath:pageOne.imagePath];
+    return pageOne.group ? [pageOne.group.topLevelGroup valueForKeyPath: @"fileURL"] : [NSURL fileURLWithPath:pageOne.imagePath];
 }
 
 #pragma mark - Convenience Methods
@@ -1570,7 +1571,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	// Bytes aren't cached and the aspect is unknown -- nudge the streamer
 	// toward this entry (we're likely headed there) without blocking here.
-	[(TSSTManagedGroup *)page.group prioritizeEntryIndex: page.index.integerValue];
+	[page.group prioritizeEntryIndex: page.index.integerValue];
 	return YES;
 }
 
@@ -1896,7 +1897,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 /// view -- the currently displayed page stays visible underneath.
 - (void)showPageLoadHUDForPageNumber:(NSUInteger)pageNumber
 {
-	NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Loading page %lu…", @"HUD shown while a page is fetched over a slow network volume"), (unsigned long)pageNumber];
+	NSString * message = [NSString localizedStringWithFormat: NSLocalizedString(@"Loading page %lu…", @"HUD shown while a page is fetched over a slow network volume"), (unsigned long)pageNumber];
 
 	if (pageLoadHUDView)
 	{
@@ -2369,7 +2370,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 
 - (void)prepareToEnd
 {
-	[(TSSTThumbnailView *)exposeView cancelThumbnailProcessing];
+	[exposeView cancelThumbnailProcessing];
 	[[self window] setAcceptsMouseMovedEvents: NO];
 	[mouseMovedTimer invalidate];
 	mouseMovedTimer = nil;
@@ -2513,15 +2514,15 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	}
 	else
 	{
-		newSize.width = maxImageSize.width < NSWidth(correctedFrame) ? maxImageSize.width : NSWidth(correctedFrame);
-		newSize.height = maxImageSize.height < NSHeight(correctedFrame) ? maxImageSize.height : NSHeight(correctedFrame);
+		newSize.width = MIN(maxImageSize.width, NSWidth(correctedFrame));
+		newSize.height = MIN(maxImageSize.height, NSHeight(correctedFrame));
 	}
 	
 	newSize.width += horOffset;
 	newSize.height += vertOffset;
 	
-	newSize.width = newSize.width < minSize.width ? minSize.width : newSize.width;
-	newSize.height = newSize.height < minSize.height ? minSize.height : newSize.height;
+	newSize.width = MAX(newSize.width, minSize.width);
+	newSize.height = MAX(newSize.height, minSize.height);
 	
 	NSRect windowFrame = NSMakeRect(NSMinX(boundingRect), NSMaxY(boundingRect) - newSize.height, newSize.width, newSize.height);
 	return windowFrame;
