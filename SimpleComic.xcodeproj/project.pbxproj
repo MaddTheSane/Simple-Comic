@@ -101,6 +101,7 @@
 		5C0000000000000000000A02 /* TSSTThumbnailViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */; };
 		5C0000000000000000000B02 /* TSSTPageSizingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000B01 /* TSSTPageSizingTests.m */; };
 		5C0000000000000000000B22 /* TSSTArchiveScanEndToEndTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000B21 /* TSSTArchiveScanEndToEndTests.m */; };
+		5C0000000000000000000C02 /* TSSTInitialWindowSizeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000C01 /* TSSTInitialWindowSizeTests.m */; };
 		6304B5D42840190B009E7D61 /* OCRVision.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B5D32840190B009E7D61 /* OCRVision.m */; };
 		6304B5D7284019EC009E7D61 /* OCRTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B5D5284019EC009E7D61 /* OCRTracker.m */; };
 		6304B60A28411F13009E7D61 /* OCRSelectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B60928411F13009E7D61 /* OCRSelectionLayer.m */; };
@@ -500,6 +501,7 @@
 		5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTThumbnailViewTests.m; sourceTree = "<group>"; };
 		5C0000000000000000000B01 /* TSSTPageSizingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPageSizingTests.m; sourceTree = "<group>"; };
 		5C0000000000000000000B21 /* TSSTArchiveScanEndToEndTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveScanEndToEndTests.m; sourceTree = "<group>"; };
+		5C0000000000000000000C01 /* TSSTInitialWindowSizeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTInitialWindowSizeTests.m; sourceTree = "<group>"; };
 		6220035510734CD884768BFB /* TSSTArchiveByteSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTArchiveByteSource.h; sourceTree = "<group>"; };
 		6304B5D22840190B009E7D61 /* OCRVision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRVision.h; sourceTree = "<group>"; };
 		6304B5D32840190B009E7D61 /* OCRVision.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRVision.m; sourceTree = "<group>"; };
@@ -964,6 +966,7 @@
 				5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */,
 				5C0000000000000000000B01 /* TSSTPageSizingTests.m */,
 				5C0000000000000000000B21 /* TSSTArchiveScanEndToEndTests.m */,
+				5C0000000000000000000C01 /* TSSTInitialWindowSizeTests.m */,
 				63AA7A0151AA0000007F240B /* TSSTRARFixtureTests.m */,
 				63AA7A0151AA0100007F240B /* TSSTTestFixtures.m */,
 				63AA7A0151AA0200007F240B /* TSSTTestFixtures.h */,
@@ -1428,6 +1431,7 @@
 				5C0000000000000000000A02 /* TSSTThumbnailViewTests.m in Sources */,
 				63AA000E28610007007F240B /* TSSTBackgroundModeLayoutTests.m in Sources */,
 				5C0000000000000000000B22 /* TSSTArchiveScanEndToEndTests.m in Sources */,
+				5C0000000000000000000C02 /* TSSTInitialWindowSizeTests.m in Sources */,
 				5C0000000000000000000B02 /* TSSTPageSizingTests.m in Sources */,
 				5C0000000000000000000B02 /* TSSTPageSizingTests.m in Sources */,
 				63AA7B0151BB0000007F240B /* TSSTRARFixtureTests.m in Sources */,
