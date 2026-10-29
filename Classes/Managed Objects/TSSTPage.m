@@ -221,24 +221,32 @@ static NSSize monospaceCharacterSize;
 
 + (NSData *)thumbnailDataFromImageData:(NSData *)imageData
 {
-	if (!imageData) { return nil; }
+	if (!imageData) {
+		return nil;
+	}
 	CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)imageData, NULL);
-	if (!source) { return nil; }
+	if (!source) {
+		return nil;
+	}
 	NSDictionary * options = @{ (id)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
 								(id)kCGImageSourceCreateThumbnailWithTransform: @YES,
 								(id)kCGImageSourceThumbnailMaxPixelSize: @256 };
 	CGImageRef image = CGImageSourceCreateThumbnailAtIndex(source, 0, (__bridge CFDictionaryRef)options);
 	CFRelease(source);
-	if (!image) { return nil; }
+	if (!image) {
+		return nil;
+	}
 	NSMutableData * output = [NSMutableData data];
 	CGImageDestinationRef destination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)output, (__bridge CFStringRef)UTTypePNG.identifier, 1, NULL);
-	if (destination)
-	{
+	if (destination) {
 		CGImageDestinationAddImage(destination, image, NULL);
-		if (!CGImageDestinationFinalize(destination)) { output = nil; }
+		if (!CGImageDestinationFinalize(destination)) {
+			output = nil;
+		}
 		CFRelease(destination);
+	} else {
+		output = nil;
 	}
-	else { output = nil; }
 	CGImageRelease(image);
 	return output;
 }
@@ -399,9 +407,9 @@ static NSSize monospaceCharacterSize;
 			NSScriptObjectSpecifier *parent = [controller objectSpecifier];
 			NSScriptClassDescription *desc = [NSScriptClassDescription classDescriptionForClass:[self class]];
 			return [[NSIndexSpecifier alloc] initWithContainerClassDescription:desc
-																											containerSpecifier:parent
-																																		 key:@"page"
-																																	 index:[self.index integerValue]];
+															containerSpecifier:parent
+																		   key:@"page"
+																		 index:[self.index integerValue]];
 		}
 	}
 	return nil;
