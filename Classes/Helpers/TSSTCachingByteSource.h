@@ -62,7 +62,7 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 /// ``TSSTCachingByteSourceErrorOverBudget``).
 - (BOOL)canCacheRangeAtOffset:(uint64_t)offset length:(NSUInteger)length;
 
-/// The longest range starting at `offset` that `-prefetchAtOffset:length:error:`
+/// The longest range starting at `offset` that ``prefetchAtOffset:length:error:``
 /// accepts under the current budget (always at least 1; effectively
 /// unlimited when unbudgeted).
 - (NSUInteger)maxPrefetchLengthAtOffset:(uint64_t)offset;
@@ -72,7 +72,7 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 - (NSIndexSet *)indexesOfCachedRanges:(NSArray<NSValue *> *)ranges;
 
 /// Blocks until no demand read is pending or `keepWaiting` returns `NO`.
-/// `keepWaiting` is re-checked whenever `-wakeWaiters` is called or a
+/// `keepWaiting` is re-checked whenever ``wakeWaiters`` is called or a
 /// demand read finishes.
 - (void)waitForNoPendingDemandWhile:(BOOL (^)(void))keepWaiting;
 - (void)wakeWaiters;
@@ -82,7 +82,7 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 /// Fetches and caches the given range if not already cached, at the
 /// given priority; used by the streamer for background prefetch. Same
 /// coalescing/wait-for-in-flight behavior as the demand path, but does
-/// not count against `-pendingDemandCount`.
+/// not count against ``pendingDemandCount``.
 - (BOOL)prefetchAtOffset:(uint64_t)offset length:(NSUInteger)length error:(NSError * _Nullable * _Nullable)error;
 
 /// Closes the backing file and deletes its temp directory. Safe to call

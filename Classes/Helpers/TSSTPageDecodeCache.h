@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Decodes the snapshotted page's bytes and caches the result, keyed by
 /// objectID, cost = pixelsWide \* pixelsHigh \* 4. Synchronous -- call from
-/// `-decodeQueue` only. Does nothing (and does not touch the network) unless
+/// ``decodeQueue`` only. Does nothing (and does not touch the network) unless
 /// the caller has already established it's safe to read the page without
 /// blocking, e.g. via ``-[TSSTManagedArchive isEntryIndexCached:]`` or a local
 /// file.

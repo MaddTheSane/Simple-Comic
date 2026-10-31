@@ -28,7 +28,7 @@ extern NSExceptionName const TSSTByteSourceHandleErrorException;
 - (instancetype)initWithByteSource:(id<TSSTArchiveByteSource>)source;
 - (instancetype)initAsCopyOf:(TSSTByteSourceHandle *)other;
 
-@property (nonatomic, readonly) id<TSSTArchiveByteSource> byteSource;
+@property (nonatomic, readonly, strong) id<TSSTArchiveByteSource> byteSource;
 
 @end
 

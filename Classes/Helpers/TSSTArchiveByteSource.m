@@ -78,10 +78,7 @@ void TSSTWaitOnConditionWhile(NSCondition *condition, BOOL (^waiting)(void))
 	return source;
 }
 
-- (uint64_t)length
-{
-	return _length;
-}
+@synthesize length=_length;
 
 - (nullable NSData *)readAtOffset:(uint64_t)offset length:(NSUInteger)length error:(NSError * _Nullable * _Nullable)error
 {

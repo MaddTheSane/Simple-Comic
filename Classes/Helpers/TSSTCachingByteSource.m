@@ -9,11 +9,11 @@
 #import <fcntl.h>
 #import <errno.h>
 
-// Small on purpose: RAR4 header walks read a few dozen bytes per entry, each
-// in a different place, and every such read fetches a whole block. At 256 KB
-// that was ~52 ms of transfer per entry at 5 MB/s; at 16 KB it is ~3 ms.
-// Streaming reads span many blocks and are coalesced into single upstream
-// requests, so a small block costs them nothing.
+/// Small on purpose: RAR4 header walks read a few dozen bytes per entry, each
+/// in a different place, and every such read fetches a whole block. At 256 KB
+/// that was ~52 ms of transfer per entry at 5 MB/s; at 16 KB it is ~3 ms.
+/// Streaming reads span many blocks and are coalesced into single upstream
+/// requests, so a small block costs them nothing.
 const NSUInteger TSSTCachingByteSourceBlockSize = 16 * 1024;
 
 NSErrorDomain const TSSTCachingByteSourceErrorDomain = @"TSSTCachingByteSourceErrorDomain";
@@ -171,8 +171,8 @@ static NSError *TSSTCachingError(NSString *description)
 	[self unpinBlockRange: pin];
 }
 
-/// Brackets a pread/pwrite on _fd: -invalidate waits for these to finish
-/// before closing. Returns NO (and the fd must not be used) once invalidated.
+/// Brackets a pread/pwrite on `_fd`: -invalidate waits for these to finish
+/// before closing. Returns `NO` (and the fd must not be used) once invalidated.
 - (BOOL)beginIO
 {
 	[_cond lock];
@@ -300,8 +300,8 @@ static NSError *TSSTCachingError(NSString *description)
 /// Claims (marks in-flight) any blocks within blockRange that are neither
 /// cached nor already in flight, waiting out blocks claimed by someone
 /// else. Returns the set of blocks this call claimed (caller must fetch
-/// them and call -commitFetchedBlocks:success:). Must be called with
-/// _cond unlocked; locks/unlocks internally, possibly blocking.
+/// them and call ``commitFetchedBlocks:success:``). Must be called with
+/// `_cond` unlocked; locks/unlocks internally, possibly blocking.
 - (NSIndexSet *)claimUncachedBlocksInRange:(NSRange)blockRange
 {
 	NSMutableIndexSet *claimed = [NSMutableIndexSet indexSet];
@@ -576,7 +576,7 @@ static NSError *TSSTCachingError(NSString *description)
 	[_cond unlock];
 }
 
-/// Called with _cond held (so _fd can't be closed underneath it).
+/// Called with `_cond` held (so `_fd` can't be closed underneath it).
 - (void)punchHoleAtOffset:(uint64_t)offset length:(NSUInteger)length
 {
 	if (_fd < 0 || length == 0) { return; }
