@@ -18,3 +18,7 @@ xcuserdata/
 profile
 
 Store Assets
+
+# release artifacts and local agent notes
+dist/
+.context/
