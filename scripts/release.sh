@@ -6,7 +6,7 @@
 #
 # Stages (each is also a Makefile target and safe to retry):
 #   1 preflight   tools, auth, ASC build number, clean tree
-#   2 notes       Haiku drafts the summary + App Store What's New  -> APPROVAL STOP
+#   2 notes       Haiku drafts (REUSE_NOTES=1 keeps already-approved files) the summary + App Store What's New  -> APPROVAL STOP
 #   3 bump        version-bump PR into upstream arc, merged; everything below builds
 #                 from the merged commit, which is also what gets tagged
 #   4 build       tests, Developer-ID export, notarize, verify
@@ -57,7 +57,11 @@ fi
 step "release notes"
 notes_dir="build/release-$version"
 git rev-parse --verify -q upstream/arc >/dev/null
-RELEASE_SUMMARY_END=upstream/arc scripts/release_summary.sh "$version" "$prev_tag" "$notes_dir"
+if [[ "${REUSE_NOTES:-0}" == "1" && -s "$notes_dir/summary.txt" && -s "$notes_dir/whats-new.txt" ]]; then
+  echo "reusing the already-approved notes in $notes_dir"
+else
+  RELEASE_SUMMARY_END=upstream/arc scripts/release_summary.sh "$version" "$prev_tag" "$notes_dir"
+fi
 [[ -s "$notes_dir/summary.txt" ]] || { echo "error: no release notes; edit $notes_dir/*.txt and re-run" >&2; exit 1; }
 if (( ! assume_yes )); then
   echo
