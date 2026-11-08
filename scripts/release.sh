@@ -47,7 +47,7 @@ git fetch upstream --tags --quiet
 latest_build=$(asc_latest_build)
 build="${BUILD:-$((latest_build + 1))}"
 (( build > latest_build )) || { echo "error: BUILD $build is not above uploaded build $latest_build" >&2; exit 1; }
-prev_tag=$(git tag --list 'App-Store-*' --sort=-v:refname | head -1)
+prev_tag=$(git ls-remote --tags --refs upstream 'App-Store-*' | sed 's#.*refs/tags/##' | sort -V | tail -1)
 echo "version $version, build $build (latest uploaded: $latest_build), previous release: $prev_tag"
 if git ls-remote --exit-code --tags upstream "refs/tags/$tag" >/dev/null 2>&1; then
   echo "error: $tag already exists on upstream" >&2; exit 1
