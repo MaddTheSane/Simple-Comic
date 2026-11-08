@@ -76,8 +76,8 @@ typedef struct {
 	/// This is the rect describing the users page selection.
 	NSRect cropRect;
 
-	/*!	The page-key pair -requestMissingBackgroundSources was last called
-		for, so repeated -drawRect: calls during the same still-missing page
+	/*!	The page-key pair `-requestMissingBackgroundSources` was last called
+		for, so repeated `-drawRect:` calls during the same still-missing page
 		(e.g. while resizing) don't keep re-requesting it. */
 	id pendingBackgroundFirstKey;
 	id pendingBackgroundSecondKey;
