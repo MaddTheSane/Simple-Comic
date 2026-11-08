@@ -52,7 +52,7 @@ preflight: ## Check signing identity, gh and 1Password auth
 	@gh auth status >/dev/null && op account list >/dev/null && echo "preflight ok"
 
 notes: ## Draft release notes with Haiku (VERSION=x.y.z [PREV=App-Store-a.b.c])
-	scripts/release_summary.sh "$(VERSION)" "$(or $(PREV),$(shell git tag --list 'App-Store-*' --sort=-v:refname | head -1))" build/release-$(VERSION)
+	scripts/release_summary.sh "$(VERSION)" "$(PREV)" build/release-$(VERSION)
 
 archive: ## Developer-ID signed export in build/export
 	scripts/build_release.sh

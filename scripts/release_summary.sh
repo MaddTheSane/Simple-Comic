@@ -15,17 +15,29 @@ cd "$repo_root"
 
 version="${1:?usage: release_summary.sh <version> <prev-tag> <out-dir>}"
 prev_tag="${2:-}"
+[[ -n "$prev_tag" ]] || prev_tag=$(git ls-remote --tags --refs upstream 'App-Store-*' | sed 's#.*refs/tags/##' | sort -V | tail -1)
 out_dir="${3:?usage: release_summary.sh <version> <prev-tag> <out-dir>}"
 mkdir -p "$out_dir"
 rm -f "$out_dir/summary.txt" "$out_dir/whats-new.txt"
 
 cldp_args="${RELEASE_SUMMARY_ARGS:--p --model claude-haiku-5-5}"
 range="${prev_tag:+${prev_tag}..}${RELEASE_SUMMARY_END:-HEAD}"
-commits=$(git log "$range" --reverse --no-merges --pretty=format:'- %s' | head -300 || true)
+commits=$(git log "$range" --no-merges --pretty=format:'- %s' | grep -iv -e 'poke' -e 'localiz' -e 'indentation' | head -120 || true)
+since=""
+[[ -n "$prev_tag" ]] && since=$(git log -1 --format=%cs "$prev_tag" 2>/dev/null || true)
+prs=""
+if [[ -n "$since" ]]; then
+  prs=$(gh pr list --repo "$UPSTREAM_REPO" --state merged --search "merged:>=${since}" --limit 100 \
+    --json title -q '.[] | "- " + .title' 2>/dev/null || true)
+fi
 
 prompt=$(cat <<PROMPT
-Write release notes for version ${version} of Simple Comic, a macOS comic book reader. Base them on these commit subjects (ignore localization/internal housekeeping; describe what users will notice):
+Write release notes for version ${version} of Simple Comic, a macOS comic book reader. Base them on these merged pull request titles and recent commit subjects (ignore localization/internal housekeeping and tests; describe what users will notice; merge duplicates):
 
+Pull requests:
+${prs}
+
+Commits (newest first):
 ${commits}
 
 Output only a JSON object with two string keys:
