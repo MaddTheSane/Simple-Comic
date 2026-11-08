@@ -146,7 +146,8 @@ def cmd_submit(a):
         api("PATCH", f"/v1/appStoreVersions/{vid}/relationships/build",
             {"data": {"type": "builds", "id": build["id"]}})
         print(f"attached build {a.build}")
-        sub = api("POST", "/v1/reviewSubmissions", {"data": {
+        open_subs = [x for x in api("GET", f"/v1/apps/{aid}/reviewSubmissions?filter[platform]=MAC_OS&filter[state]=READY_FOR_REVIEW")["data"]]
+        sub = open_subs[0] if open_subs else api("POST", "/v1/reviewSubmissions", {"data": {
             "type": "reviewSubmissions", "attributes": {"platform": "MAC_OS"},
             "relationships": {"app": {"data": {"type": "apps", "id": aid}}}}})["data"]
         api("POST", "/v1/reviewSubmissionItems", {"data": {
