@@ -51,7 +51,7 @@ class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 			// Only load so many pages, plus the last one. Pages are appended: the old code
 			// inserted at the entry's offset in the archive, which is past the end of the
 			// (still short) document and made PDFDocument throw, crashing the extension.
-			for offset in TSSTPreviewPageOffsets(UInt(fList.count), 25) {
+			for offset in TSSTPreviewPageOffsets(fList.count, 25) {
 				let list = fList[offset.intValue]
 				guard let index = list["index"] as? Int,
 					  let fileData = try? archive.contents(ofEntry: index),

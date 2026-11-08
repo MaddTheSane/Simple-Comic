@@ -10,9 +10,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// Offsets (into the sorted image list) to include in the preview: the first
 /// `maxPages` entries plus the last one, as suggested by a user. Kept in a header
 /// so the unit tests can exercise it without loading the extension.
-static inline NSArray<NSNumber *> *TSSTPreviewPageOffsets(NSUInteger imageCount, NSUInteger maxPages) {
+static inline NSArray<NSNumber *> *TSSTPreviewPageOffsets(NSInteger imageCount, NSInteger maxPages) {
 	NSMutableArray<NSNumber *> *offsets = [NSMutableArray array];
-	for (NSUInteger i = 0; i < imageCount; i++) {
+	for (NSInteger i = 0; i < imageCount; i++) {
 		if (i < maxPages || i == imageCount - 1) {
 			[offsets addObject:@(i)];
 		}
