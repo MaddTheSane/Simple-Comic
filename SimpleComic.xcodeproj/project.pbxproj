@@ -145,6 +145,8 @@
 		63AA000C28610006007F240B /* TSSTHiddenPrefsLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */; };
 		63AA000E28610007007F240B /* TSSTBackgroundModeLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000F28610007007F240B /* TSSTBackgroundModeLayoutTests.m */; };
 		63AA00F628610014007F240B /* TSSTCb7FixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */; };
+		63AA00FB28610020007F240B /* webpzoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA00FA28610020007F240B /* webpzoo */; };
+		63AA00FD28610021007F240B /* TSSTWebPFixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FC28610021007F240B /* TSSTWebPFixtureTests.m */; };
 		63AA00F928610013007F240B /* cb7zoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA00F828610013007F240B /* cb7zoo */; };
 		63AA00FB28610012007F240B /* TSSTPreviewPageSelectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */; };
 		63AA00FE28610010007F240B /* TSSTUTIDeclarationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */; };
@@ -665,6 +667,8 @@
 		63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTHiddenPrefsLayoutTests.m; sourceTree = "<group>"; };
 		63AA000F28610007007F240B /* TSSTBackgroundModeLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTBackgroundModeLayoutTests.m; sourceTree = "<group>"; };
 		63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCb7FixtureTests.m; sourceTree = "<group>"; };
+		63AA00FA28610020007F240B /* webpzoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = webpzoo; sourceTree = "<group>"; };
+		63AA00FC28610021007F240B /* TSSTWebPFixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTWebPFixtureTests.m; sourceTree = "<group>"; };
 		63AA00F828610013007F240B /* cb7zoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cb7zoo; sourceTree = "<group>"; };
 		63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPreviewPageSelectionTests.m; sourceTree = "<group>"; };
 		63AA00FC28610011007F240B /* TSSTPreviewPageSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSTPreviewPageSelection.h; sourceTree = "<group>"; };
@@ -1068,6 +1072,7 @@
 			isa = PBXGroup;
 			children = (
 				63AA00F828610013007F240B /* cb7zoo */,
+				63AA00FA28610020007F240B /* webpzoo */,
 				63AA7C0151AA0001007F240B /* rarzoo */,
 				63AA7C0151AA0003007F240B /* jessie-james-rar4.cbr */,
 				63AA7C0151AA0005007F240B /* jessie-james-rar5.cbr */,
@@ -1121,6 +1126,7 @@
 				63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */,
 				63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */,
 				63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */,
+				63AA00FC28610021007F240B /* TSSTWebPFixtureTests.m */,
 				63AA000028610001007F240B /* TSSTImageUtilitiesTests.m */,
 				6323E4C228613F83007F240B /* OCR_NSStringTests.m */,
 				63AA000228610002007F240B /* TSSTManagedGroupURLErrorBatchTests.m */,
@@ -1568,6 +1574,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63AA00F928610013007F240B /* cb7zoo in Resources */,
+				63AA00FB28610020007F240B /* webpzoo in Resources */,
 				63AA7C0151AA0002007F240B /* rarzoo in Resources */,
 				63AA7C0151AA0004007F240B /* jessie-james-rar4.cbr in Resources */,
 				63AA7C0151AA0006007F240B /* jessie-james-rar5.cbr in Resources */,
@@ -1670,6 +1677,7 @@
 				63AA00FE28610010007F240B /* TSSTUTIDeclarationTests.m in Sources */,
 				63AA00FB28610012007F240B /* TSSTPreviewPageSelectionTests.m in Sources */,
 				63AA00F628610014007F240B /* TSSTCb7FixtureTests.m in Sources */,
+				63AA00FD28610021007F240B /* TSSTWebPFixtureTests.m in Sources */,
 				63AA000128610001007F240B /* TSSTImageUtilitiesTests.m in Sources */,
 				6323E4D228613F83007F240B /* OCR_NSStringTests.m in Sources */,
 				63AA000328610002007F240B /* TSSTManagedGroupURLErrorBatchTests.m in Sources */,
