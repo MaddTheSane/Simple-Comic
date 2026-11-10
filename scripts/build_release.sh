@@ -8,9 +8,9 @@ cd "$repo_root"
 archive_path="build/SimpleComic.xcarchive"
 export_path="build/export"
 
-echo "==> archiving (Release)"
+echo "==> archiving (Release, $DIRECT_SCHEME)"
 rm -rf "$archive_path"
-xcodebuild -project "$PROJECT" -scheme "$SCHEME" \
+xcodebuild -project "$PROJECT" -scheme "$DIRECT_SCHEME" \
   -configuration Release clean archive -archivePath "$archive_path"
 
 echo "==> exporting Developer-ID signed .app"

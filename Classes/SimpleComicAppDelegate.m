@@ -30,7 +30,16 @@
 #import "OCRTracker.h"
 #import "NSImageRep+WebP.h"
 
+#if SPARKLE_ENABLED
+// Only the direct-download ("Simple Comic Direct") target links Sparkle. The
+// Mac App Store build must not contain a self-updater.
+@import Sparkle;
+#endif
+
 @interface SimpleComicAppDelegate () <XADArchiveDelegate>
+#if SPARKLE_ENABLED
+@property (nonatomic, strong) SPUStandardUpdaterController *updaterController;
+#endif
 
 @end
 
@@ -309,6 +318,9 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 {
 	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
 	[self generateEncodingMenu];
+#if SPARKLE_ENABLED
+	[self setUpUpdater];
+#endif
 	
 	/* Starts the auto save timer */
 	if([userDefaults boolForKey: TSSTSessionRestore])
@@ -897,6 +909,21 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 {
 	[NSApp runModalForWindow: encodingPanel];
 }
+
+#if SPARKLE_ENABLED
+/// Starts Sparkle and adds "Check for Updates…" below "About Simple Comic".
+- (void)setUpUpdater
+{
+	self.updaterController = [[SPUStandardUpdaterController alloc] initWithStartingUpdater: YES updaterDelegate: nil userDriverDelegate: nil];
+	NSMenu *appMenu = NSApp.mainMenu.itemArray.firstObject.submenu;
+	if(appMenu == nil) return;
+	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle: NSLocalizedString(@"Check for Updates…", @"App menu item that checks for a newer version")
+												  action: @selector(checkForUpdates:)
+										   keyEquivalent: @""];
+	item.target = self.updaterController;
+	[appMenu insertItem: item atIndex: MIN(1, (NSInteger)appMenu.numberOfItems)];
+}
+#endif
 
 - (void)generateEncodingMenu
 {

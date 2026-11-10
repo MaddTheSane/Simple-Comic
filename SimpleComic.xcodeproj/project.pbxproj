@@ -8,12 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		01D2C7276C9F5F72951B57D0 /* TSSTFolderStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 39777B2912D5130554FC2AA9 /* TSSTFolderStreamingTests.m */; };
+		03379F36C5337AFA0306031C /* OCRFind.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D72861400B007F240B /* OCRFind.m */; };
+		052E04E2E8AE380B480732F2 /* TSSTThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559EF3EA1BDD473B00FAAA0A /* TSSTThumbnailView.swift */; };
+		0555CBE59F07090E28AADD1F /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 554564782B2BC6F000983407 /* InfoPlist.xcstrings */; };
+		063AFF1DAF8B63F37EE4276E /* OCRVision.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B5D32840190B009E7D61 /* OCRVision.m */; };
+		06EFEC535675DD050DEDCB40 /* QuickComic Thumbnailer.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 55517ACA294BD686009734A9 /* QuickComic Thumbnailer.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		08C55A10CBF922EE22D86794 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28A266081285C34300ED6391 /* Preferences.xib */; };
+		0928FBDE96721CBD0CBCDCF6 /* UKXattrMetadataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EF3FBF0E9970BD002AD2EE /* UKXattrMetadataStore.m */; };
+		0DB52CCAC72BBED8DA2D3E12 /* TSSTCustomValueTransformers.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FB53408AADA270085AA55 /* TSSTCustomValueTransformers.m */; };
 		151667F519E44A51937BBA13 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 559EF3DF1BDD38F400FAAA0A /* libz.tbd */; };
+		18822A3308A84667A304FDFE /* NSImageRep+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A35EF6BF64495859B4843 /* NSImageRep+WebP.m */; };
 		1A2B3C4D50014A1AA1000003 /* TSSTCachingByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000002 /* TSSTCachingByteSource.m */; };
 		1A2B3C4D50014A1AA1000006 /* TSSTArchiveStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000005 /* TSSTArchiveStreamer.m */; };
 		1A2B3C4D50014A1AA1000008 /* TSSTArchiveStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */; };
 		1A2B3C4D50014A1AA1000012 /* TSSTPageDecodeCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000011 /* TSSTPageDecodeCache.m */; };
-		18822A3308A84667A304FDFE /* NSImageRep+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A35EF6BF64495859B4843 /* NSImageRep+WebP.m */; };
+		1BA49A3CD12D728B0F3CC7D9 /* QuickComic.qlgenerator in Copy Quicklook plugin */ = {isa = PBXBuildFile; fileRef = 55C374051BD9E67D006385B6 /* QuickComic.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1EF31D4F57A032FB2A696B64 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 285FE32F0F945E2300CD8F96 /* Carbon.framework */; };
+		1F3EB1CFAEFE0F6F6B20E165 /* TSSTPage+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1BC1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m */; };
+		26847AD922D17ED05CCF5B0F /* TSSTArchiveStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000005 /* TSSTArchiveStreamer.m */; };
+		26E04F5B484E4F76BBB77168 /* QuickComic Preview.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 55EE6BAF2945CA5B00C1AAE7 /* QuickComic Preview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		28073E610FFC347200D2602B /* QuickComic.qlgenerator in Copy Quicklook plugin */ = {isa = PBXBuildFile; fileRef = 55C374051BD9E67D006385B6 /* QuickComic.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2813145B0C0A7D5200EC007B /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 281314590C0A7D5200EC007B /* Credits.rtf */; };
 		281954EA0C1201E6001F5E95 /* TSSTManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 281954E80C1201E5001F5E95 /* TSSTManagedGroup.m */; };
@@ -36,13 +49,28 @@
 		28C1D4080DF18251003392B4 /* TSSTManagedSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 2803B2FF0D5E541800CD7906 /* TSSTManagedSession.m */; };
 		28C1D5600DF1FE37003392B4 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C1D55F0DF1FE37003392B4 /* QuickLook.framework */; };
 		28EF3FC00E9970BD002AD2EE /* UKXattrMetadataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EF3FBF0E9970BD002AD2EE /* UKXattrMetadataStore.m */; };
-		2E5BE968B74F8DE7888C9FBF /* TSSTPublicDomainStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00221E0ED7F9F78D78157C57 /* TSSTPublicDomainStreamingTests.m */; };
-		3B54D043193749CA876D1B74 /* TSSTZipIndexTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A350175E1F4C94AF2AB2A5 /* TSSTZipIndexTests.m */; };
+		2B91F85569EAF946FFDCFE2F /* NSWindow+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B34A721013779B006C551C /* NSWindow+Extensions.swift */; };
+		2BB21C72DCE1276DF042EABA /* TSSTManagedSession+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1E41DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m */; };
 		2BEFF37B2F343F1500A35924 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF37A2F343F1500A35924 /* SDWebImage.framework */; };
 		2BEFF3A12F34417600A35924 /* SDWebImageWebPCoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF3752F343EF000A35924 /* SDWebImageWebPCoder.framework */; };
+		2E5BE968B74F8DE7888C9FBF /* TSSTPublicDomainStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00221E0ED7F9F78D78157C57 /* TSSTPublicDomainStreamingTests.m */; };
+		363A8A8B7724E40E160CF7DE /* OCRTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B5D5284019EC009E7D61 /* OCRTracker.m */; };
+		378538A68E3B7D751A338D6D /* TSSTImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5526278C1BDEBF29005AAF63 /* TSSTImageView.swift */; };
+		37A6909C853DAFA37253895C /* TSSTSessionWindowController+NSToolbarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBFF02D26EF71BF00E3CFC8 /* TSSTSessionWindowController+NSToolbarDelegate.swift */; };
+		37FF4BA776D48C411128F741 /* TSSTByteSourceHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = D34C674663E641248BC4F5BC /* TSSTByteSourceHandle.m */; };
+		38D717FA85CA51F2CE57777E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		3B54D043193749CA876D1B74 /* TSSTZipIndexTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A350175E1F4C94AF2AB2A5 /* TSSTZipIndexTests.m */; };
+		3BC2DB64440F1EF9F0A839A1 /* ManagedSmartFolder+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 5590EB3724A1FD0900DA060E /* ManagedSmartFolder+CoreDataClass.m */; };
 		42D9A8BF2449ABC400AF2FB6 /* CenteredTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D9A8BE2449ABC400AF2FB6 /* CenteredTextLayer.swift */; };
+		43A053EA825B2B7D113FDDB3 /* TSSTInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78F1C4C06FF005F40C8 /* TSSTInfoWindow.swift */; };
+		45CC22F73D63382827EC8892 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5545647D2B2BC6F100983407 /* Localizable.xcstrings */; };
+		4879E7CE243339490F6100FB /* TSSTPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2895F9D80B67D224008683C6 /* TSSTPage.m */; };
+		4924376D1884FD4E8C71C990 /* TSSTPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7257EF08A6CE2E006A2A19 /* TSSTPageView.m */; };
 		4FC078349F8F4428BB7554C6 /* TSSTByteSourceHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = D34C674663E641248BC4F5BC /* TSSTByteSourceHandle.m */; };
+		51135FF89E1BC856605EA3B3 /* DTPreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A2662F1285C73200ED6391 /* DTPreferencesController.swift */; };
+		513EA47241411D4C5556C34A /* SimpleComicAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C8280C06725ACE000B614F /* SimpleComicAppDelegate.m */; };
 		522A1C3A1B3441A6AE423B4B /* TSSTXADArchiveSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08B50E4BEF6348EBB37D1A1D /* TSSTXADArchiveSourceTests.m */; };
+		5237DDF77987B9359617D136 /* TSSTSessionWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FA4FA50B8AA28000496668 /* TSSTSessionWindowController.m */; };
 		5500A65C1D7772B200321300 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; };
 		5500A65D1D7772CD00321300 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; };
 		5500A65F1D7772D400321300 /* XADMaster.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -88,6 +116,13 @@
 		55C374611BD9F03B006385B6 /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55C374571BD9EAA1006385B6 /* UniversalDetector.framework */; };
 		55C7D78C1C4C0401005F40C8 /* TSSTCircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78B1C4C0401005F40C8 /* TSSTCircularImageView.swift */; };
 		55C7D7901C4C06FF005F40C8 /* TSSTInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78F1C4C06FF005F40C8 /* TSSTInfoWindow.swift */; };
+		55D068AC30A2AA5800AA2AB3 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = C17256455F35F5119B2A361B /* Sparkle */; };
+		55D068B130A2AACB00AA2AB3 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF3B42F34436F00A35924 /* SDWebImage.framework */; };
+		55D068B230A2AACB00AA2AB3 /* SDWebImage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF3B42F34436F00A35924 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		55D068CF30A2AB2300AA2AB3 /* libwebp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B62EA542F34E8C400ECCA61 /* libwebp.framework */; };
+		55D068D030A2AB2300AA2AB3 /* libwebp.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2B62EA542F34E8C400ECCA61 /* libwebp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		55D0690630A2AC3300AA2AB3 /* SDWebImageWebPCoder.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF3752F343EF000A35924 /* SDWebImageWebPCoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		55D0690730A2AC8500AA2AB3 /* NSImageRep+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A35EF6BF64495859B4843 /* NSImageRep+WebP.m */; };
 		55ED4ADB2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ED4ADA2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift */; };
 		55EE6BB02945CA5B00C1AAE7 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28BD08E50C9836E600BD7EAF /* Quartz.framework */; };
 		55EE6BB52945CA5B00C1AAE7 /* PreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EE6BB42945CA5B00C1AAE7 /* PreviewProvider.swift */; };
@@ -98,6 +133,8 @@
 		55FFF1BE1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1BC1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m */; };
 		55FFF1DF1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1DB1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m */; };
 		55FFF1E61DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1E41DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m */; };
+		59F80389E96C58D02669D453 /* SimpleComic Help.help in Resources */ = {isa = PBXBuildFile; fileRef = 551275E12584AE5D0030269F /* SimpleComic Help.help */; };
+		5A75C1D2FC0499EFDDAE0681 /* TSSTSessionWindowController+NSTouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554A1C0126478396009FE60D /* TSSTSessionWindowController+NSTouchBar.swift */; };
 		5C0000000000000000000A02 /* TSSTThumbnailViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */; };
 		5C0000000000000000000B02 /* TSSTPageSizingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000B01 /* TSSTPageSizingTests.m */; };
 		5C0000000000000000000B22 /* TSSTArchiveScanEndToEndTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000B21 /* TSSTArchiveScanEndToEndTests.m */; };
@@ -128,24 +165,71 @@
 		63AA7C0151AA0008007F240B /* Public-Domain-Comic-Jessie-James.cbz.zip in Resources */ = {isa = PBXBuildFile; fileRef = 63AA7C0151AA0007007F240B /* Public-Domain-Comic-Jessie-James.cbz.zip */; };
 		63BA27152874BEF100E540C0 /* SimpleComic.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 63BA27052874BEF100E540C0 /* SimpleComic.sdef */; };
 		63E5A9072870D1C200A9FFD5 /* OCRRangeEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5A9062870D1C200A9FFD5 /* OCRRangeEnumerator.m */; };
+		659E8535A0E44E14E45D3A4F /* OCRSelectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B60928411F13009E7D61 /* OCRSelectionLayer.m */; };
+		6864D0068EF1ADCECACA5576 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 559EF3DF1BDD38F400FAAA0A /* libz.tbd */; };
+		6970222CF2DE7DD929FCD111 /* TSSTThumbnailItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2B1CC26506CE50099ADA5 /* TSSTThumbnailItemView.swift */; };
+		6ACF2C0CB79F8AA5B93F7BEA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286236010AADDB6200B83E77 /* QuartzCore.framework */; };
 		708DE06789374E0BAE939FCD /* TSSTArchiveByteSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C69F05BC2544412492D8FCCB /* TSSTArchiveByteSourceTests.m */; };
+		70D6E98EB9EF6C6BCD63891D /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; };
+		710ECCFDD5C60BAFA6BD9C0C /* TSSTKeyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552627901BDEEC5E005AAF63 /* TSSTKeyWindow.swift */; };
+		7527096606A56D4419462B96 /* DTPolishedProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5599515D1BDC0A400086661A /* DTPolishedProgressBar.swift */; };
 		77C8280E06725ACE000B614F /* SimpleComicAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C8280C06725ACE000B614F /* SimpleComicAppDelegate.m */; };
+		78159E26EF0E8D01F318FB7A /* TSSTTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552627941BDEEF85005AAF63 /* TSSTTransparentView.swift */; };
+		7958DC6861EF69BAFC726620 /* TSSTPageDecodeCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000011 /* TSSTPageDecodeCache.m */; };
+		79DDDE54A2D68C8CE52B121F /* TSSTManagedGroup+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1DB1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m */; };
 		7A1C0DE5B1A24F0E9C3D5A01 /* TSSTRAR5QuickOpen.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1C0DE5B1A24F0E9C3D5A03 /* TSSTRAR5QuickOpen.m */; };
+		7DB0A1805A9F5D152E95599A /* TSSTManagedSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 2803B2FF0D5E541800CD7906 /* TSSTManagedSession.m */; };
+		831B5993BAF55FD5997C871A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28A2660C1285C35700ED6391 /* MainMenu.xib */; };
+		83B2F17DED00F796347A745E /* OCR_NSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D428613FBE007F240B /* OCR_NSString.m */; };
+		85E16516D196FD5644F09544 /* container-migration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8F54DD521CCA336B001403DA /* container-migration.plist */; };
+		8828721176E90754513966B5 /* TSSTInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5538C2011C0E1A7C00744130 /* TSSTInfoView.swift */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		8ECF04FEFC8D4BC12927F488 /* TSSTManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 281954E80C1201E5001F5E95 /* TSSTManagedGroup.m */; };
+		8F275067D6B5D8B47152A36D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28BD08E50C9836E600BD7EAF /* Quartz.framework */; };
 		8F54DD531CCA336B001403DA /* container-migration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8F54DD521CCA336B001403DA /* container-migration.plist */; };
 		8FBFF02E26EF71BF00E3CFC8 /* TSSTSessionWindowController+NSToolbarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBFF02D26EF71BF00E3CFC8 /* TSSTSessionWindowController+NSToolbarDelegate.swift */; };
+		90DE27392AF24C847E04C371 /* TSSTArchiveByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = E10F9CC2A5604DBBA14B21C3 /* TSSTArchiveByteSource.m */; };
+		952AA8B40C4919BE24A0D658 /* OCRFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4D82861400B007F240B /* OCRFindViewController.m */; };
+		95D189ABB5C39BABD7BF48A8 /* OCRFindViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63A57A172872683F00D0A88B /* OCRFindViewController.xib */; };
 		9691EFED4D4F4560E6D91128 /* TSSTFileSetByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D12D30B6E317162571303B9D /* TSSTFileSetByteSource.m */; };
+		9811624327D556AB276B2159 /* TSSTImageUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 283C4D5C0C43DE6800DB4FE9 /* TSSTImageUtilities.m */; };
+		9CA9093E88C8D46A6496F871 /* ManagedSmartFolder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5590EB3824A1FD0900DA060E /* ManagedSmartFolder+CoreDataProperties.m */; };
+		9D7274B5E03879B62BDEF412 /* ColorSecureUnarchiveFromDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ED4ADA2D405689001BFB79 /* ColorSecureUnarchiveFromDataTransformer.swift */; };
+		A1288F25246974C9B0883857 /* TSSTZipIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 638E896DFA17428A8E6C0284 /* TSSTZipIndex.m */; };
+		A28F17E14B29AD5551F95011 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		A30798F539FE46CDBD08C86D /* TSSTByteSourceHandleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 551113E49626444D9D30867C /* TSSTByteSourceHandleTests.m */; };
+		A81AE15DF9DC21AD9CF8FAC9 /* XADMaster.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AF59CE63585048A4A89A7538 /* TSSTEdgeBlurRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6A921C6A11486D91716385 /* TSSTEdgeBlurRenderer.m */; };
+		B1C56260EB6C27CCB43731DF /* Sessions_DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 287D0C0310F058BB00207768 /* Sessions_DataModel.xcdatamodeld */; };
+		B36D5AFE3E4A4AB288377E14 /* UniversalDetector.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 55C374571BD9EAA1006385B6 /* UniversalDetector.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BBBBBFACBE292E6755F5FFD3 /* DTToolbarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284D381A101249BE00A37AB2 /* DTToolbarItems.swift */; };
+		C011079E8D236FD2BA7F41AC /* TSSTEdgeBlurRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6A921C6A11486D91716385 /* TSSTEdgeBlurRenderer.m */; };
 		C07F89BE81094190A3C99F4F /* TSSTArchiveByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = E10F9CC2A5604DBBA14B21C3 /* TSSTArchiveByteSource.m */; };
 		C0FFEE0000000000000000A1 /* DTPolishedProgressBarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C0FFEE0000000000000000A2 /* DTPolishedProgressBarTests.m */; };
+		C15362338EE26B453BFE8CEB /* TSSTCachingByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000002 /* TSSTCachingByteSource.m */; };
 		C461C4C073134889AD743053 /* TSSTZipIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 638E896DFA17428A8E6C0284 /* TSSTZipIndex.m */; };
+		C57B06D41B11165BF74D24E8 /* TSSTScrubberBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2B1BB26506B1E0099ADA5 /* TSSTScrubberBarItem.swift */; };
+		CE50C576CDD8F1288EE333D3 /* CenteredTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D9A8BE2449ABC400AF2FB6 /* CenteredTextLayer.swift */; };
+		D04B588BE00D8B26E41C0D90 /* TSSTCircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78B1C4C0401005F40C8 /* TSSTCircularImageView.swift */; };
 		D0E574A7DE3B4418A41D7EA2 /* TSSTXADArchiveSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D57E674C430A43BE8B619F34 /* TSSTXADArchiveSource.m */; };
-		FA9FB53508AADA270085AA55 /* TSSTCustomValueTransformers.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FB53408AADA270085AA55 /* TSSTCustomValueTransformers.m */; };
+		D3A9B00FCEA8681CC43B1A9D /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28C1D55F0DF1FE37003392B4 /* QuickLook.framework */; };
+		DD1C43A72CA52EA024009B26 /* TSSTSessionWindowToolbar.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 55F1FA132EE6985A0001CB75 /* TSSTSessionWindowToolbar.xcstrings */; };
 		E0000000000000000000A001 /* SDWebImage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF37A2F343F1500A35924 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E0000000000000000000A002 /* SDWebImageWebPCoder.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF3752F343EF000A35924 /* SDWebImageWebPCoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E0000000000000000000A003 /* libwebp.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2B62EA542F34E8C400ECCA61 /* libwebp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E2BD73860EA25214211556BA /* OCRRangeEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5A9062870D1C200A9FFD5 /* OCRRangeEnumerator.m */; };
+		E5A0D44CA35BD32548932FDD /* Sessions_DataModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 770B37EC0679A11B001EADE2 /* Sessions_DataModel.xcdatamodel */; };
+		E75B89782D33F7BC1A267492 /* TSSTSessionWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28A266141285C3A700ED6391 /* TSSTSessionWindow.xib */; };
+		E9117F50A8D34BEBC16342E5 /* TSSTSortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 286AEDB60C4161C20031E3D9 /* TSSTSortDescriptor.m */; };
+		EB59406EFF975B6AFAADDFAC /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5589952D1A13D4450058830B /* Media.xcassets */; };
+		EF764BAAF71084D61A2C2601 /* TSSTRAR5QuickOpen.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1C0DE5B1A24F0E9C3D5A03 /* TSSTRAR5QuickOpen.m */; };
+		F2C396EA6BA135C8A9993518 /* TSSTXADArchiveSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D57E674C430A43BE8B619F34 /* TSSTXADArchiveSource.m */; };
+		F38BF999FA15620F27358686 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 281314590C0A7D5200EC007B /* Credits.rtf */; };
+		F812937E8C7501045B3C9BE7 /* SimpleComic.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 63BA27052874BEF100E540C0 /* SimpleComic.sdef */; };
+		FA9FB53508AADA270085AA55 /* TSSTCustomValueTransformers.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FB53408AADA270085AA55 /* TSSTCustomValueTransformers.m */; };
+		FB52D8FBF6FC411832E1B80D /* V1ToV2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 55861E3823C68B3700390CD3 /* V1ToV2.xcmappingmodel */; };
+		FCA5A45A13BF869369ACB0AA /* TSSTFileSetByteSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D12D30B6E317162571303B9D /* TSSTFileSetByteSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -190,34 +274,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 80BFF26E2136BE7900B95470;
 			remoteInfo = "SDWebImageWebPCoder-watchos";
-		};
-		2BEFF38F2F34412700A35924 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BEFF38A2F34412700A35924 /* SDWebImage.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 4A2CADFE1AB4BB5300B6BC39;
-			remoteInfo = SDWebImage;
-		};
-		2BEFF3992F34412800A35924 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BEFF38A2F34412700A35924 /* SDWebImage.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 53761325155AD0D5005750A4;
-			remoteInfo = "SDWebImage static";
-		};
-		2BEFF39B2F34412800A35924 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BEFF38A2F34412700A35924 /* SDWebImage.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4A2CADFF1AB4BB5300B6BC39;
-			remoteInfo = SDWebImage;
-		};
-		2BEFF39D2F34412800A35924 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BEFF38A2F34412700A35924 /* SDWebImage.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 80B6DFEE2142B71600BCB334;
-			remoteInfo = SDWebImageMapKit;
 		};
 		2BEFF3B12F34436F00A35924 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -415,9 +471,42 @@
 			remoteGlobalIDString = 8D1107260486CEB800E47090;
 			remoteInfo = "Simple Comic";
 		};
+		78A381CA5A6D38BD6FD8760E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 55517AC9294BD686009734A9;
+			remoteInfo = "QuickComic Thumbnailer";
+		};
+		C9EA1FBF49589B6AABCE5AAE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 55C374041BD9E67D006385B6;
+			remoteInfo = QuickComic;
+		};
+		D37D612925DBD26A3377A03B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 55EE6BAE2945CA5B00C1AAE7;
+			remoteInfo = "QuickComic Preview";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		11FDDB9FA039E631714CF1A2 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				26E04F5B484E4F76BBB77168 /* QuickComic Preview.appex in Embed Foundation Extensions */,
+				06EFEC535675DD050DEDCB40 /* QuickComic Thumbnailer.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		28073E0A0FFC305400D2602B /* Copy Quicklook plugin */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -454,6 +543,32 @@
 				5528C69F2953D19E0005EE8B /* QuickComic Thumbnailer.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6949B1103C649FAA7D8FBA6B /* Copy Quicklook plugin */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/QuickLook;
+			dstSubfolderSpec = 1;
+			files = (
+				1BA49A3CD12D728B0F3CC7D9 /* QuickComic.qlgenerator in Copy Quicklook plugin */,
+			);
+			name = "Copy Quicklook plugin";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9228AA66A7A389B265BF4946 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				55D0690630A2AC3300AA2AB3 /* SDWebImageWebPCoder.framework in Copy Frameworks */,
+				55D068D030A2AB2300AA2AB3 /* libwebp.framework in Copy Frameworks */,
+				55D068B230A2AACB00AA2AB3 /* SDWebImage.framework in Copy Frameworks */,
+				A81AE15DF9DC21AD9CF8FAC9 /* XADMaster.framework in Copy Frameworks */,
+				B36D5AFE3E4A4AB288377E14 /* UniversalDetector.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -505,7 +620,6 @@
 		2BEFF35D2F343EE400A35924 /* SDWebImageWebPCoder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDWebImageWebPCoder.xcodeproj; path = SDWebImageWebPCoder/SDWebImageWebPCoder.xcodeproj; sourceTree = "<group>"; };
 		2BEFF37A2F343F1500A35924 /* SDWebImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDWebImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BEFF37F2F34405300A35924 /* libwebp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libwebp.xcodeproj; path = "libwebp-Xcode/libwebp.xcodeproj"; sourceTree = "<group>"; };
-		2BEFF38A2F34412700A35924 /* SDWebImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDWebImage.xcodeproj; path = "/Users/zicaleo/Dev/ZicaLeo/Simple-Comic/Vendor/SDWebImage/SDWebImage.xcodeproj"; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* SimpleComic_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleComic_Prefix.pch; sourceTree = "<group>"; };
 		34A350175E1F4C94AF2AB2A5 /* TSSTZipIndexTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTZipIndexTests.m; sourceTree = "<group>"; };
 		39777B2912D5130554FC2AA9 /* TSSTFolderStreamingTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSSTFolderStreamingTests.m; sourceTree = "<group>"; };
@@ -577,12 +691,12 @@
 		55FFF1DB1DB020470080B059 /* TSSTManagedGroup+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSSTManagedGroup+CoreDataProperties.m"; sourceTree = "<group>"; };
 		55FFF1E31DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TSSTManagedSession+CoreDataProperties.h"; sourceTree = "<group>"; };
 		55FFF1E41DB0275C0080B059 /* TSSTManagedSession+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSSTManagedSession+CoreDataProperties.m"; sourceTree = "<group>"; };
+		5A5A35EF6BF64495859B4843 /* NSImageRep+WebP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImageRep+WebP.m"; sourceTree = "<group>"; };
 		5C0000000000000000000A01 /* TSSTThumbnailViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTThumbnailViewTests.m; sourceTree = "<group>"; };
 		5C0000000000000000000B01 /* TSSTPageSizingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPageSizingTests.m; sourceTree = "<group>"; };
 		5C0000000000000000000B21 /* TSSTArchiveScanEndToEndTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveScanEndToEndTests.m; sourceTree = "<group>"; };
 		5C0000000000000000000C01 /* TSSTInitialWindowSizeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTInitialWindowSizeTests.m; sourceTree = "<group>"; };
 		6220035510734CD884768BFB /* TSSTArchiveByteSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTArchiveByteSource.h; sourceTree = "<group>"; };
-		5A5A35EF6BF64495859B4843 /* NSImageRep+WebP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImageRep+WebP.m"; sourceTree = "<group>"; };
 		6304B5D22840190B009E7D61 /* OCRVision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRVision.h; sourceTree = "<group>"; };
 		6304B5D32840190B009E7D61 /* OCRVision.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRVision.m; sourceTree = "<group>"; };
 		6304B5D5284019EC009E7D61 /* OCRTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRTracker.m; sourceTree = "<group>"; };
@@ -636,6 +750,7 @@
 		99E2A23979FF4A4DB0941DBD /* TSSTByteSourceHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTByteSourceHandle.h; sourceTree = "<group>"; };
 		B6DBB6E5D3AB4B0FB3FD4960 /* TSSTEdgeBlurRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTEdgeBlurRenderer.h; sourceTree = "<group>"; };
 		C0FFEE0000000000000000A2 /* DTPolishedProgressBarTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTPolishedProgressBarTests.m; sourceTree = "<group>"; };
+		C22AB8DDC2E7C8A5003CA934 /* Simple Comic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Comic.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C69F05BC2544412492D8FCCB /* TSSTArchiveByteSourceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTArchiveByteSourceTests.m; sourceTree = "<group>"; };
 		D12D30B6E317162571303B9D /* TSSTFileSetByteSource.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TSSTFileSetByteSource.m; sourceTree = "<group>"; };
 		D34C674663E641248BC4F5BC /* TSSTByteSourceHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTByteSourceHandle.m; sourceTree = "<group>"; };
@@ -698,6 +813,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F6BA6F904316BE33BF59BB17 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55D068CF30A2AB2300AA2AB3 /* libwebp.framework in Frameworks */,
+				55D068B130A2AACB00AA2AB3 /* SDWebImage.framework in Frameworks */,
+				55D068AC30A2AA5800AA2AB3 /* Sparkle in Frameworks */,
+				70D6E98EB9EF6C6BCD63891D /* XADMaster.framework in Frameworks */,
+				38D717FA85CA51F2CE57777E /* Cocoa.framework in Frameworks */,
+				6ACF2C0CB79F8AA5B93F7BEA /* QuartzCore.framework in Frameworks */,
+				8F275067D6B5D8B47152A36D /* Quartz.framework in Frameworks */,
+				D3A9B00FCEA8681CC43B1A9D /* QuickLook.framework in Frameworks */,
+				1EF31D4F57A032FB2A696B64 /* Carbon.framework in Frameworks */,
+				6864D0068EF1ADCECACA5576 /* libz.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -736,6 +868,7 @@
 				63BF686A28590BF6005962F4 /* OCR Unit Tests.xctest */,
 				55EE6BAF2945CA5B00C1AAE7 /* QuickComic Preview.appex */,
 				55517ACA294BD686009734A9 /* QuickComic Thumbnailer.appex */,
+				C22AB8DDC2E7C8A5003CA934 /* Simple Comic.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -829,8 +962,6 @@
 				55C373FF1BD9E61E006385B6 /* QuickComic */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				2BEFF38A2F34412700A35924 /* SDWebImage.xcodeproj */,
-				2BEFF3A92F34436E00A35924 /* Recovered References */,
 			);
 			name = MetaComic;
 			sourceTree = "<group>";
@@ -905,23 +1036,6 @@
 				2BEFF3792F343EF000A35924 /* SDWebImageWebPCoder.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		2BEFF38B2F34412700A35924 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2BEFF39A2F34412800A35924 /* libSDWebImage.a */,
-				2BEFF39C2F34412800A35924 /* SDWebImage.framework */,
-				2BEFF39E2F34412800A35924 /* SDWebImageMapKit.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		2BEFF3A92F34436E00A35924 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		2BEFF3AA2F34436F00A35924 /* Products */ = {
@@ -1151,6 +1265,33 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		0BC3E17BBD97A3B04B538D59 /* Simple Comic Direct */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FD915DE925EF9EF171E78572 /* Build configuration list for PBXNativeTarget "Simple Comic Direct" */;
+			buildPhases = (
+				7FD3C5E369168DFE5187A1E9 /* Sources */,
+				F6BA6F904316BE33BF59BB17 /* Frameworks */,
+				790741FE3C6550BBFF2A8995 /* Resources */,
+				9228AA66A7A389B265BF4946 /* Copy Frameworks */,
+				6949B1103C649FAA7D8FBA6B /* Copy Quicklook plugin */,
+				11FDDB9FA039E631714CF1A2 /* Embed Foundation Extensions */,
+				865FF539EB507F77F0080D3C /* Add Sparkle Info.plist keys */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F76FA975BCC56ADF6DCD5008 /* PBXTargetDependency */,
+				D6154C6E8E9A4168D0E7BD4D /* PBXTargetDependency */,
+				1754AC3EFDA4C46EC2304CEB /* PBXTargetDependency */,
+			);
+			name = "Simple Comic Direct";
+			packageProductDependencies = (
+				C17256455F35F5119B2A361B /* Sparkle */,
+			);
+			productName = "Simple Comic Direct";
+			productReference = C22AB8DDC2E7C8A5003CA934 /* Simple Comic.app */;
+			productType = "com.apple.product-type.application";
+		};
 		55517AC9294BD686009734A9 /* QuickComic Thumbnailer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 55517AE8294BD687009734A9 /* Build configuration list for PBXNativeTarget "QuickComic Thumbnailer" */;
@@ -1239,7 +1380,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2BEFF3902F34412700A35924 /* PBXTargetDependency */,
 				55C3745D1BD9EFE2006385B6 /* PBXTargetDependency */,
 				550CB1E72366E88C00FAC663 /* PBXTargetDependency */,
 				55C3745B1BD9EFE2006385B6 /* PBXTargetDependency */,
@@ -1266,6 +1406,16 @@
 				LastUpgradeCheck = 1620;
 				ORGANIZATIONNAME = "Dancing Tortoise Software";
 				TargetAttributes = {
+					0BC3E17BBD97A3B04B538D59 = {
+						DevelopmentTeam = 3D9SMH4RWM;
+						LastSwiftMigration = 1100;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
+					};
 					55517AC9294BD686009734A9 = {
 						CreatedOnToolsVersion = 14.2;
 						DevelopmentTeam = 3D9SMH4RWM;
@@ -1320,7 +1470,9 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* MetaComic */;
 			packageReferences = (
+				FF7049B7E16B340F23EF2F95 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
+			productRefGroup = 19C28FACFE9D520D11CA2CBB /* Products */;
 			projectDirPath = "";
 			projectReferences = (
 				{
@@ -1330,10 +1482,6 @@
 				{
 					ProductGroup = 2BEFF3AA2F34436F00A35924 /* Products */;
 					ProjectRef = 2BEFF3502F343ECF00A35924 /* SDWebImage.xcodeproj */;
-				},
-				{
-					ProductGroup = 2BEFF38B2F34412700A35924 /* Products */;
-					ProjectRef = 2BEFF38A2F34412700A35924 /* SDWebImage.xcodeproj */;
 				},
 				{
 					ProductGroup = 2BEFF36C2F343EF000A35924 /* Products */;
@@ -1355,6 +1503,7 @@
 				63BF686928590BF6005962F4 /* OCR Unit Tests */,
 				55EE6BAE2945CA5B00C1AAE7 /* QuickComic Preview */,
 				55517AC9294BD686009734A9 /* QuickComic Thumbnailer */,
+				0BC3E17BBD97A3B04B538D59 /* Simple Comic Direct */,
 			);
 		};
 /* End PBXProject section */
@@ -1400,27 +1549,6 @@
 			fileType = wrapper.framework;
 			path = SDWebImageWebPCoder.framework;
 			remoteRef = 2BEFF3782F343EF000A35924 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2BEFF39A2F34412800A35924 /* libSDWebImage.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSDWebImage.a;
-			remoteRef = 2BEFF3992F34412800A35924 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2BEFF39C2F34412800A35924 /* SDWebImage.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SDWebImage.framework;
-			remoteRef = 2BEFF39B2F34412800A35924 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2BEFF39E2F34412800A35924 /* SDWebImageMapKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SDWebImageMapKit.framework;
-			remoteRef = 2BEFF39D2F34412800A35924 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2BEFF3B22F34436F00A35924 /* libSDWebImage.a */ = {
@@ -1572,6 +1700,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		790741FE3C6550BBFF2A8995 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F38BF999FA15620F27358686 /* Credits.rtf in Resources */,
+				EB59406EFF975B6AFAADDFAC /* Media.xcassets in Resources */,
+				59F80389E96C58D02669D453 /* SimpleComic Help.help in Resources */,
+				08C55A10CBF922EE22D86794 /* Preferences.xib in Resources */,
+				831B5993BAF55FD5997C871A /* MainMenu.xib in Resources */,
+				45CC22F73D63382827EC8892 /* Localizable.xcstrings in Resources */,
+				0555CBE59F07090E28AADD1F /* InfoPlist.xcstrings in Resources */,
+				F812937E8C7501045B3C9BE7 /* SimpleComic.sdef in Resources */,
+				85E16516D196FD5644F09544 /* container-migration.plist in Resources */,
+				95D189ABB5C39BABD7BF48A8 /* OCRFindViewController.xib in Resources */,
+				DD1C43A72CA52EA024009B26 /* TSSTSessionWindowToolbar.xcstrings in Resources */,
+				E75B89782D33F7BC1A267492 /* TSSTSessionWindow.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D1107290486CEB800E47090 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1592,6 +1739,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		865FF539EB507F77F0080D3C /* Add Sparkle Info.plist keys */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Add Sparkle Info.plist keys";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/sparkle-plist-keys.stamp",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Sparkle settings exist only in the direct-download app (the App Store target has none).\nPLIST=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nset_key() { /usr/libexec/PlistBuddy -c \"Set :$1 $3\" \"$PLIST\" 2>/dev/null || /usr/libexec/PlistBuddy -c \"Add :$1 $2 $3\" \"$PLIST\"; }\nset_key SUFeedURL string \"$SPARKLE_FEED_URL\"\nset_key SUPublicEDKey string \"$SPARKLE_PUBLIC_ED_KEY\"\nset_key SUEnableInstallerLauncherService bool true\ntouch \"$DERIVED_FILE_DIR/sparkle-plist-keys.stamp\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		55517AC6294BD686009734A9 /* Sources */ = {
@@ -1664,6 +1835,67 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7FD3C5E369168DFE5187A1E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7527096606A56D4419462B96 /* DTPolishedProgressBar.swift in Sources */,
+				03379F36C5337AFA0306031C /* OCRFind.m in Sources */,
+				E2BD73860EA25214211556BA /* OCRRangeEnumerator.m in Sources */,
+				FB52D8FBF6FC411832E1B80D /* V1ToV2.xcmappingmodel in Sources */,
+				063AFF1DAF8B63F37EE4276E /* OCRVision.m in Sources */,
+				659E8535A0E44E14E45D3A4F /* OCRSelectionLayer.m in Sources */,
+				A28F17E14B29AD5551F95011 /* main.m in Sources */,
+				D04B588BE00D8B26E41C0D90 /* TSSTCircularImageView.swift in Sources */,
+				9CA9093E88C8D46A6496F871 /* ManagedSmartFolder+CoreDataProperties.m in Sources */,
+				363A8A8B7724E40E160CF7DE /* OCRTracker.m in Sources */,
+				513EA47241411D4C5556C34A /* SimpleComicAppDelegate.m in Sources */,
+				0DB52CCAC72BBED8DA2D3E12 /* TSSTCustomValueTransformers.m in Sources */,
+				710ECCFDD5C60BAFA6BD9C0C /* TSSTKeyWindow.swift in Sources */,
+				83B2F17DED00F796347A745E /* OCR_NSString.m in Sources */,
+				6970222CF2DE7DD929FCD111 /* TSSTThumbnailItemView.swift in Sources */,
+				78159E26EF0E8D01F318FB7A /* TSSTTransparentView.swift in Sources */,
+				B1C56260EB6C27CCB43731DF /* Sessions_DataModel.xcdatamodeld in Sources */,
+				4879E7CE243339490F6100FB /* TSSTPage.m in Sources */,
+				952AA8B40C4919BE24A0D658 /* OCRFindViewController.m in Sources */,
+				5237DDF77987B9359617D136 /* TSSTSessionWindowController.m in Sources */,
+				4924376D1884FD4E8C71C990 /* TSSTPageView.m in Sources */,
+				C011079E8D236FD2BA7F41AC /* TSSTEdgeBlurRenderer.m in Sources */,
+				A1288F25246974C9B0883857 /* TSSTZipIndex.m in Sources */,
+				90DE27392AF24C847E04C371 /* TSSTArchiveByteSource.m in Sources */,
+				37FF4BA776D48C411128F741 /* TSSTByteSourceHandle.m in Sources */,
+				F2C396EA6BA135C8A9993518 /* TSSTXADArchiveSource.m in Sources */,
+				EF764BAAF71084D61A2C2601 /* TSSTRAR5QuickOpen.m in Sources */,
+				FCA5A45A13BF869369ACB0AA /* TSSTFileSetByteSource.m in Sources */,
+				C15362338EE26B453BFE8CEB /* TSSTCachingByteSource.m in Sources */,
+				7958DC6861EF69BAFC726620 /* TSSTPageDecodeCache.m in Sources */,
+				26847AD922D17ED05CCF5B0F /* TSSTArchiveStreamer.m in Sources */,
+				8ECF04FEFC8D4BC12927F488 /* TSSTManagedGroup.m in Sources */,
+				3BC2DB64440F1EF9F0A839A1 /* ManagedSmartFolder+CoreDataClass.m in Sources */,
+				E9117F50A8D34BEBC16342E5 /* TSSTSortDescriptor.m in Sources */,
+				43A053EA825B2B7D113FDDB3 /* TSSTInfoWindow.swift in Sources */,
+				C57B06D41B11165BF74D24E8 /* TSSTScrubberBarItem.swift in Sources */,
+				9811624327D556AB276B2159 /* TSSTImageUtilities.m in Sources */,
+				7DB0A1805A9F5D152E95599A /* TSSTManagedSession.m in Sources */,
+				0928FBDE96721CBD0CBCDCF6 /* UKXattrMetadataStore.m in Sources */,
+				1F3EB1CFAEFE0F6F6B20E165 /* TSSTPage+CoreDataProperties.m in Sources */,
+				BBBBBFACBE292E6755F5FFD3 /* DTToolbarItems.swift in Sources */,
+				9D7274B5E03879B62BDEF412 /* ColorSecureUnarchiveFromDataTransformer.swift in Sources */,
+				CE50C576CDD8F1288EE333D3 /* CenteredTextLayer.swift in Sources */,
+				79DDDE54A2D68C8CE52B121F /* TSSTManagedGroup+CoreDataProperties.m in Sources */,
+				2BB21C72DCE1276DF042EABA /* TSSTManagedSession+CoreDataProperties.m in Sources */,
+				5A75C1D2FC0499EFDDAE0681 /* TSSTSessionWindowController+NSTouchBar.swift in Sources */,
+				8828721176E90754513966B5 /* TSSTInfoView.swift in Sources */,
+				2B91F85569EAF946FFDCFE2F /* NSWindow+Extensions.swift in Sources */,
+				55D0690730A2AC8500AA2AB3 /* NSImageRep+WebP.m in Sources */,
+				378538A68E3B7D751A338D6D /* TSSTImageView.swift in Sources */,
+				E5A0D44CA35BD32548932FDD /* Sessions_DataModel.xcdatamodel in Sources */,
+				37A6909C853DAFA37253895C /* TSSTSessionWindowController+NSToolbarDelegate.swift in Sources */,
+				51135FF89E1BC856605EA3B3 /* DTPreferencesController.swift in Sources */,
+				052E04E2E8AE380B480732F2 /* TSSTThumbnailView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D11072C0486CEB800E47090 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1728,10 +1960,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2BEFF3902F34412700A35924 /* PBXTargetDependency */ = {
+		1754AC3EFDA4C46EC2304CEB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = SDWebImage;
-			targetProxy = 2BEFF38F2F34412700A35924 /* PBXContainerItemProxy */;
+			name = "QuickComic Thumbnailer";
+			target = 55517AC9294BD686009734A9 /* QuickComic Thumbnailer */;
+			targetProxy = 78A381CA5A6D38BD6FD8760E /* PBXContainerItemProxy */;
 		};
 		550CB1E72366E88C00FAC663 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1793,6 +2026,18 @@
 			target = 8D1107260486CEB800E47090 /* Simple Comic */;
 			targetProxy = 63BF686E28590BF6005962F4 /* PBXContainerItemProxy */;
 		};
+		D6154C6E8E9A4168D0E7BD4D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "QuickComic Preview";
+			target = 55EE6BAE2945CA5B00C1AAE7 /* QuickComic Preview */;
+			targetProxy = D37D612925DBD26A3377A03B /* PBXContainerItemProxy */;
+		};
+		F76FA975BCC56ADF6DCD5008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = QuickComic;
+			target = 55C374041BD9E67D006385B6 /* QuickComic */;
+			targetProxy = C9EA1FBF49589B6AABCE5AAE /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1843,6 +2088,58 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3848B64D6FEA137BE430A83D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55E21B1123FBCCF900D53932 /* No Sign.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "Accent Color";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Simple Comic Direct.entitlements";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 362;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 3D9SMH4RWM;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"SPARKLE_ENABLED=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Simple Comic";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2010 Dancing Tortoise Software.";
+				INFOPLIST_KEY_NSMainNibFile = MainMenu;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@loader_path/../Frameworks",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
+				MARKETING_VERSION = 1.11.0;
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic;
+				PRODUCT_NAME = "Simple Comic";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SPARKLE_FEED_URL = "https://github.com/MaddTheSane/Simple-Comic/releases/latest/download/appcast.xml";
+				SPARKLE_PUBLIC_ED_KEY = "2S+y6238Obvk4gqgJIInoFOz2wJ0DVNVUMUL8h4wSU8=";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Classes/Simple Comic-Bridging-Header.h";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
 		55517AD7294BD687009734A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2109,6 +2406,56 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Simple Comic.app/Contents/MacOS/Simple Comic";
+			};
+			name = Release;
+		};
+		B4ADF16CC97428BFA185726F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "Accent Color";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Simple Comic Direct.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 362;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 3D9SMH4RWM;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"SPARKLE_ENABLED=1",
+				);
+				GCC_THREADSAFE_STATICS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Simple Comic";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2010 Dancing Tortoise Software.";
+				INFOPLIST_KEY_NSMainNibFile = MainMenu;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@loader_path/../Frameworks",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
+				MARKETING_VERSION = 1.11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic;
+				PRODUCT_NAME = "Simple Comic";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SPARKLE_FEED_URL = "https://github.com/MaddTheSane/Simple-Comic/releases/latest/download/appcast.xml";
+				SPARKLE_PUBLIC_ED_KEY = "2S+y6238Obvk4gqgJIInoFOz2wJ0DVNVUMUL8h4wSU8=";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Classes/Simple Comic-Bridging-Header.h";
+				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
@@ -2392,7 +2739,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		FD915DE925EF9EF171E78572 /* Build configuration list for PBXNativeTarget "Simple Comic Direct" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B4ADF16CC97428BFA185726F /* Release */,
+				3848B64D6FEA137BE430A83D /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FF7049B7E16B340F23EF2F95 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C17256455F35F5119B2A361B /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FF7049B7E16B340F23EF2F95 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		287D0C0310F058BB00207768 /* Sessions_DataModel.xcdatamodeld */ = {

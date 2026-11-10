@@ -16,6 +16,13 @@ check_app() {
   codesign --verify --deep --strict "$app"
   spctl --assess --type execute --verbose "$app"
   xcrun stapler validate "$app"
+  echo "==> [$label] Sparkle (direct build only)"
+  [[ -d "$app/Contents/Frameworks/Sparkle.framework" ]] || { echo "error: Sparkle.framework missing" >&2; exit 1; }
+  local key
+  for key in SUFeedURL SUPublicEDKey; do
+    /usr/libexec/PlistBuddy -c "Print :$key" "$app/Contents/Info.plist" >/dev/null \
+      || { echo "error: $key missing from Info.plist" >&2; exit 1; }
+  done
   local plist
   for plist in "$app/Contents/Info.plist" "$app"/Contents/PlugIns/*/Contents/Info.plist; do
     [[ -f "$plist" ]] || continue
