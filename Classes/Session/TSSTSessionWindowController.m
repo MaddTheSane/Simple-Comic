@@ -1998,7 +1998,8 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
     BOOL hasHor = NO;
 	int scaling = session.scaleOptions;
 	
-	if(pageSelectionInProgress || ![[NSUserDefaults standardUserDefaults] boolForKey: TSSTScrollersVisible])
+	BOOL showScrollers = [[NSUserDefaults standardUserDefaults] boolForKey: TSSTScrollersVisible];
+	if(pageSelectionInProgress)
 	{
 		scaling = 1;
 	}
@@ -2029,6 +2030,13 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			break;
 	}
 	
+	// Hiding the scrollers only hides them: it must not force fit-to-window or reset zoom,
+	// otherwise Zoom In/Out/pinch silently do nothing.
+	if(!showScrollers)
+	{
+		hasVert = NO;
+		hasHor = NO;
+	}
     [pageScrollView setHasVerticalScroller: hasVert];
     [pageScrollView setHasHorizontalScroller: hasHor];
 	
