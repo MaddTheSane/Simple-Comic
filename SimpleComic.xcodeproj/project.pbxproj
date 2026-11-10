@@ -22,12 +22,10 @@
 		1A2B3C4D50014A1AA1000006 /* TSSTArchiveStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000005 /* TSSTArchiveStreamer.m */; };
 		1A2B3C4D50014A1AA1000008 /* TSSTArchiveStreamingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000007 /* TSSTArchiveStreamingTests.m */; };
 		1A2B3C4D50014A1AA1000012 /* TSSTPageDecodeCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000011 /* TSSTPageDecodeCache.m */; };
-		1BA49A3CD12D728B0F3CC7D9 /* QuickComic.qlgenerator in Copy Quicklook plugin */ = {isa = PBXBuildFile; fileRef = 55C374051BD9E67D006385B6 /* QuickComic.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1EF31D4F57A032FB2A696B64 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 285FE32F0F945E2300CD8F96 /* Carbon.framework */; };
 		1F3EB1CFAEFE0F6F6B20E165 /* TSSTPage+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FFF1BC1DB01C5E0080B059 /* TSSTPage+CoreDataProperties.m */; };
 		26847AD922D17ED05CCF5B0F /* TSSTArchiveStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D50014A1AA1000005 /* TSSTArchiveStreamer.m */; };
 		26E04F5B484E4F76BBB77168 /* QuickComic Preview.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 55EE6BAF2945CA5B00C1AAE7 /* QuickComic Preview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		28073E610FFC347200D2602B /* QuickComic.qlgenerator in Copy Quicklook plugin */ = {isa = PBXBuildFile; fileRef = 55C374051BD9E67D006385B6 /* QuickComic.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2813145B0C0A7D5200EC007B /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 281314590C0A7D5200EC007B /* Credits.rtf */; };
 		281954EA0C1201E6001F5E95 /* TSSTManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 281954E80C1201E5001F5E95 /* TSSTManagedGroup.m */; };
 		283C4D5E0C43DE6900DB4FE9 /* TSSTImageUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 283C4D5C0C43DE6800DB4FE9 /* TSSTImageUtilities.m */; };
@@ -103,13 +101,6 @@
 		559EF3EB1BDD473B00FAAA0A /* TSSTThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559EF3EA1BDD473B00FAAA0A /* TSSTThumbnailView.swift */; };
 		55B2B1BC26506B1E0099ADA5 /* TSSTScrubberBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2B1BB26506B1E0099ADA5 /* TSSTScrubberBarItem.swift */; };
 		55B2B1CD26506CE50099ADA5 /* TSSTThumbnailItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2B1CC26506CE50099ADA5 /* TSSTThumbnailItemView.swift */; };
-		55C374251BD9E6AF006385B6 /* DTPartialArchiveParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 55C374111BD9E6AF006385B6 /* DTPartialArchiveParser.h */; };
-		55C374261BD9E6AF006385B6 /* DTPartialArchiveParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C374121BD9E6AF006385B6 /* DTPartialArchiveParser.m */; };
-		55C374271BD9E6AF006385B6 /* DTQuickComicCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 55C374131BD9E6AF006385B6 /* DTQuickComicCommon.h */; };
-		55C374281BD9E6AF006385B6 /* DTQuickComicCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C374141BD9E6AF006385B6 /* DTQuickComicCommon.m */; };
-		55C3742A1BD9E6AF006385B6 /* GeneratePreviewForURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C374181BD9E6AF006385B6 /* GeneratePreviewForURL.m */; };
-		55C3742B1BD9E6AF006385B6 /* GenerateThumbnailForURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C374191BD9E6AF006385B6 /* GenerateThumbnailForURL.m */; };
-		55C3742D1BD9E6AF006385B6 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 55C3741B1BD9E6AF006385B6 /* main.c */; };
 		55C374351BD9E6C4006385B6 /* UKXattrMetadataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EF3FBF0E9970BD002AD2EE /* UKXattrMetadataStore.m */; };
 		55C374391BD9E7C7006385B6 /* TSSTImageUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 283C4D5C0C43DE6800DB4FE9 /* TSSTImageUtilities.m */; };
 		55C3743A1BD9E85A006385B6 /* TSSTSortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 286AEDB60C4161C20031E3D9 /* TSSTSortDescriptor.m */; };
@@ -436,13 +427,6 @@
 			remoteGlobalIDString = 1B0DDCAB0A2D0AD10009B697;
 			remoteInfo = DetectorTest;
 		};
-		55C3745A1BD9EFE2006385B6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 55C374041BD9E67D006385B6;
-			remoteInfo = QuickComic;
-		};
 		55C3745C1BD9EFE2006385B6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 55C374511BD9EAA1006385B6 /* UniversalDetector.xcodeproj */;
@@ -478,13 +462,6 @@
 			remoteGlobalIDString = 55517AC9294BD686009734A9;
 			remoteInfo = "QuickComic Thumbnailer";
 		};
-		C9EA1FBF49589B6AABCE5AAE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 55C374041BD9E67D006385B6;
-			remoteInfo = QuickComic;
-		};
 		D37D612925DBD26A3377A03B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -505,17 +482,6 @@
 				06EFEC535675DD050DEDCB40 /* QuickComic Thumbnailer.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		28073E0A0FFC305400D2602B /* Copy Quicklook plugin */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Contents/Library/QuickLook;
-			dstSubfolderSpec = 1;
-			files = (
-				28073E610FFC347200D2602B /* QuickComic.qlgenerator in Copy Quicklook plugin */,
-			);
-			name = "Copy Quicklook plugin";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		280B6BBA0A1BB34600EE91B0 /* Copy Frameworks */ = {
@@ -543,17 +509,6 @@
 				5528C69F2953D19E0005EE8B /* QuickComic Thumbnailer.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6949B1103C649FAA7D8FBA6B /* Copy Quicklook plugin */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Contents/Library/QuickLook;
-			dstSubfolderSpec = 1;
-			files = (
-				1BA49A3CD12D728B0F3CC7D9 /* QuickComic.qlgenerator in Copy Quicklook plugin */,
-			);
-			name = "Copy Quicklook plugin";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9228AA66A7A389B265BF4946 /* Copy Frameworks */ = {
@@ -648,7 +603,6 @@
 		55517AD2294BD686009734A9 /* QuickComic_Thumbnailer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickComic_Thumbnailer.entitlements; sourceTree = "<group>"; };
 		55517AE9294BD7A8009734A9 /* QuickComic Thumbnailer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuickComic Thumbnailer-Bridging-Header.h"; sourceTree = "<group>"; };
 		55517AEF294BD8EE009734A9 /* PartialArchiveParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialArchiveParser.swift; sourceTree = "<group>"; };
-		5575A1821EAA76AC00C6D178 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		55861E3823C68B3700390CD3 /* V1ToV2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = V1ToV2.xcmappingmodel; sourceTree = "<group>"; };
 		5588929C2D41DF5900EA6A58 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5589952D1A13D4450058830B /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
@@ -661,18 +615,8 @@
 		559EF3DF1BDD38F400FAAA0A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		559EF3E11BDD390000FAAA0A /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		559EF3EA1BDD473B00FAAA0A /* TSSTThumbnailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSTThumbnailView.swift; sourceTree = "<group>"; };
-		55A6C3241CEF51F90049D381 /* QuickComic.exp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.exports; path = QuickComic.exp; sourceTree = "<group>"; };
 		55B2B1BB26506B1E0099ADA5 /* TSSTScrubberBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSSTScrubberBarItem.swift; sourceTree = "<group>"; };
 		55B2B1CC26506CE50099ADA5 /* TSSTThumbnailItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSSTThumbnailItemView.swift; sourceTree = "<group>"; };
-		55C374051BD9E67D006385B6 /* QuickComic.qlgenerator */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickComic.qlgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
-		55C374111BD9E6AF006385B6 /* DTPartialArchiveParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTPartialArchiveParser.h; sourceTree = "<group>"; };
-		55C374121BD9E6AF006385B6 /* DTPartialArchiveParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTPartialArchiveParser.m; sourceTree = "<group>"; };
-		55C374131BD9E6AF006385B6 /* DTQuickComicCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTQuickComicCommon.h; sourceTree = "<group>"; };
-		55C374141BD9E6AF006385B6 /* DTQuickComicCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTQuickComicCommon.m; sourceTree = "<group>"; usesTabs = 0; };
-		55C374181BD9E6AF006385B6 /* GeneratePreviewForURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratePreviewForURL.m; sourceTree = "<group>"; };
-		55C374191BD9E6AF006385B6 /* GenerateThumbnailForURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateThumbnailForURL.m; sourceTree = "<group>"; };
-		55C3741A1BD9E6AF006385B6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		55C3741B1BD9E6AF006385B6 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; usesTabs = 0; };
 		55C374511BD9EAA1006385B6 /* UniversalDetector.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UniversalDetector.xcodeproj; path = UniversalDetector/UniversalDetector.xcodeproj; sourceTree = "<group>"; };
 		55C7D78B1C4C0401005F40C8 /* TSSTCircularImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSTCircularImageView.swift; sourceTree = "<group>"; };
 		55C7D78F1C4C06FF005F40C8 /* TSSTInfoWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSTInfoWindow.swift; sourceTree = "<group>"; };
@@ -772,15 +716,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		55C374011BD9E67D006385B6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5500A65C1D7772B200321300 /* XADMaster.framework in Frameworks */,
-				55C374611BD9F03B006385B6 /* UniversalDetector.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		55EE6BAC2945CA5B00C1AAE7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -864,7 +799,6 @@
 			isa = PBXGroup;
 			children = (
 				8D1107320486CEB800E47090 /* Simple Comic.app */,
-				55C374051BD9E67D006385B6 /* QuickComic.qlgenerator */,
 				63BF686A28590BF6005962F4 /* OCR Unit Tests.xctest */,
 				55EE6BAF2945CA5B00C1AAE7 /* QuickComic Preview.appex */,
 				55517ACA294BD686009734A9 /* QuickComic Thumbnailer.appex */,
@@ -1089,16 +1023,6 @@
 		55C373FF1BD9E61E006385B6 /* QuickComic */ = {
 			isa = PBXGroup;
 			children = (
-				55C374111BD9E6AF006385B6 /* DTPartialArchiveParser.h */,
-				55C374121BD9E6AF006385B6 /* DTPartialArchiveParser.m */,
-				55C374131BD9E6AF006385B6 /* DTQuickComicCommon.h */,
-				55C374141BD9E6AF006385B6 /* DTQuickComicCommon.m */,
-				55C374181BD9E6AF006385B6 /* GeneratePreviewForURL.m */,
-				55C374191BD9E6AF006385B6 /* GenerateThumbnailForURL.m */,
-				5575A1821EAA76AC00C6D178 /* main.h */,
-				55C3741B1BD9E6AF006385B6 /* main.c */,
-				55C3741A1BD9E6AF006385B6 /* Info.plist */,
-				55A6C3241CEF51F90049D381 /* QuickComic.exp */,
 				55EE6BD82945D40300C1AAE7 /* QuickComicCommonSwift.swift */,
 				55EE6BB12945CA5B00C1AAE7 /* QuickComic Preview */,
 				55517ACE294BD686009734A9 /* QuickComic Thumbnailer */,
@@ -1252,18 +1176,6 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		55C374021BD9E67D006385B6 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				55C374251BD9E6AF006385B6 /* DTPartialArchiveParser.h in Headers */,
-				55C374271BD9E6AF006385B6 /* DTQuickComicCommon.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		0BC3E17BBD97A3B04B538D59 /* Simple Comic Direct */ = {
 			isa = PBXNativeTarget;
@@ -1273,14 +1185,12 @@
 				F6BA6F904316BE33BF59BB17 /* Frameworks */,
 				790741FE3C6550BBFF2A8995 /* Resources */,
 				9228AA66A7A389B265BF4946 /* Copy Frameworks */,
-				6949B1103C649FAA7D8FBA6B /* Copy Quicklook plugin */,
 				11FDDB9FA039E631714CF1A2 /* Embed Foundation Extensions */,
 				865FF539EB507F77F0080D3C /* Add Sparkle Info.plist keys */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				F76FA975BCC56ADF6DCD5008 /* PBXTargetDependency */,
 				D6154C6E8E9A4168D0E7BD4D /* PBXTargetDependency */,
 				1754AC3EFDA4C46EC2304CEB /* PBXTargetDependency */,
 			);
@@ -1309,26 +1219,6 @@
 			productName = "QuickComic Thumbnailer";
 			productReference = 55517ACA294BD686009734A9 /* QuickComic Thumbnailer.appex */;
 			productType = "com.apple.product-type.app-extension";
-		};
-		55C374041BD9E67D006385B6 /* QuickComic */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 55C3740E1BD9E67D006385B6 /* Build configuration list for PBXNativeTarget "QuickComic" */;
-			buildPhases = (
-				55C374001BD9E67D006385B6 /* Sources */,
-				55C374011BD9E67D006385B6 /* Frameworks */,
-				55C374021BD9E67D006385B6 /* Headers */,
-				55C374031BD9E67D006385B6 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				550CB1FA2366E8AD00FAC663 /* PBXTargetDependency */,
-				55C3745F1BD9EFE7006385B6 /* PBXTargetDependency */,
-			);
-			name = QuickComic;
-			productName = QuickComic2;
-			productReference = 55C374051BD9E67D006385B6 /* QuickComic.qlgenerator */;
-			productType = "com.apple.product-type.bundle";
 		};
 		55EE6BAE2945CA5B00C1AAE7 /* QuickComic Preview */ = {
 			isa = PBXNativeTarget;
@@ -1374,7 +1264,6 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				8D1107290486CEB800E47090 /* Resources */,
 				280B6BBA0A1BB34600EE91B0 /* Copy Frameworks */,
-				28073E0A0FFC305400D2602B /* Copy Quicklook plugin */,
 				55517AD6294BD687009734A9 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
@@ -1382,7 +1271,6 @@
 			dependencies = (
 				55C3745D1BD9EFE2006385B6 /* PBXTargetDependency */,
 				550CB1E72366E88C00FAC663 /* PBXTargetDependency */,
-				55C3745B1BD9EFE2006385B6 /* PBXTargetDependency */,
 				55517AF9294E46B7009734A9 /* PBXTargetDependency */,
 				55517AD4294BD686009734A9 /* PBXTargetDependency */,
 				5528C69E2953D19E0005EE8B /* PBXTargetDependency */,
@@ -1420,11 +1308,6 @@
 						CreatedOnToolsVersion = 14.2;
 						DevelopmentTeam = 3D9SMH4RWM;
 						LastSwiftMigration = 1420;
-						ProvisioningStyle = Automatic;
-					};
-					55C374041BD9E67D006385B6 = {
-						CreatedOnToolsVersion = 7.1;
-						DevelopmentTeam = 3D9SMH4RWM;
 						ProvisioningStyle = Automatic;
 					};
 					55EE6BAE2945CA5B00C1AAE7 = {
@@ -1499,7 +1382,6 @@
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* Simple Comic */,
-				55C374041BD9E67D006385B6 /* QuickComic */,
 				63BF686928590BF6005962F4 /* OCR Unit Tests */,
 				55EE6BAE2945CA5B00C1AAE7 /* QuickComic Preview */,
 				55517AC9294BD686009734A9 /* QuickComic Thumbnailer */,
@@ -1673,13 +1555,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		55C374031BD9E67D006385B6 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		55EE6BAD2945CA5B00C1AAE7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1775,21 +1650,6 @@
 				55517AF0294BD8EE009734A9 /* PartialArchiveParser.swift in Sources */,
 				55517AD0294BD686009734A9 /* ThumbnailProvider.swift in Sources */,
 				55517AED294BD7EA009734A9 /* UKXattrMetadataStore.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		55C374001BD9E67D006385B6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				55C3742D1BD9E6AF006385B6 /* main.c in Sources */,
-				55C374391BD9E7C7006385B6 /* TSSTImageUtilities.m in Sources */,
-				55C374281BD9E6AF006385B6 /* DTQuickComicCommon.m in Sources */,
-				55C374351BD9E6C4006385B6 /* UKXattrMetadataStore.m in Sources */,
-				55C3742B1BD9E6AF006385B6 /* GenerateThumbnailForURL.m in Sources */,
-				55C374261BD9E6AF006385B6 /* DTPartialArchiveParser.m in Sources */,
-				55C3743A1BD9E85A006385B6 /* TSSTSortDescriptor.m in Sources */,
-				55C3742A1BD9E6AF006385B6 /* GeneratePreviewForURL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1971,11 +1831,6 @@
 			name = XADMaster;
 			targetProxy = 550CB1E62366E88C00FAC663 /* PBXContainerItemProxy */;
 		};
-		550CB1FA2366E8AD00FAC663 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = XADMaster;
-			targetProxy = 550CB1F92366E8AD00FAC663 /* PBXContainerItemProxy */;
-		};
 		5528C69E2953D19E0005EE8B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 55EE6BAE2945CA5B00C1AAE7 /* QuickComic Preview */;
@@ -2001,20 +1856,10 @@
 			target = 55EE6BAE2945CA5B00C1AAE7 /* QuickComic Preview */;
 			targetProxy = 55517AF8294E46B7009734A9 /* PBXContainerItemProxy */;
 		};
-		55C3745B1BD9EFE2006385B6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 55C374041BD9E67D006385B6 /* QuickComic */;
-			targetProxy = 55C3745A1BD9EFE2006385B6 /* PBXContainerItemProxy */;
-		};
 		55C3745D1BD9EFE2006385B6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = UniversalDetector;
 			targetProxy = 55C3745C1BD9EFE2006385B6 /* PBXContainerItemProxy */;
-		};
-		55C3745F1BD9EFE7006385B6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = UniversalDetector;
-			targetProxy = 55C3745E1BD9EFE7006385B6 /* PBXContainerItemProxy */;
 		};
 		55EE6BD42945CD3500C1AAE7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2031,12 +1876,6 @@
 			name = "QuickComic Preview";
 			target = 55EE6BAE2945CA5B00C1AAE7 /* QuickComic Preview */;
 			targetProxy = D37D612925DBD26A3377A03B /* PBXContainerItemProxy */;
-		};
-		F76FA975BCC56ADF6DCD5008 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = QuickComic;
-			target = 55C374041BD9E67D006385B6 /* QuickComic */;
-			targetProxy = C9EA1FBF49589B6AABCE5AAE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2212,66 +2051,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "QuickComic/QuickComic Thumbnailer/QuickComic Thumbnailer-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		55C3740F1BD9E67D006385B6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55E21B1123FBCCF900D53932 /* No Sign.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 362;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 3D9SMH4RWM;
-				EXPORTED_SYMBOLS_FILE = QuickComic/QuickComic.exp;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = QuickComic/Info.plist;
-				INSTALL_PATH = /Library/QuickLook;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"@loader_path/../../../../../Frameworks",
-					"$(inherited)",
-				);
-				MARKETING_VERSION = 1.11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic.quickcomic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = qlgenerator;
-			};
-			name = Debug;
-		};
-		55C374101BD9E67D006385B6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 362;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 3D9SMH4RWM;
-				ENABLE_HARDENED_RUNTIME = YES;
-				EXPORTED_SYMBOLS_FILE = QuickComic/QuickComic.exp;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = QuickComic/Info.plist;
-				INSTALL_PATH = /Library/QuickLook;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"@loader_path/../../../../../Frameworks",
-					"$(inherited)",
-				);
-				MARKETING_VERSION = 1.11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic.quickcomic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = qlgenerator;
 			};
 			name = Release;
 		};
@@ -2690,15 +2469,6 @@
 			buildConfigurations = (
 				55517AD7294BD687009734A9 /* Debug */,
 				55517AD8294BD687009734A9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		55C3740E1BD9E67D006385B6 /* Build configuration list for PBXNativeTarget "QuickComic" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				55C3740F1BD9E67D006385B6 /* Debug */,
-				55C374101BD9E67D006385B6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
