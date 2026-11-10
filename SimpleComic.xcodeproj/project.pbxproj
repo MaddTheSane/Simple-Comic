@@ -69,7 +69,6 @@
 		513EA47241411D4C5556C34A /* SimpleComicAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C8280C06725ACE000B614F /* SimpleComicAppDelegate.m */; };
 		522A1C3A1B3441A6AE423B4B /* TSSTXADArchiveSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08B50E4BEF6348EBB37D1A1D /* TSSTXADArchiveSourceTests.m */; };
 		5237DDF77987B9359617D136 /* TSSTSessionWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FA4FA50B8AA28000496668 /* TSSTSessionWindowController.m */; };
-		5500A65C1D7772B200321300 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; };
 		5500A65D1D7772CD00321300 /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; };
 		5500A65F1D7772D400321300 /* XADMaster.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 5500A6371D77712F00321300 /* XADMaster.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		551275F12584AE5D0030269F /* SimpleComic Help.help in Resources */ = {isa = PBXBuildFile; fileRef = 551275E12584AE5D0030269F /* SimpleComic Help.help */; };
@@ -101,10 +100,6 @@
 		559EF3EB1BDD473B00FAAA0A /* TSSTThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559EF3EA1BDD473B00FAAA0A /* TSSTThumbnailView.swift */; };
 		55B2B1BC26506B1E0099ADA5 /* TSSTScrubberBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2B1BB26506B1E0099ADA5 /* TSSTScrubberBarItem.swift */; };
 		55B2B1CD26506CE50099ADA5 /* TSSTThumbnailItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B2B1CC26506CE50099ADA5 /* TSSTThumbnailItemView.swift */; };
-		55C374351BD9E6C4006385B6 /* UKXattrMetadataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EF3FBF0E9970BD002AD2EE /* UKXattrMetadataStore.m */; };
-		55C374391BD9E7C7006385B6 /* TSSTImageUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 283C4D5C0C43DE6800DB4FE9 /* TSSTImageUtilities.m */; };
-		55C3743A1BD9E85A006385B6 /* TSSTSortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 286AEDB60C4161C20031E3D9 /* TSSTSortDescriptor.m */; };
-		55C374611BD9F03B006385B6 /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55C374571BD9EAA1006385B6 /* UniversalDetector.framework */; };
 		55C7D78C1C4C0401005F40C8 /* TSSTCircularImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78B1C4C0401005F40C8 /* TSSTCircularImageView.swift */; };
 		55C7D7901C4C06FF005F40C8 /* TSSTInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7D78F1C4C06FF005F40C8 /* TSSTInfoWindow.swift */; };
 		55D068AC30A2AA5800AA2AB3 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = C17256455F35F5119B2A361B /* Sparkle */; };
@@ -145,10 +140,10 @@
 		63AA000C28610006007F240B /* TSSTHiddenPrefsLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */; };
 		63AA000E28610007007F240B /* TSSTBackgroundModeLayoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA000F28610007007F240B /* TSSTBackgroundModeLayoutTests.m */; };
 		63AA00F628610014007F240B /* TSSTCb7FixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */; };
-		63AA00FB28610020007F240B /* webpzoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA00FA28610020007F240B /* webpzoo */; };
-		63AA00FD28610021007F240B /* TSSTWebPFixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FC28610021007F240B /* TSSTWebPFixtureTests.m */; };
 		63AA00F928610013007F240B /* cb7zoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA00F828610013007F240B /* cb7zoo */; };
 		63AA00FB28610012007F240B /* TSSTPreviewPageSelectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */; };
+		63AA00FB28610020007F240B /* webpzoo in Resources */ = {isa = PBXBuildFile; fileRef = 63AA00FA28610020007F240B /* webpzoo */; };
+		63AA00FD28610021007F240B /* TSSTWebPFixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FC28610021007F240B /* TSSTWebPFixtureTests.m */; };
 		63AA00FE28610010007F240B /* TSSTUTIDeclarationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */; };
 		63AA7B0151BB0000007F240B /* TSSTRARFixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA7A0151AA0000007F240B /* TSSTRARFixtureTests.m */; };
 		63AA7B0151BB0100007F240B /* TSSTTestFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA7A0151AA0100007F240B /* TSSTTestFixtures.m */; };
@@ -352,13 +347,6 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = XADMaster;
 		};
-		550CB1F92366E8AD00FAC663 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5500A6231D77712F00321300 /* XADMaster.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = XADMaster;
-		};
 		5528C69D2953D19E0005EE8B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -430,13 +418,6 @@
 			remoteInfo = DetectorTest;
 		};
 		55C3745C1BD9EFE2006385B6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 55C374511BD9EAA1006385B6 /* UniversalDetector.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = UniversalDetector;
-		};
-		55C3745E1BD9EFE7006385B6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 55C374511BD9EAA1006385B6 /* UniversalDetector.xcodeproj */;
 			proxyType = 1;
@@ -667,11 +648,11 @@
 		63AA000D28610006007F240B /* TSSTHiddenPrefsLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTHiddenPrefsLayoutTests.m; sourceTree = "<group>"; };
 		63AA000F28610007007F240B /* TSSTBackgroundModeLayoutTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTBackgroundModeLayoutTests.m; sourceTree = "<group>"; };
 		63AA00F528610014007F240B /* TSSTCb7FixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTCb7FixtureTests.m; sourceTree = "<group>"; };
-		63AA00FA28610020007F240B /* webpzoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = webpzoo; sourceTree = "<group>"; };
-		63AA00FC28610021007F240B /* TSSTWebPFixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTWebPFixtureTests.m; sourceTree = "<group>"; };
 		63AA00F828610013007F240B /* cb7zoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cb7zoo; sourceTree = "<group>"; };
 		63AA00FA28610012007F240B /* TSSTPreviewPageSelectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTPreviewPageSelectionTests.m; sourceTree = "<group>"; };
+		63AA00FA28610020007F240B /* webpzoo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = webpzoo; sourceTree = "<group>"; };
 		63AA00FC28610011007F240B /* TSSTPreviewPageSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSTPreviewPageSelection.h; sourceTree = "<group>"; };
+		63AA00FC28610021007F240B /* TSSTWebPFixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTWebPFixtureTests.m; sourceTree = "<group>"; };
 		63AA00FD28610010007F240B /* TSSTUTIDeclarationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTUTIDeclarationTests.m; sourceTree = "<group>"; };
 		63AA7A0151AA0000007F240B /* TSSTRARFixtureTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTRARFixtureTests.m; sourceTree = "<group>"; };
 		63AA7A0151AA0100007F240B /* TSSTTestFixtures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTTestFixtures.m; sourceTree = "<group>"; };
