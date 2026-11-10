@@ -143,6 +143,9 @@
 		C461C4C073134889AD743053 /* TSSTZipIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 638E896DFA17428A8E6C0284 /* TSSTZipIndex.m */; };
 		D0E574A7DE3B4418A41D7EA2 /* TSSTXADArchiveSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D57E674C430A43BE8B619F34 /* TSSTXADArchiveSource.m */; };
 		FA9FB53508AADA270085AA55 /* TSSTCustomValueTransformers.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FB53408AADA270085AA55 /* TSSTCustomValueTransformers.m */; };
+		E0000000000000000000A001 /* SDWebImage.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF37A2F343F1500A35924 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E0000000000000000000A002 /* SDWebImageWebPCoder.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEFF3752F343EF000A35924 /* SDWebImageWebPCoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E0000000000000000000A003 /* libwebp.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2B62EA542F34E8C400ECCA61 /* libwebp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -434,6 +437,9 @@
 			files = (
 				5500A65F1D7772D400321300 /* XADMaster.framework in Copy Frameworks */,
 				284348130DA95C4A00F602E2 /* UniversalDetector.framework in Copy Frameworks */,
+				E0000000000000000000A001 /* SDWebImage.framework in Copy Frameworks */,
+				E0000000000000000000A002 /* SDWebImageWebPCoder.framework in Copy Frameworks */,
+				E0000000000000000000A003 /* libwebp.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
