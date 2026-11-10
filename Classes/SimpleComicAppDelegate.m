@@ -57,6 +57,7 @@ NSString *const TSSTLoupeDiameter =     @"loupeDiameter";
 NSString *const TSSTLoupePower =        @"loupePower";
 
 NSString *const TSSTLonelyFirstPage =   @"lonelyFirstPage";
+NSString *const TSSTLiveTextOverlay =   @"liveTextOverlay";
 NSString *const TSSTScrollersVisible =  @"scrollersVisible";
 NSString *const TSSTPreserveModDate =   @"preserveModDate";
 NSString *const TSSTUnifiedTitlebar =   @"unifiedTitlebar";
@@ -218,6 +219,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		  TSSTLoupeDiameter: @500,
 		  TSSTLoupePower: @2.0f,
 		  TSSTLonelyFirstPage: @YES,
+		  TSSTLiveTextOverlay: @YES,
 		  TSSTStatusbarVisible: @YES,
 		  TSSTPreserveModDate: @YES,
 		  TSSTUnifiedTitlebar: @NO,

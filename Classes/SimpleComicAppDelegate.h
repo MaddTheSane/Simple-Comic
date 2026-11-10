@@ -46,6 +46,8 @@ extern NSString *const TSSTEnableSwipe;
 extern NSString *const TSSTLoupeDiameter;
 extern NSString *const TSSTLoupePower;
 extern NSString *const TSSTLonelyFirstPage;
+/// Use native Live Text (VisionKit) for on-page text selection. Default YES; `defaults write <bundle id> liveTextOverlay -bool NO` restores the Vision-based selection.
+extern NSString *const TSSTLiveTextOverlay;
 extern NSString *const TSSTScrollersVisible;
 extern NSString *const TSSTPreserveModDate;
 extern NSString *const TSSTUnifiedTitlebar;

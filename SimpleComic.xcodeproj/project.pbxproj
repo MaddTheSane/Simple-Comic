@@ -140,6 +140,7 @@
 		5C0000000000000000000B22 /* TSSTArchiveScanEndToEndTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000B21 /* TSSTArchiveScanEndToEndTests.m */; };
 		5C0000000000000000000C02 /* TSSTInitialWindowSizeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0000000000000000000C01 /* TSSTInitialWindowSizeTests.m */; };
 		6304B5D42840190B009E7D61 /* OCRVision.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B5D32840190B009E7D61 /* OCRVision.m */; };
+		7C1FE7E22F0A00010078AA01 /* LiveTextOverlayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1FE7E12F0A00010078AA01 /* LiveTextOverlayCoordinator.swift */; };
 		6304B5D7284019EC009E7D61 /* OCRTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B5D5284019EC009E7D61 /* OCRTracker.m */; };
 		6304B60A28411F13009E7D61 /* OCRSelectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304B60928411F13009E7D61 /* OCRSelectionLayer.m */; };
 		6323E4D228613F83007F240B /* OCR_NSStringTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323E4C228613F83007F240B /* OCR_NSStringTests.m */; };
@@ -698,6 +699,7 @@
 		5C0000000000000000000C01 /* TSSTInitialWindowSizeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSTInitialWindowSizeTests.m; sourceTree = "<group>"; };
 		6220035510734CD884768BFB /* TSSTArchiveByteSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSTArchiveByteSource.h; sourceTree = "<group>"; };
 		6304B5D22840190B009E7D61 /* OCRVision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRVision.h; sourceTree = "<group>"; };
+		7C1FE7E12F0A00010078AA01 /* LiveTextOverlayCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveTextOverlayCoordinator.swift; sourceTree = "<group>"; };
 		6304B5D32840190B009E7D61 /* OCRVision.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRVision.m; sourceTree = "<group>"; };
 		6304B5D5284019EC009E7D61 /* OCRTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRTracker.m; sourceTree = "<group>"; };
 		6304B5D6284019EC009E7D61 /* OCRTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRTracker.h; sourceTree = "<group>"; };
@@ -1183,6 +1185,7 @@
 				6304B5D5284019EC009E7D61 /* OCRTracker.m */,
 				6304B5D22840190B009E7D61 /* OCRVision.h */,
 				6304B5D32840190B009E7D61 /* OCRVision.m */,
+				7C1FE7E12F0A00010078AA01 /* LiveTextOverlayCoordinator.swift */,
 			);
 			indentWidth = 4;
 			path = OCRVision;
@@ -1905,6 +1908,7 @@
 				63E5A9072870D1C200A9FFD5 /* OCRRangeEnumerator.m in Sources */,
 				55861E3923C68B3700390CD3 /* V1ToV2.xcmappingmodel in Sources */,
 				6304B5D42840190B009E7D61 /* OCRVision.m in Sources */,
+				7C1FE7E22F0A00010078AA01 /* LiveTextOverlayCoordinator.swift in Sources */,
 				6304B60A28411F13009E7D61 /* OCRSelectionLayer.m in Sources */,
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				55C7D78C1C4C0401005F40C8 /* TSSTCircularImageView.swift in Sources */,

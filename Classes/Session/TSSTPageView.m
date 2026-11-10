@@ -76,6 +76,16 @@ typedef struct {
 	/// This is the rect describing the users page selection.
 	NSRect cropRect;
 
+	/// Native Live Text overlays; created lazily while `TSSTLiveTextOverlay` is on.
+	LiveTextOverlayCoordinator *liveTextCoordinator;
+	CALayer *pageContainerLayer;
+	/// Animated pages are excluded from Live Text (every frame would be re-analyzed).
+	BOOL firstPageAnimated;
+	BOOL secondPageAnimated;
+	/// Where the last click began, so a drag (e.g. selecting text) isn't mistaken for a page-turn click.
+	NSPoint mouseDownWindowPoint;
+	BOOL hasMouseDownPoint;
+
 	/*!	The page-key pair `-requestMissingBackgroundSources` was last called
 		for, so repeated `-drawRect:` calls during the same still-missing page
 		(e.g. while resizing) don't keep re-requesting it. */
@@ -140,7 +150,8 @@ typedef struct {
 	if(first != firstPageImage)
 	{
 		firstPageImage = first;
-		if([self didStartAnimationForImage: firstPageImage])
+		firstPageAnimated = [self didStartAnimationForImage: firstPageImage];
+		if(firstPageAnimated)
 		{
 			[sessionController.tracker ocrImage:nil];
 		} else {
@@ -151,7 +162,8 @@ typedef struct {
 	if(second != secondPageImage)
 	{
 		secondPageImage = second;
-		if([self didStartAnimationForImage: secondPageImage])
+		secondPageAnimated = [self didStartAnimationForImage: secondPageImage];
+		if(secondPageAnimated)
 		{
 			[sessionController.tracker ocrImage2:nil];
 		} else {
@@ -327,14 +339,36 @@ typedef struct {
 #pragma mark Drawing
 
 
+/// The Live Text coordinator, or nil when the preference is off or Live Text is unsupported here.
+- (LiveTextOverlayCoordinator *)activeLiveTextCoordinator
+{
+	if(![[NSUserDefaults standardUserDefaults] boolForKey: TSSTLiveTextOverlay] || ![LiveTextOverlayCoordinator isAvailable])
+	{
+		[liveTextCoordinator clear];
+		liveTextCoordinator = nil;
+		return nil;
+	}
+	if(!liveTextCoordinator)
+	{
+		liveTextCoordinator = [[LiveTextOverlayCoordinator alloc] initWithHostView: self];
+	}
+	return liveTextCoordinator;
+}
+
+
 - (void)drawRect:(NSRect)aRect
 {
 	if(!firstPageImage)
 	{
+		[liveTextCoordinator clear];
 		return;
 	}
+	LiveTextOverlayCoordinator *liveText = [self activeLiveTextCoordinator];
+	CGAffineTransform liveTextTransform = [self rotationCGTransformWithFrame: [self frame]];
 
-	self.layer.sublayers = nil;
+	// Only drop our own page layer: wiping every sublayer would also detach the Live Text overlay
+	// subviews' backing layers (they stay in the view tree but stop rendering).
+	[pageContainerLayer removeFromSuperlayer];
 
 	CALayer* newLayer = [[CALayer alloc]init];
 	
@@ -414,6 +448,12 @@ typedef struct {
 		NSRect frame = [self centerScanRect: firstPageRect];
 		[firstPageLayer setFrame:frame];
 		[newLayer addSublayer:firstPageLayer];
+		if(liveText)
+		{
+			NSRect liveFrame = NSIntegralRect(CGRectApplyAffineTransform(frame, liveTextTransform));
+			[liveText setImage: firstPageAnimated ? nil : firstPageImage frame: liveFrame key: 0 rotation: rotation];
+		}
+		// Kept even with Live Text on: Find highlights and scroll-to-match live on this layer.
 		CALayer *selectionLayer = [sessionController.tracker layerForImage:firstPageImage imageLayer:firstPageLayer];
 		if (selectionLayer) {
 			[firstPageLayer addSublayer:selectionLayer];
@@ -427,10 +467,20 @@ typedef struct {
 		NSRect frame = [self centerScanRect: secondPageRect];
 		[secondPageLayer setFrame:frame];
 		[newLayer addSublayer:secondPageLayer];
+		if(liveText)
+		{
+			NSRect liveFrame = NSIntegralRect(CGRectApplyAffineTransform(frame, liveTextTransform));
+			[liveText setImage: secondPageAnimated ? nil : secondPageImage frame: liveFrame key: 1 rotation: rotation];
+		}
+		// Kept even with Live Text on: Find highlights and scroll-to-match live on this layer.
 		CALayer *selectionLayer = [sessionController.tracker layerForImage:secondPageImage imageLayer:secondPageLayer];
 		if (selectionLayer) {
 			[secondPageLayer addSublayer:selectionLayer];
 		}
+	}
+	else
+	{
+		[liveText setImage: nil frame: NSZeroRect key: 1 rotation: rotation];
 	}
 	
 	NSColor* selectionBackgroundColor = [NSColor.selectedContentBackgroundColor colorWithAlphaComponent:0.5];
@@ -518,7 +568,8 @@ typedef struct {
 	
 	[newLayer setAffineTransform:rotationTransform];
 	
-	[self.layer addSublayer:newLayer];
+	pageContainerLayer = newLayer;
+	[self.layer insertSublayer:newLayer atIndex:0];
 }
 
 
@@ -1383,6 +1434,8 @@ typedef struct {
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
+	mouseDownWindowPoint = [theEvent locationInWindow];
+	hasMouseDownPoint = YES;
 	if ([sessionController pageSelectionInProgress])
 	{
 		NSPoint cursor = [self convertPoint: [theEvent locationInWindow] fromView: nil];
@@ -1486,6 +1539,17 @@ typedef struct {
 	}
 	
 	NSPoint clickPoint = [theEvent locationInWindow];
+	if(liveTextCoordinator)
+	{
+		/* The Live Text overlay handles text selection drags itself but lets the
+		   mouse-up fall through to us. Only a plain click should turn the page. */
+		BOOL wasDrag = hasMouseDownPoint && hypot(clickPoint.x - mouseDownWindowPoint.x, clickPoint.y - mouseDownWindowPoint.y) > 4.0;
+		hasMouseDownPoint = NO;
+		if(wasDrag || liveTextCoordinator.hasActiveTextSelection)
+		{
+			return;
+		}
+	}
 	int viewSplit = NSWidth([[self enclosingScrollView] frame]) / 2;
 	if(NSMouseInRect(clickPoint, [[self enclosingScrollView] frame], [[self enclosingScrollView] isFlipped]))
 	{
