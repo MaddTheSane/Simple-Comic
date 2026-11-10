@@ -20,6 +20,8 @@ Simple Comic uses Apple's Optical Character Recognition, on Apple Silicon Macs, 
 
 We don't collect any user data in the app itself. We know nothing about you and are happy with that.
 
+The direct-download build (from GitHub Releases or Homebrew) checks GitHub for new versions using Sparkle; the Mac App Store build has no updater and makes no network requests.
+
 GitHub collects data when you interact with the project here, but we can't change any of that.
 
 ## Build Instructions

@@ -36,11 +36,14 @@ step() { printf '\n\033[1m==> %s\033[0m\n' "$*"; }
 
 # ---- 1 preflight --------------------------------------------------------
 step "preflight"
-for tool in xcodebuild gh op git python3 xcrun; do
+for tool in xcodebuild gh op git python3 xcrun sign_update xmllint; do
   command -v "$tool" >/dev/null || { echo "error: missing $tool" >&2; exit 1; }
 done
 security find-identity -v -p codesigning | grep -q "Developer ID Application" \
   || { echo "error: no Developer ID Application identity in the keychain" >&2; exit 1; }
+# The Sparkle signing key must exist in the login keychain (sign_update reads it from there).
+security find-generic-password -s "https://sparkle-project.org" -a "$SPARKLE_ACCOUNT" >/dev/null 2>&1 \
+  || { echo "error: no Sparkle key for account '$SPARKLE_ACCOUNT' in the keychain (generate_keys --account $SPARKLE_ACCOUNT)" >&2; exit 1; }
 gh auth status >/dev/null 2>&1 || { echo "error: gh not authenticated" >&2; exit 1; }
 [[ -z "$(git status --porcelain --untracked-files=no)" ]] || { echo "error: working tree not clean" >&2; exit 1; }
 git fetch upstream --tags --quiet
@@ -106,6 +109,8 @@ if (( dry_run )); then
 fi
 scripts/notarize.sh "$version"
 scripts/verify_release.sh "dist/Simple.Comic.${version}.zip" "$version" "$build"
+step "Sparkle appcast"
+scripts/sparkle_appcast.sh "$version" "$build" "dist/Simple.Comic.${version}.zip" "$notes_dir/summary.txt"
 
 if (( dry_run )); then
   step "dry run complete (nothing pushed, uploaded, tagged or published)"
@@ -126,7 +131,7 @@ git tag "$tag" "$sha"
 git push upstream "$tag"
 { echo "Submitted to the [Mac App Store](https://apps.apple.com/us/app/simple-comic/id1497435571?mt=12)."; echo
   cat "$notes_dir/summary.txt"; } > "$notes_dir/body-head.md"
-gh release create "$tag" "dist/Simple.Comic.${version}.zip" --repo "$UPSTREAM_REPO" \
+gh release create "$tag" "dist/Simple.Comic.${version}.zip" dist/appcast.xml --repo "$UPSTREAM_REPO" \
   --target "$sha" --title "$tag" --latest \
   --generate-notes --notes-start-tag "$prev_tag" --notes-file "$notes_dir/body-head.md"
 gh release view "$tag" --repo "$UPSTREAM_REPO" --json url,isLatest,assets -q '.url'

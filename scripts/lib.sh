@@ -14,6 +14,10 @@ UPSTREAM_REPO="${UPSTREAM_REPO:-MaddTheSane/Simple-Comic}"
 BUNDLE_ID="com.ToWatchList.SimpleComic"
 APP_NAME="Simple Comic"
 SCHEME="Simple Comic"
+# Direct-download (Sparkle) variant of the app. The App Store build uses SCHEME.
+DIRECT_SCHEME="Simple Comic Direct"
+# Keychain account of the Sparkle EdDSA signing key (generate_keys --account ...).
+SPARKLE_ACCOUNT="${SPARKLE_ACCOUNT:-SimpleComic}"
 PROJECT="SimpleComic.xcodeproj"
 
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
