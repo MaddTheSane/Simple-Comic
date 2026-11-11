@@ -134,7 +134,7 @@ git push upstream "$tag"
 gh release create "$tag" "dist/Simple.Comic.${version}.zip" dist/appcast.xml --repo "$UPSTREAM_REPO" \
   --target "$sha" --title "$tag" --latest \
   --generate-notes --notes-start-tag "$prev_tag" --notes-file "$notes_dir/body-head.md"
-gh release view "$tag" --repo "$UPSTREAM_REPO" --json url,isLatest,assets -q '.url'
+gh release view "$tag" --repo "$UPSTREAM_REPO" --json url,assets -q '.url'
 
 # ---- 7 install ------------------------------------------------------------
 step "install locally"
