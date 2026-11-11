@@ -338,6 +338,17 @@
         }
       }
     },
+    "Check for Updates…" : {
+      "comment" : "App menu item that checks for a newer version",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check for Updates…"
+          }
+        }
+      }
+    },
     "Click to select page" : {
       "localizations" : {
         "de" : {
