@@ -81,6 +81,10 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	    page 1 only while the user hasn't navigated away from the one we
 	    pinned. nil once the scan finishes or the user moves selection. */
 	id autoPinnedPageDuringScan;
+	/** YES once the first batch of a scan has been looked at for pinning,
+	    so a pin the user abandoned by navigating isn't re-armed by the
+	    next batch. Cleared when the scan ends. */
+	BOOL scanPinConsidered;
 
 	/** Bumped on every -changeViewImages call; an async page load compares
 	    its captured value against the current one before applying its
@@ -436,6 +440,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 		// The scan finished with pages already showing: stop following the
 		// first page and drop the overlay.
 		autoPinnedPageDuringScan = nil;
+		scanPinConsidered = NO;
 		[self updateLoadingOverlay];
 		return;
 	}
@@ -469,7 +474,20 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 			[pageController setSelectionIndex: target];
 			if (session.isLoading)
 			{
+				scanPinConsidered = YES;
 				autoPinnedPageDuringScan = [pageController arrangedObjects][target];
+			}
+		}
+		else if (pageCount > 0 && session.isLoading && !autoPinnedPageDuringScan && !scanPinConsidered)
+		{
+			// The array controller already selected the first page of the
+			// first batch on its own (the branch above only handles the
+			// case where it didn't), so pin that page here: later batches
+			// can still insert pages that sort before it.
+			scanPinConsidered = YES;
+			if (selectionIndex == 0)
+			{
+				autoPinnedPageDuringScan = [pageController arrangedObjects][0];
 			}
 		}
 		else if (pageCount > 0 && session.isLoading && autoPinnedPageDuringScan)
