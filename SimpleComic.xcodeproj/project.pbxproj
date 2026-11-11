@@ -1929,7 +1929,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 362;
+				CURRENT_PROJECT_VERSION = 363;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -1955,7 +1955,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.12.0;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic;
 				PRODUCT_NAME = "Simple Comic";
@@ -1979,7 +1979,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 362;
+				CURRENT_PROJECT_VERSION = 363;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1997,7 +1997,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ToWatchList.SimpleComic.QuickComic-Thumbnailer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2020,7 +2020,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 362;
+				CURRENT_PROJECT_VERSION = 363;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2033,7 +2033,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ToWatchList.SimpleComic.QuickComic-Thumbnailer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2053,7 +2053,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 362;
+				CURRENT_PROJECT_VERSION = 363;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2071,7 +2071,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ToWatchList.SimpleComic.QuickComic-Preview";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2092,7 +2092,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 362;
+				CURRENT_PROJECT_VERSION = 363;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2106,7 +2106,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ToWatchList.SimpleComic.QuickComic-Preview";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2189,7 +2189,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 362;
+				CURRENT_PROJECT_VERSION = 363;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2215,7 +2215,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic;
 				PRODUCT_NAME = "Simple Comic";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2240,7 +2240,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 362;
+				CURRENT_PROJECT_VERSION = 363;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -2265,7 +2265,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.12.0;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic;
 				PRODUCT_NAME = "Simple Comic";
@@ -2288,7 +2288,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 362;
+				CURRENT_PROJECT_VERSION = 363;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 3D9SMH4RWM;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2309,7 +2309,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)";
-				MARKETING_VERSION = 1.11.0;
+				MARKETING_VERSION = 1.12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ToWatchList.SimpleComic;
 				PRODUCT_NAME = "Simple Comic";
 				PROVISIONING_PROFILE_SPECIFIER = "";
