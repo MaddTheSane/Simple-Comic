@@ -12,6 +12,10 @@
 #import <XADMaster/XADArchive.h>
 #import "TSSTTestFixtures.h"
 #import "TSSTManagedGroup.h"
+#import "SimpleComicAppDelegate.h"
+#import "TSSTManagedSession.h"
+#import "TSSTSessionWindowController.h"
+#import "TSSTPage.h"
 
 static NSString *const kFixturePassword = @"TESTPW"; // password of every encrypted fixture
 static const NSUInteger kFixturePageCount = 6;       // pages in each plain fixture
@@ -177,6 +181,44 @@ static const NSUInteger kFixturePageCount = 6;       // pages in each plain fixt
 	NSArray<NSNumber *> *pages = [self pageIndexesInArchive: archive];
 	XCTAssertGreaterThan(pages.count, 0u);
 	XCTAssertTrue([self dataIsJPEG: [archive contentsOfEntry: pages.firstObject.integerValue]]);
+}
+
+#pragma mark - Opening a window (what File > Open does)
+
+/// Opens `name` the way File > Open does (session + window controller, never shown) and returns the controller after the scan has landed.
+/// RAR entries are stored in directory order, not reading order, so pages arrive in batches that are not sorted; the window must still end up on the first page.
+- (void)assertOpeningFixtureLandsOnFirstPage:(NSString *)name
+{
+	TSSTRequireFixture(url, name);
+	SimpleComicAppDelegate *delegate = (SimpleComicAppDelegate *)NSApp.delegate;
+	TSSTManagedSession *session = [delegate newSessionWithFileURLs: @[url]];
+	TSSTSessionWindowController *controller = [[TSSTSessionWindowController alloc] initWithSession: session];
+	(void)controller.window; // loads the nib; the window is not shown
+
+	NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow: 30];
+	while ((session.loading || session.images.count == 0) && deadline.timeIntervalSinceNow > 0)
+	{
+		[[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode beforeDate: [NSDate dateWithTimeIntervalSinceNow: 0.02]];
+	}
+	[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow: 0.3]];
+
+	XCTAssertFalse(session.loading, @"%@ never finished loading", name);
+	NSArray<TSSTPage *> *pages = controller.pageController.arrangedObjects;
+	XCTAssertEqual(pages.count, kFixturePageCount, @"%@", name);
+	XCTAssertEqual(controller.pageController.selectionIndex, 0u, @"%@ opened on %@, not its first page", name, [controller.pageController.selectedObjects.firstObject valueForKey: @"imagePath"]);
+	XCTAssertEqual(session.selection, 0, @"%@ session.selection", name);
+
+	[controller.window orderOut: nil];
+	[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow: 0.5]];
+	[delegate.managedObjectContext deleteObject: session];
+}
+
+- (void)testOpeningARARLandsOnItsFirstPage
+{
+	for (NSString *name in @[@"jessie-james-rar4.cbr", @"jessie-james-rar5.cbr", @"jj-rar4-solid.cbr", @"jj-rar5-solid.cbr", @"jj-rar5-nonsolid-noqo.cbr", @"jj-rar5-recovery-qo.cbr", @"jj-rar5-stored.cbr", @"jj-rar4-stored.cbr", @"jj-rar5-comment.cbr"])
+	{
+		[self assertOpeningFixtureLandsOnFirstPage: name];
+	}
 }
 
 #pragma mark - App scan path
