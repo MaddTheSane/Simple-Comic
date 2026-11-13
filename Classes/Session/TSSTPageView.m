@@ -474,7 +474,7 @@ typedef struct {
 	
 	if([sessionController pageSelectionInProgress])
 	{
-		NSString * selectionText = NSLocalizedString(@"Click to select page", @"");
+		NSString * selectionText = NSLocalizedString(@"Click to select page", @"Click to select page");
 		if([sessionController pageSelectionCanCrop])
 		{
 			selectionText = [selectionText stringByAppendingString: NSLocalizedString(@"\nDrag to crop", @"")];

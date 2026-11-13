@@ -37,7 +37,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "\nDrag to crop"
+            "value" : "\nドラッグしてトリミングする"
           }
         },
         "ko" : {
@@ -49,7 +49,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "\nDrag to crop"
+            "value" : "\nArrastar para recortar"
           }
         },
         "zh-Hans" : {
@@ -254,6 +254,24 @@
             "value" : "Un volume de cet archive multivolet n'a pas pu être ouvert : « %@ ». Conservez toutes ses parties dans un seul dossier."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Un volume di questo archivio multivolume non potrebbe essere aperto: \"%@\". Tieni tutte le sue parti insieme in una cartella."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "このマルチボリュームアーカイブのボリュームを開くことができません：「%@」。すべてのパーツを1つのフォルダーにまとめてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "이 다중 볼륨 아카이브의 일부를 열 수 없습니다: “%@”. 모든 부분을 하나의 폴더에 함께 보관하세요."
+          }
+        },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -346,10 +364,59 @@
             "state" : "translated",
             "value" : "Check for Updates…"
           }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check for Updates…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Vérifiez les mises à jour..."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Controlla per gli aggiornamenti..."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "更新を確認してください..."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "업데이트 확인..."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Verifique as atualizações..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "检查更新……"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "檢查更新..."
+          }
         }
       }
     },
     "Click to select page" : {
+      "comment" : "Click to select page",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -384,7 +451,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Click to select page"
+            "value" : "ページを選択するにはクリックしてください"
           }
         },
         "ko" : {
@@ -396,7 +463,7 @@
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Click to select page"
+            "value" : "Clique para selecionar página"
           }
         },
         "zh-Hans" : {
@@ -438,6 +505,30 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Contient"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Contains"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "含まれている"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "포함한다"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Contém"
           }
         },
         "zh-Hans" : {
@@ -485,6 +576,24 @@
             "value" : "Copie"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "copia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "コピー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "복사"
+          }
+        },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -530,6 +639,24 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Copier le texte"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Copia del testo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "テキストをコピーする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "텍스트 복사"
           }
         },
         "pt" : {
@@ -618,6 +745,7 @@
       }
     },
     "Extract" : {
+      "comment" : "Extract Page prompt",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -652,13 +780,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract"
+            "value" : "抽出する"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract"
+            "value" : "추출물"
           }
         },
         "pt" : {
@@ -682,6 +810,7 @@
       }
     },
     "Extract Page" : {
+      "comment" : "Extract Page title",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -716,13 +845,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract Page"
+            "value" : "抽出ページ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Extract Page"
+            "value" : "추출 페이지"
           }
         },
         "pt" : {
@@ -772,10 +901,28 @@
             "value" : "Mot plein"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "parola piena"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "完全な単語"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "전체 단어"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Palavra completa"
           }
         },
         "zh-Hans" : {
@@ -817,6 +964,24 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Accorder l'accès"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Concedi l'accesso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "アクセスを許可する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "접근 권한 부여"
           }
         },
         "pt" : {
@@ -935,6 +1100,30 @@
             "value" : "Chargement de la page %lu…"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pagina di caricamento %lu…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ロード中のページ%lu..."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "로딩 페이지 %lu..."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Carregando página %lu…"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -974,6 +1163,30 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Chargement..."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Caricamento..."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "読み込み中..."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "로딩 중..."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Carregando..."
           }
         },
         "zh-Hans" : {
@@ -1017,6 +1230,12 @@
             "value" : "Regarde"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Cerca"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -1027,6 +1246,12 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "찾아봐"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pesquisar"
           }
         },
         "zh-Hans" : {
@@ -1070,6 +1295,12 @@
             "value" : "Cherchez « %@ »"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Cerca \"%@\""
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -1080,6 +1311,12 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "찾아봐 “%@”"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Procure por “%@”"
           }
         },
         "zh-Hans" : {
@@ -1121,6 +1358,30 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Aucune page n'a pu être trouvée dans \"%@\"."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Non sono state trovate pagine in \"%@\"."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "「%@」でページが見つかりません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "\"%@\"에서 페이지를 찾을 수 없습니다."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nenhuma página pôde ser encontrada em “%@”."
           }
         },
         "zh-Hans" : {
@@ -1170,6 +1431,24 @@
             "value" : "Layout di pagina"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ページレイアウト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "페이지 레이아웃"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Layout da página"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1217,6 +1496,24 @@
             "value" : "Ordine delle pagine"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ページ注文"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "페이지 순서"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pedido de Página"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1262,6 +1559,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dimensione pagina"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ページスケーリング"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "페이지 스케일링"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Escalonamento de página"
           }
         },
         "zh-Hans" : {
@@ -1444,7 +1759,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Prev/Next Comic"
+            "value" : "前/次コミック"
           }
         },
         "ko" : {
@@ -1714,6 +2029,12 @@
             "value" : "회전하다"
           }
         },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "girar"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1820,6 +2141,30 @@
             "value" : "Simple Comic a besoin d'un accès à ce dossier pour lire les autres volumes de l'archive multi-parties « %@ »."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Simple Comic ha bisogno di accedere a questa cartella per leggere gli altri volumi dell'archivio in più parti \"%@\"."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Simple Comicは、このフォルダにアクセスして、マルチパートアーカイブ「%@」の他のボリュームを読む必要があります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Simple Comic은 다른 다중 부분 아카이브 “%@”의 다른 볼륨들을 읽기 위해 이 폴더에 액세스가 필요합니다."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Simple Comic precisa de acesso a esta pasta para ler os outros volumes do arquivo multi-partes “%@”."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -1859,6 +2204,30 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Commencez à parler"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Inizia a parlare"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "話すことを始める"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "말하기 시작하기"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Comece a Falar"
           }
         },
         "zh-Hans" : {
@@ -1902,10 +2271,28 @@
             "value" : "Commence par"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Inizia con"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "から始まる"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "시작으로"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Começa com"
           }
         },
         "zh-Hans" : {
@@ -1949,6 +2336,30 @@
             "value" : "Arrête De Parler"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Smettila di parlare"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "話すのをやめて"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "말을 멈춰"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pare de falar"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -1988,6 +2399,30 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Envelopper autour"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Avvolgere intorno"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "巻き込む"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "감싸다"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Envolver"
           }
         },
         "zh-Hans" : {

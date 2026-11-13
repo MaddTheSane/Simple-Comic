@@ -402,7 +402,7 @@ static NSArray<NSNumber*> * allAvailableStringEncodings(void)
 		alert.messageText = NSLocalizedString(@"Quit without saving session?", @"Quit without saving session?");
 		alert.informativeText = NSLocalizedString(@"Could not save changes while quitting. Quit anyway?", @"Could not save changes while quitting. Quit anyway?");
 		[alert addButtonWithTitle:NSLocalizedString(@"Quit anyway", @"Quit anyway")];
-		[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel")];
 		NSInteger alertReturn = [alert runModal];
 		if (alertReturn == NSAlertSecondButtonReturn)
 		{
