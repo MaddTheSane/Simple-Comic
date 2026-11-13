@@ -3374,19 +3374,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Jump to Page…"
+            "value" : "ページにジャンプする..."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Jump to Page…"
+            "value" : "페이지로 건너뛰기..."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Jump to Page…"
+            "value" : "Saltar para a Página..."
           }
         },
         "zh-Hans" : {
@@ -3440,19 +3440,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Status Bar"
+            "value" : "ステータスバー"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Status Bar"
+            "value" : "상태 표시줄"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Status Bar"
+            "value" : "barra de status"
           }
         },
         "zh-Hans" : {
@@ -3506,19 +3506,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Show Toolbar"
+            "value" : "ツールバーを表示する"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Show Toolbar"
+            "value" : "툴바 표시"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Show Toolbar"
+            "value" : "Mostrar Barra de Ferramentas"
           }
         },
         "zh-Hans" : {
@@ -3572,19 +3572,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Customize Toolbar…"
+            "value" : "ツールバーをカスタマイズ..."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Customize Toolbar…"
+            "value" : "도구 모음바우더를 맞춤"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Customize Toolbar…"
+            "value" : "Personalizar Barra de Ferramentas..."
           }
         },
         "zh-Hans" : {
@@ -4145,7 +4145,8 @@
             "value" : "filename"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "1712.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Cancel\"; ObjectID = \"1712\";",
@@ -4250,13 +4251,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Page as Icon"
+            "value" : "ページをアイコンとして設定する"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Set Page as Icon"
+            "value" : "페이지를 아이콘으로 설정"
           }
         },
         "pt" : {
@@ -4514,13 +4515,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "No Rotation"
+            "value" : "回転なし"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "No Rotation"
+            "value" : "회전 없음"
           }
         },
         "pt" : {
@@ -4580,13 +4581,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page…"
+            "value" : "キャプチャページ..."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Capture Page…"
+            "value" : "캡처 페이지..."
           }
         },
         "pt" : {
@@ -4646,13 +4647,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Edit"
+            "value" : "編集"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Edit"
+            "value" : "편집"
           }
         },
         "pt" : {
@@ -4712,13 +4713,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Edit"
+            "value" : "編集"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Edit"
+            "value" : "편집"
           }
         },
         "pt" : {
@@ -4778,13 +4779,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Cut"
+            "value" : "カット"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Cut"
+            "value" : "베임"
           }
         },
         "pt" : {
@@ -4844,13 +4845,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Copy"
+            "value" : "コピー"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Copy"
+            "value" : "복사"
           }
         },
         "pt" : {
@@ -4910,13 +4911,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Paste"
+            "value" : "ペースト"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Paste"
+            "value" : "밀가루 반죽"
           }
         },
         "pt" : {
@@ -4959,6 +4960,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Always Show Toolbar in Full Screen"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "フルスクリーンで常にツールバーを表示する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "풀스크린에서 항상 도구모음 표시"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mostrar a Barra de Ferramentas em Tela Cheia"
           }
         },
         "zh-Hans" : {
@@ -5012,19 +5031,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Select All"
+            "value" : "すべてを選択する"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Select All"
+            "value" : "모두 선택"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Select All"
+            "value" : "Selecionar Todos"
           }
         },
         "zh-Hans" : {
@@ -5057,6 +5076,24 @@
             "value" : "Find Next"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "次へ検索する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "다음 찾기"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Encontrar Próximo"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -5079,6 +5116,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Find"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "見つける"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "정보를 얻다"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Encontrar"
           }
         },
         "zh-Hans" : {
@@ -5105,6 +5160,24 @@
             "value" : "Use Selection for Find"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "検索に選択を使用する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "선택을 사용하여 찾기"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Use Seleção para Pesquisar"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -5127,6 +5200,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Find…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "見つける…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "찾아라..."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Encontre..."
           }
         },
         "zh-Hans" : {
@@ -5153,6 +5244,24 @@
             "value" : "Find Previous"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "前へ戻る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "이전 찾기"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Encontrar Anterior"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -5175,6 +5284,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Speech"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "スピーチ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "연설"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Discurso"
           }
         },
         "zh-Hans" : {
@@ -5207,6 +5334,24 @@
             "value" : "Start Speaking"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "話すことを始める"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "말하기 시작하기"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Comece a Falar"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -5235,6 +5380,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stop Speaking"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "話すのをやめて"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "말을 멈춰"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pare de falar"
           }
         },
         "zh-Hans" : {
@@ -5267,6 +5430,24 @@
             "value" : "Find"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "見つける"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "정보를 얻다"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Encontrar"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -5289,6 +5470,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Speech"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "スピーチ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "연설"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Discurso"
           }
         },
         "zh-Hans" : {
