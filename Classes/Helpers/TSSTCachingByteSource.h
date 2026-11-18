@@ -30,7 +30,7 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 /// Wraps an upstream ``TSSTArchiveByteSource`` with a local disk cache, so
 /// repeated reads of the same range (typical when re-paging, or when a
 /// background streamer has already pulled a block) don't cost another
-/// round trip over a slow link. Demand reads (`-readAtOffset:length:error:`)
+/// round trip over a slow link. Demand reads (``TSSTArchiveByteSource/readAtOffset:length:error:``)
 /// fetch and cache whatever they need, coalescing missing blocks into as
 /// few upstream reads as possible; ``TSSTArchiveStreamer-class`` drives background
 /// prefetch through the same cache.
@@ -50,15 +50,15 @@ typedef NS_ERROR_ENUM(TSSTCachingByteSourceErrorDomain, TSSTCachingByteSourceErr
 /// Hint for eviction: blocks far from this offset are evicted first.
 @property (nonatomic) uint64_t focusOffset;
 
-/// Number of demand reads (from `-readAtOffset:length:error:`) currently
-/// in flight and needing upstream data. `TSSTArchiveStreamer` checks this
+/// Number of demand reads (from ``TSSTArchiveByteSource/readAtOffset:length:error:``) currently
+/// in flight and needing upstream data. ``TSSTArchiveStreamer`` checks this
 /// before starting its next background chunk, so demand always wins.
 @property (atomic, readonly) NSUInteger pendingDemandCount;
 
 - (BOOL)isRangeCachedAtOffset:(uint64_t)offset length:(NSUInteger)length;
 
 /// `NO` when the range spans more blocks than the budget keeps, so it could
-/// never be fully cached at once (`-prefetchAtOffset:length:error:` fails with
+/// never be fully cached at once (``prefetchAtOffset:length:error:`` fails with
 /// ``TSSTCachingByteSourceErrorOverBudget``).
 - (BOOL)canCacheRangeAtOffset:(uint64_t)offset length:(NSUInteger)length;
 

@@ -116,7 +116,7 @@ textStyle: Dictionary of string attributes.
 	}
 
 	/// Pure helper (unit tested): merges `indexes` into contiguous runs,
-	/// each expressed as a fractional [start, end) range of `total`. Split
+	/// each expressed as a fractional \[start, end) range of `total`. Split
 	/// out of `draw(_:)` so the run-merging logic can be tested without a
 	/// view/graphics context.
 	static func bufferedFractionalRuns(indexes: IndexSet, total: Int) -> [(start: CGFloat, end: CGFloat)] {
@@ -240,7 +240,7 @@ textStyle: Dictionary of string attributes.
 	
 	/// If there has been a mouse tracking area added to this view it will be updated
 	/// every time the progress bar is re-sized.
-	/// The tracking area is based on the `progressRect` property.
+	/// The tracking area is based on the ``progressRect`` property.
 	override func updateTrackingAreas() {
 		defer {
 			super.updateTrackingAreas()
@@ -260,7 +260,7 @@ textStyle: Dictionary of string attributes.
 		return false
 	}
 	
-	/// Changes the `currentValue` based on where the user clicks.
+	/// Changes the ``currentValue`` based on where the user clicks.
 	override func mouseDown(with theEvent: NSEvent) {
 		let cursorPoint = convert(theEvent.locationInWindow, from: nil)
 		if NSMouseInRect(cursorPoint, progressRect, isFlipped) {
@@ -275,7 +275,7 @@ textStyle: Dictionary of string attributes.
 		if NSMouseInRect(cursorPoint, progressRect, isFlipped) {
 			self.currentValue = index(for: cursorPoint)
 			
-			NotificationCenter.default.post(name: .TSSTMouseDrag, object: self)
+			NotificationCenter.default.post(name: .SCMouseDrag, object: self)
 		}
 	}
 }

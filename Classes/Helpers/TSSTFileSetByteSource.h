@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// never straddles two files.
 @interface TSSTFileSetByteSource : NSObject <TSSTArchiveByteSource>
 
-/// urls and sizes are parallel; sizes come from the directory listing so
+/// `urls` and `sizes` are parallel; sizes come from the directory listing so
 /// no per-file stat is needed to lay the space out.
 - (instancetype)initWithFileURLs:(NSArray<NSURL *> *)urls sizes:(NSArray<NSNumber *> *)sizes;
 

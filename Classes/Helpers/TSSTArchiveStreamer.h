@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// on a single utility-QoS thread, so paging never has to wait on the
 /// network once the streamer gets ahead of the reader. Demand reads
 /// (UI paging) go straight to the caching source and always take
-/// priority: see ``TSSTCachingByteSource-class``'s `-pendingDemandCount`.
+/// priority: see ``TSSTCachingByteSource-class``'s ``TSSTCachingByteSource-class/pendingDemandCount``.
 @interface TSSTArchiveStreamer : NSObject
 
 /// - parameter spans: `NSValue`-boxed `NSRange`, one per page, offset/length within the archive.

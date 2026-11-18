@@ -47,9 +47,12 @@ typedef struct
 @interface TSSTZipIndex ()
 {
 	id<TSSTArchiveByteSource> _source;
-	NSData *_centralDirectoryData; // raw bytes for all CD headers, kept for name decoding
-	NSMutableArray<NSValue *> *_entries; // boxed TSSTZipCDEntry
-	NSMutableArray<NSString *> *_names;  // decoded names, index-aligned with _entries
+	/// raw bytes for all CD headers, kept for name decoding
+	NSData *_centralDirectoryData;
+	/// boxed TSSTZipCDEntry
+	NSMutableArray<NSValue *> *_entries;
+	/// decoded names, index-aligned with `_entries`
+	NSMutableArray<NSString *> *_names;
 }
 @end
 

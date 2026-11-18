@@ -1312,9 +1312,9 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 }
 
 /// Prompts for (or reuses) an archive's password the same way for every
-/// backend: XADArchive's delegate (-archiveNeedsPassword:), the
-/// background-scan delegate (TSSTScanArchiveDelegate), and
-/// TSSTXADArchiveSource's password provider block. Always prompts on the
+/// backend: XADArchive's delegate (`-archiveNeedsPassword:`), the
+/// background-scan delegate (``TSSTScanArchiveDelegate``), and
+/// ``TSSTXADArchiveSource``'s password provider block. Always prompts on the
 /// main thread, synchronously if called from elsewhere.
 + (nullable NSString *)promptForPasswordAtPath:(NSString *)path knownPassword:(nullable NSString *)known
 {
@@ -1327,7 +1327,7 @@ static TSSTURLErrorBatch *CurrentURLErrorBatch(void)
 }
 
 /// Runs \c block on the main thread and waits: inline when already there,
-/// dispatch_sync otherwise. Callers must hold no lock the main thread may
+/// `dispatch_sync` otherwise. Callers must hold no lock the main thread may
 /// wait for while the block runs (the shared deadlock rule for every prompt).
 + (void)runOnMainThreadSynchronously:(void (^)(void))block
 {

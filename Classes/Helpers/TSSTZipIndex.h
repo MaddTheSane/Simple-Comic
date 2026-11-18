@@ -44,8 +44,8 @@ typedef NS_ERROR_ENUM(TSSTZipIndexErrorDomain, TSSTZipIndexError)
 
 #if DEBUG
 /// Test convenience: indexes a local file directly. The app always goes
-/// through `-indexWithByteSource:error:` (see ``+[TSSTManagedArchive
-/// buildZipIndexForFileURL:cachingSource:]``).
+/// through ``indexWithByteSource:error:`` (see `+[TSSTManagedArchive
+/// buildZipIndexForFileURL:cachingSource:]`).
 + (nullable instancetype)indexWithFileURL:(NSURL *)url error:(NSError * _Nullable * _Nullable)error;
 #endif
 

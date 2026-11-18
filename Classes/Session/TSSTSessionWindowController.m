@@ -38,7 +38,7 @@
 
 #import "Simple_Comic-Swift.h"
 
-NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
+NSString * const SCMouseDragNotification = @"SCMouseDragNotification";
 
 
 
@@ -241,7 +241,7 @@ NSString * const TSSTMouseDragNotification = @"SCMouseDragNotification";
 	[progressBar addTrackingArea: newArea];
 	[jumpField setDelegate: self];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleMouseDragged:) name:TSSTMouseDragNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleMouseDragged:) name:SCMouseDragNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleArchiveCacheProgress:) name:TSSTArchiveCacheProgressNotification object:nil];
 
 	[self updateLoadingOverlay];

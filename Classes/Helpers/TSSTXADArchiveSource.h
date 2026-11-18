@@ -59,7 +59,7 @@ typedef void (^TSSTXADArchiveSourceBatchHandler)(NSArray<TSSTXADArchiveEntry *> 
 
 /// Returns the already-known password for an archive at the given path,
 /// prompting the user (on the main thread, synchronously) if necessary.
-/// Mirrors `TSSTScanArchiveDelegate`'s behavior so both backends prompt the
+/// Mirrors ``TSSTScanArchiveDelegate``'s behavior so both backends prompt the
 /// same way. Return nil to indicate no password is available.
 typedef NSString * _Nullable (^TSSTXADArchiveSourcePasswordProvider)(NSString *archivePath, NSString * _Nullable knownPassword);
 

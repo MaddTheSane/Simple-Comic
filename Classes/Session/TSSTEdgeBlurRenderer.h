@@ -43,14 +43,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)hasSourceForPageKey:(id)pageKey;
 
 /*!	Ensures a small decoded source image is cached for `pageKey`, for later,
-	synchronous use by ``TSSTEdgeBlurRenderer.canvasImageForFirstPageKey:firstRect:secondPageKey:secondRect:fallbackColor:`` below. No-ops (and)
+	synchronous use by ``TSSTEdgeBlurRenderer/canvasImageForFirstPageKey:firstRect:secondPageKey:secondRect:fallbackColor:`` below. No-ops (and)
 	calls `completion` immediately, on the main queue) if a source is
 	already cached for this key. Concurrent prepares for the same key are
 	de-duplicated rather than redone.
 
 	If `thumbnailData` is non-nil, it's decoded directly -- cheap, and it
 	never touches anything beyond the data itself off the calling thread.
-	If it's nil, `pageImageProvider` is invoked, off the main thread, to
+	If it's `nil`, `pageImageProvider` is invoked, off the main thread, to
 	produce one; give it something that follows the app's existing off-
 	main thumbnail-generation precedent (see how ``TSSTThumbnailItemView``
 	calls `page.thumbnail` directly from a background queue) rather than

@@ -32,7 +32,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSNotificationName const TSSTMouseDragNotification;
+extern NSNotificationName const SCMouseDragNotification;
 
 typedef NS_ENUM(NSInteger, PageSelectionMode)  {
 	PageSelectionModeNone,
